@@ -5,8 +5,8 @@
     "type": "module",
     "scripts": {
         "dev": "vite --host --port 3000",
-        "build-dev": "vite build",
-        "build-prod": "vite build --config vite.prod.config.ts",
+        "build": "vite build",
+        "build-tsc": "tsc",
         "preview": "vite preview"
     },
     "dependencies": {
@@ -31,7 +31,7 @@
         "katex": "^0.15.2",
         "lexical": "0.15.0",
         "lodash-es": "^4.17.21",
-        "prettier": "^2.3.2",
+        "prettier": "^3.2.5",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-error-boundary": "^3.1.4",
@@ -40,8 +40,12 @@
     },
     "devDependencies": {
         "@rollup/plugin-commonjs": "^25.0.7",
+        "@types/katex": "^0.16.7",
         "@types/lodash-es": "^4.14.182",
+        "@types/react": "^18.3.2",
+        "@types/react-dom": "^18.3.0",
         "@vitejs/plugin-react": "^4.2.1",
+        "less": "^4.2.0",
         "prettier": "^3.2.5",
         "prettier-plugin-hermes-parser": "^0.21.1",
         "prettier-plugin-organize-attributes": "^1.0.0",

@@ -15,7 +15,7 @@ import { defineConfig } from 'vite';
 import { replaceCodePlugin } from 'vite-plugin-replace';
 
 // import moduleResolution from './shared/viteModuleResolution';
-import viteCopyEsm from './viteCopyEsm';
+// import viteCopyEsm from './viteCopyEsm';
 
 const require = createRequire(import.meta.url);
 
@@ -71,12 +71,12 @@ export default defineConfig(({ command }) => {
             //   presets: ['@babel/preset-react'],
             // }),
             react(),
-            viteCopyEsm(),
+            // viteCopyEsm(),
             commonjs(),
         ],
         resolve: {
             alias: {
-                'shared': fileURLToPath(new URL('./shared', import.meta.url)),
+                'shared': fileURLToPath(new URL('./src/shared', import.meta.url)),
             },
             // alias: moduleResolution(command === 'serve' ? 'source' : 'development'),
         },

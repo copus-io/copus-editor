@@ -9,9 +9,10 @@
 import {CAN_USE_BEFORE_INPUT} from '@lexical/utils';
 import {useEffect, useMemo, useState} from 'react';
 
-import {INITIAL_SETTINGS, isDevPlayground} from './appSettings';
+import {INITIAL_SETTINGS} from './appSettings';
 import {useSettings} from './context/SettingsContext';
 import Switch from './ui/Switch';
+import React from 'react';
 
 export default function Settings(): JSX.Element {
   const windowLocation = window.location;
@@ -57,7 +58,7 @@ export default function Settings(): JSX.Element {
       />
       {showSettings ? (
         <div className="switches">
-          {isRichText && isDevPlayground && (
+          {isRichText && (
             <Switch
               onClick={() => {
                 setOption('isCollab', !isCollab);
@@ -67,7 +68,7 @@ export default function Settings(): JSX.Element {
               text="Collaboration"
             />
           )}
-          {isDevPlayground && (
+    
             <Switch
               onClick={() => {
                 if (isSplitScreen) {
@@ -79,7 +80,7 @@ export default function Settings(): JSX.Element {
               checked={isSplitScreen}
               text="Split Screen"
             />
-          )}
+          
           <Switch
             onClick={() => setOption('measureTypingPerf', !measureTypingPerf)}
             checked={measureTypingPerf}

@@ -1,0 +1,260 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+@import 'https://fonts.googleapis.com/css?family=Reenie+Beanie';
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #eee;
+  padding: 0 20px;
+}
+
+header {
+  max-width: 580px;
+  margin: auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+header a {
+  max-width: 220px;
+  margin: 20px 0 0 0;
+  display: block;
+}
+
+header img {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+header h1 {
+  text-align: left;
+  color: #333;
+  display: inline-block;
+  margin: 20px 0 0 0;
+}
+
+.editor-shell {
+  margin: 20px auto;
+  border-radius: 2px;
+  max-width: 1100px;
+  color: #000;
+  position: relative;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.editor-shell .editor-container {
+  background: #fff;
+  position: relative;
+  display: block;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.editor-shell .editor-container.tree-view {
+  border-radius: 0;
+}
+
+.editor-shell .editor-container.plain-text {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.editor-scroller {
+  min-height: 150px;
+  border: 0;
+  display: flex;
+  position: relative;
+  outline: 0;
+  z-index: 0;
+  overflow: auto;
+  resize: vertical;
+}
+
+.editor {
+  flex: auto;
+  position: relative;
+  resize: vertical;
+  z-index: -1;
+}
+
+.test-recorder-output {
+  margin: 20px auto 20px auto;
+  width: 100%;
+}
+
+pre {
+  line-height: 1.1;
+  background: #222;
+  color: #fff;
+  margin: 0;
+  padding: 10px;
+  font-size: 12px;
+  overflow: auto;
+  max-height: 400px;
+}
+
+.tree-view-output {
+  display: block;
+  background: #222;
+  color: #fff;
+  padding: 0;
+  font-size: 12px;
+  margin: 1px auto 10px auto;
+  position: relative;
+  overflow: hidden;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+pre::-webkit-scrollbar {
+  background: transparent;
+  width: 10px;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: #999;
+}
+
+.editor-dev-button {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 40px;
+  font-size: 12px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+  background-color: #444;
+}
+
+.editor-dev-button::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  display: block;
+  background-size: contain;
+  filter: invert(1);
+}
+
+.editor-dev-button:hover {
+  background-color: #555;
+}
+
+.editor-dev-button.active {
+  background-color: rgb(233, 35, 35);
+}
+
+.test-recorder-toolbar {
+  display: flex;
+}
+
+.test-recorder-button {
+  position: relative;
+  display: block;
+  width: 32px;
+  height: 32px;
+  font-size: 10px;
+  padding: 6px 6px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.4);
+  background-color: #222;
+  transition: box-shadow 50ms ease-out;
+}
+
+.test-recorder-button:active {
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.test-recorder-button + .test-recorder-button {
+  margin-left: 4px;
+}
+
+.test-recorder-button::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  display: block;
+  background-size: contain;
+  filter: invert(1);
+}
+
+#options-button {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+}
+
+#test-recorder-button {
+  position: fixed;
+  left: 70px;
+  bottom: 20px;
+}
+
+#paste-log-button {
+  position: fixed;
+  left: 120px;
+  bottom: 20px;
+}
+
+#docs-button {
+  position: fixed;
+  left: 170px;
+  bottom: 20px;
+}
+
+#options-button::after {
+  background-image: url(../src/images/icons/gear.svg);
+}
+
+#test-recorder-button::after {
+  background-image: url(../src/images/icons/journal-code.svg);
+}
+
+#paste-log-button::after {
+  background-image: url(../src/images/icons/clipboard.svg);
+}
+
+#docs-button::after {
+  background-image: url(../src/images/icons/file-earmark-text.svg);
+}
+
+#test-recorder-button-snapshot {
+  margin-right: auto;
+}
+
+#test-recorder-button-snapshot::after {
+  background-image: url(../src/images/icons/camera.svg);
+}
+
+#test-recorder-button-copy::after {
+  background-image: url(../src/images/icons/clipboard.svg);
+}
+
+#test-recorder-button-download::after {
+  background-image: url(../src/images/icons/download.svg);
+}
+

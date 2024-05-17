@@ -26,10 +26,8 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { CAN_USE_DOM } from 'shared/canUseDOM';
 
-import { createWebsocketProvider } from './collaboration';
 import { useSettings } from './context/SettingsContext';
 import { useSharedHistoryContext } from './context/SharedHistoryContext';
-// import ActionsPlugin from './plugins/ActionsPlugin';
 import AutocompletePlugin from './plugins/AutocompletePlugin';
 import AutoEmbedPlugin from './plugins/AutoEmbedPlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
@@ -79,7 +77,7 @@ export default function Editor(): JSX.Element {
     const { historyState } = useSharedHistoryContext();
     const {
         settings: {
-            isCollab,
+            // isCollab,
             isAutocomplete,
             isMaxLength,
             isCharLimit,
@@ -93,11 +91,7 @@ export default function Editor(): JSX.Element {
         },
     } = useSettings();
     const isEditable = useLexicalEditable();
-    const text = isCollab
-        ? 'Enter some collaborative rich text...'
-        : isRichText
-        ? 'Enter some rich text...'
-        : 'Enter some plain text...';
+    const text = 'Enter some text...';
     const placeholder = <Placeholder>{text}</Placeholder>;
     const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
     const [isSmallWidthViewport, setIsSmallWidthViewport] = useState<boolean>(false);
@@ -143,18 +137,9 @@ export default function Editor(): JSX.Element {
                 <KeywordsPlugin />
                 <SpeechToTextPlugin />
                 <AutoLinkPlugin />
-                <CommentPlugin providerFactory={isCollab ? createWebsocketProvider : undefined} />
                 {isRichText ? (
                     <>
-                        {isCollab ? (
-                            <CollaborationPlugin
-                                id="main"
-                                providerFactory={createWebsocketProvider}
-                                shouldBootstrap={!skipCollaborationInit}
-                            />
-                        ) : (
-                            <HistoryPlugin externalHistoryState={historyState} />
-                        )}
+                        <HistoryPlugin externalHistoryState={historyState} />
                         <RichTextPlugin
                             contentEditable={
                                 <div className="editor-scroller">
@@ -222,7 +207,8 @@ export default function Editor(): JSX.Element {
                 {isAutocomplete && <AutocompletePlugin />}
                 <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
                 {shouldUseLexicalContextMenu && <ContextMenuPlugin />}
-                {/* <ActionsPlugin isRichText={isRichText} /> */}
+                {/* 官方插件有问题，暂时注释掉 */}
+                {/* <ActionsPlugin isRichText={isRichText} /> */} 
             </div>
             {showTreeView && <TreeViewPlugin />}
         </>

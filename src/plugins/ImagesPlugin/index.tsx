@@ -29,7 +29,9 @@ import {useEffect, useRef, useState} from 'react';
 import * as React from 'react';
 import {CAN_USE_DOM} from 'shared/canUseDOM';
 
+// @ts-ignore
 import landscapeImage from '../../images/landscape.jpg';
+// @ts-ignore
 import yellowFlowerImage from '../../images/yellow-flower.jpg';
 import {
   $createImageNode,

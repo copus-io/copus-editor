@@ -95,6 +95,7 @@ export function PrettierButton({lang, editor, getCodeDOMNode}: Props) {
           let parsed = '';
 
           try {
+            // @ts-ignore
             parsed = format(content, options);
           } catch (error: unknown) {
             setError(error);

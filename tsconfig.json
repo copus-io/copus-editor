@@ -9,16 +9,17 @@
         "noEmit": true,
         "strict": true,
         "baseUrl": ".",
-        "typeRoots": ["node_modules/@types", "libdefs/globals"],
+        "typeRoots": ["node_modules/@types"],
         "skipLibCheck": true,
         "resolveJsonModule": true,
         "allowJs": true,
+        "outDir": "./es",
         "paths": {
-            "shared/*": ["./shared/*"]
+            "shared/*": ["src/shared/*"]
         }
     },
-    "include": ["./libdefs", "./packages"],
-    "exclude": ["./libdefs/*.js", "**/dist/**", "**/npm/**", "**/node_modules/**", "./packages/lexical-devtools/**"],
+    "include": ["./src"],
+    "exclude": ["**/dist/**", "**/npm/**", "**/node_modules/**"],
     "typedocOptions": { "logLevel": "Verbose" },
     "ts-node": { "require": ["tsconfig-paths/register"], "transpileOnly": true }
 }

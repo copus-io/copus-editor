@@ -6,8 +6,6 @@
  *
  */
 
-import type {SettingName} from '../appSettings';
-
 import * as React from 'react';
 import {
   createContext,
@@ -18,7 +16,32 @@ import {
   useState,
 } from 'react';
 
-import {DEFAULT_SETTINGS, INITIAL_SETTINGS} from '../appSettings';
+export const DEFAULT_SETTINGS = {
+  disableBeforeInput: false,
+  emptyEditor: false,
+  isAutocomplete: false,
+  isCharLimit: false,
+  isCharLimitUtf8: false,
+  isCollab: false,
+  isMaxLength: false,
+  isRichText: true,
+  measureTypingPerf: false,
+  shouldUseLexicalContextMenu: false,
+  showNestedEditorTreeView: false,
+  showTableOfContents: false,
+  showTreeView: true,
+  tableCellBackgroundColor: true,
+  tableCellMerge: true,
+} as const;
+
+// These are mutated in setupEnv
+export const INITIAL_SETTINGS: Record<SettingName, boolean> = {
+  ...DEFAULT_SETTINGS,
+};
+
+export type SettingName = keyof typeof DEFAULT_SETTINGS;
+
+export type Settings = typeof INITIAL_SETTINGS;
 
 type SettingsContextShape = {
   setOption: (name: SettingName, value: boolean) => void;

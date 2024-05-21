@@ -11,6 +11,7 @@ import './Modal.css';
 import * as React from 'react';
 import {ReactNode, useEffect, useRef} from 'react';
 import {createPortal} from 'react-dom';
+import getEditorPortal from '../utils/getEditorPortal';
 
 function PortalImpl({
   onClose,
@@ -101,6 +102,6 @@ export default function Modal({
       closeOnClickOutside={closeOnClickOutside}>
       {children}
     </PortalImpl>,
-    document.body,
+    getEditorPortal(),
   );
 }

@@ -16,6 +16,7 @@ import {
   useState,
 } from 'react';
 import {createPortal} from 'react-dom';
+import getEditorPortal from '../utils/getEditorPortal';
 
 type DropDownContextType = {
   registerItem: (ref: React.RefObject<HTMLButtonElement>) => void;
@@ -252,7 +253,7 @@ export default function DropDown({
           <DropDownItems dropDownRef={dropDownRef} onClose={handleClose}>
             {children}
           </DropDownItems>,
-          document.body,
+          getEditorPortal(),
         )}
     </>
   );

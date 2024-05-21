@@ -68,6 +68,7 @@ import CommentEditorTheme from '../../themes/CommentEditorTheme';
 import Button from '../../ui/Button';
 import ContentEditable from '../../ui/ContentEditable';
 import Placeholder from '../../ui/Placeholder';
+import getEditorPortal from '../../utils/getEditorPortal';
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand(
   'INSERT_INLINE_COMMAND',
@@ -292,7 +293,7 @@ function CommentInputBox({
   useLayoutEffect(() => {
     updateLocation();
     const container = selectionState.container;
-    const body = document.body;
+    const body = getEditorPortal();
     if (body !== null) {
       body.appendChild(container);
       return () => {
@@ -942,7 +943,7 @@ export default function CommentPlugin({
             cancelAddComment={cancelAddComment}
             submitAddComment={submitAddComment}
           />,
-          document.body,
+          getEditorPortal(),
         )}
       {activeAnchorKey !== null &&
         activeAnchorKey !== undefined &&
@@ -953,7 +954,7 @@ export default function CommentPlugin({
             editor={editor}
             onAddComment={onAddComment}
           />,
-          document.body,
+          getEditorPortal(),
         )}
       {createPortal(
         <Button
@@ -964,7 +965,7 @@ export default function CommentPlugin({
           title={showComments ? 'Hide Comments' : 'Show Comments'}>
           <i className="comments" />
         </Button>,
-        document.body,
+        getEditorPortal(),
       )}
       {showComments &&
         createPortal(
@@ -975,7 +976,7 @@ export default function CommentPlugin({
             activeIDs={activeIDs}
             markNodeMap={markNodeMap}
           />,
-          document.body,
+          getEditorPortal(),
         )}
     </>
   );

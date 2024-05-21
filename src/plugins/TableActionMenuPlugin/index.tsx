@@ -47,6 +47,7 @@ import invariant from 'shared/invariant';
 
 import useModal from '../../hooks/useModal';
 import ColorPicker from '../../ui/ColorPicker';
+import getEditorPortal from '../../utils/getEditorPortal';
 
 function computeSelectionCount(selection: TableSelection): {
   columns: number;
@@ -632,7 +633,7 @@ function TableActionMenu({
         </span>
       </button>
     </div>,
-    document.body,
+    getEditorPortal(),
   );
 }
 
@@ -772,7 +773,7 @@ function TableCellActionMenuContainer({
 }
 
 export default function TableActionMenuPlugin({
-  anchorElem = document.body,
+  anchorElem = getEditorPortal(),
   cellMerge = false,
 }: {
   anchorElem?: HTMLElement;

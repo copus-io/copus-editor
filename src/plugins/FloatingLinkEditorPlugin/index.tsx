@@ -35,6 +35,7 @@ import {createPortal} from 'react-dom';
 import {getSelectedNode} from '../../utils/getSelectedNode';
 import {setFloatingElemPositionForLinkEditor} from '../../utils/setFloatingElemPositionForLinkEditor';
 import {sanitizeUrl} from '../../utils/url';
+import getEditorPortal from '../../utils/getEditorPortal';
 
 function FloatingLinkEditor({
   editor,
@@ -373,7 +374,7 @@ function useFloatingLinkEditorToolbar(
 }
 
 export default function FloatingLinkEditorPlugin({
-  anchorElem = document.body,
+  anchorElem = getEditorPortal(),
   isLinkEditMode,
   setIsLinkEditMode,
 }: {

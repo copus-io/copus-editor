@@ -30,6 +30,7 @@ import {getDOMRangeRect} from '../../utils/getDOMRangeRect';
 import {getSelectedNode} from '../../utils/getSelectedNode';
 import {setFloatingElemPosition} from '../../utils/setFloatingElemPosition';
 import {INSERT_INLINE_COMMAND} from '../CommentPlugin';
+import getEditorPortal from '../../utils/getEditorPortal';
 
 function TextFormatFloatingToolbar({
   editor,
@@ -260,13 +261,13 @@ function TextFormatFloatingToolbar({
           </button>
         </>
       )}
-      <button
+      {/* <button
         type="button"
         onClick={insertComment}
         className={'popup-item spaced insert-comment'}
         aria-label="Insert comment">
         <i className="format add-comment" />
-      </button>
+      </button> */}
     </div>
   );
 }
@@ -389,7 +390,7 @@ function useFloatingTextFormatToolbar(
 }
 
 export default function FloatingTextFormatToolbarPlugin({
-  anchorElem = document.body,
+  anchorElem = getEditorPortal(),
   setIsLinkEditMode,
 }: {
   anchorElem?: HTMLElement;

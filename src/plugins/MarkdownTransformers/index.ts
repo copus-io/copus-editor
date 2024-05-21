@@ -95,7 +95,7 @@ export const IMAGE: TextMatchTransformer = {
   type: 'text-match',
 };
 
-export const EMOJI: TextMatchTransformer = {
+const EMOJI: TextMatchTransformer = {
   dependencies: [],
   export: () => null,
   importRegExp: /:([a-z0-9_]+):/,
@@ -308,7 +308,7 @@ export const PLAYGROUND_TRANSFORMERS: Array<Transformer> = [
   TABLE,
   HR,
   IMAGE,
-  EMOJI,
+  // EMOJI,
   EQUATION,
   // TWEET,
   CHECK_LIST,

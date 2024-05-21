@@ -17,8 +17,10 @@ import {TableContext} from './plugins/TablePlugin';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 
 import './style.less';
+import {useEffect} from 'react';
+import getEditorPortal from './utils/getEditorPortal';
 
-export default function App(): JSX.Element {
+function App(): JSX.Element {
   const initialConfig = {
     editorState: null,
     namespace: 'S31Editor',
@@ -28,6 +30,8 @@ export default function App(): JSX.Element {
     },
     theme: PlaygroundEditorTheme,
   };
+
+  console.log('S31Editor');
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
@@ -41,6 +45,18 @@ export default function App(): JSX.Element {
         </TableContext>
       </SharedHistoryContext>
     </LexicalComposer>
+  );
+}
+
+export default function Main(): JSX.Element {
+  useEffect(() => {
+    getEditorPortal()
+  }, []);
+
+  return (
+    <FlashMessageContext>
+      <App />
+    </FlashMessageContext>
   );
 }
 

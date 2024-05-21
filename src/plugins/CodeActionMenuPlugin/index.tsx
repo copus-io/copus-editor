@@ -23,6 +23,7 @@ import {createPortal} from 'react-dom';
 import {CopyButton} from './components/CopyButton';
 import {canBePrettier, PrettierButton} from './components/PrettierButton';
 import {useDebounce} from './utils';
+import getEditorPortal from '../../utils/getEditorPortal';
 
 const CODE_PADDING = 8;
 
@@ -173,7 +174,7 @@ function getMouseInfo(event: MouseEvent): {
 }
 
 export default function CodeActionMenuPlugin({
-  anchorElem = document.body,
+  anchorElem = getEditorPortal(),
 }: {
   anchorElem?: HTMLElement;
 }): React.ReactPortal | null {

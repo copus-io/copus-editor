@@ -34,6 +34,7 @@ import {
   useState,
 } from 'react';
 import {createPortal} from 'react-dom';
+import getEditorPortal from '../../utils/getEditorPortal';
 
 type MousePosition = {
   x: number;
@@ -419,7 +420,7 @@ export default function TableCellResizerPlugin(): null | ReactPortal {
   return useMemo(
     () =>
       isEditable
-        ? createPortal(<TableCellResizer editor={editor} />, document.body)
+        ? createPortal(<TableCellResizer editor={editor} />, getEditorPortal())
         : null,
     [editor, isEditable],
   );

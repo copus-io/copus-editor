@@ -27,6 +27,7 @@ import {createPortal} from 'react-dom';
 import {isHTMLElement} from '../../utils/guard';
 import {Point} from '../../utils/point';
 import {Rect} from '../../utils/rect';
+import getEditorPortal from '../../utils/getEditorPortal';
 
 const SPACE = 4;
 const TARGET_LINE_HALF_HEIGHT = 2;
@@ -428,7 +429,7 @@ function useDraggableBlockMenu(
 }
 
 export default function DraggableBlockPlugin({
-  anchorElem = document.body,
+  anchorElem = getEditorPortal(),
 }: {
   anchorElem?: HTMLElement;
 }): JSX.Element {

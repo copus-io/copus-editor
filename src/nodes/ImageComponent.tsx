@@ -101,7 +101,7 @@ function LazyImage({
       ref={imageRef}
       style={{
         height,
-        maxWidth,
+        // maxWidth,
         width,
       }}
       draggable="false"
@@ -388,9 +388,9 @@ export default function ImageComponent({
           <div className="image-caption-container">
             <LexicalNestedComposer initialEditor={caption}>
               <AutoFocusPlugin />
-              <MentionsPlugin />
+              {/* <MentionsPlugin /> */}
               <LinkPlugin />
-              <EmojisPlugin />
+              {/* <EmojisPlugin /> */}
               <HashtagPlugin />
               <KeywordsPlugin />
               <HistoryPlugin externalHistoryState={historyState} />

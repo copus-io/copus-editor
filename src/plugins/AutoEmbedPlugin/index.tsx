@@ -47,7 +47,7 @@ interface PlaygroundEmbedConfig extends EmbedConfig {
 export const YoutubeEmbedConfig: PlaygroundEmbedConfig = {
   contentName: 'Youtube Video',
 
-  exampleUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw',
+  exampleUrl: 'https://www.youtube.com/watch?v=xxxx',
 
   // Icon for display.
   icon: <i className="icon youtube" />,
@@ -78,7 +78,7 @@ export const YoutubeEmbedConfig: PlaygroundEmbedConfig = {
   type: 'youtube-video',
 };
 
-export const TwitterEmbedConfig: PlaygroundEmbedConfig = {
+const TwitterEmbedConfig: PlaygroundEmbedConfig = {
   // e.g. Tweet or Google Map.
   contentName: 'Tweet',
 
@@ -115,7 +115,7 @@ export const TwitterEmbedConfig: PlaygroundEmbedConfig = {
   type: 'tweet',
 };
 
-export const FigmaEmbedConfig: PlaygroundEmbedConfig = {
+const FigmaEmbedConfig: PlaygroundEmbedConfig = {
   contentName: 'Figma Document',
 
   exampleUrl: 'https://www.figma.com/file/LKQ4FJ4bTnCSjedbRpk931/Sample-File',
@@ -149,9 +149,9 @@ export const FigmaEmbedConfig: PlaygroundEmbedConfig = {
 };
 
 export const EmbedConfigs = [
-  TwitterEmbedConfig,
+  // TwitterEmbedConfig,
   YoutubeEmbedConfig,
-  FigmaEmbedConfig,
+  // FigmaEmbedConfig,
 ];
 
 function AutoEmbedMenuItem({

@@ -66,14 +66,14 @@ export function InsertImageUriDialogBody({
     <>
       <TextInput
         label="Image URL"
-        placeholder="i.e. https://source.unsplash.com/random"
+        placeholder="https://example.com/image.jpg"
         onChange={setSrc}
         value={src}
         data-test-id="image-modal-url-input"
       />
       <TextInput
         label="Alt Text"
-        placeholder="Random unsplash image"
+        placeholder="Descriptive alternative text"
         onChange={setAltText}
         value={altText}
         data-test-id="image-modal-alt-text-input"
@@ -101,16 +101,10 @@ export function InsertImageUploadedDialogBody({
   const isDisabled = src === '';
 
   const loadImage = (files: FileList | null) => {
-    const reader = new FileReader();
-    reader.onload = function () {
-      if (typeof reader.result === 'string') {
-        setSrc(reader.result);
-      }
-      return '';
-    };
-    if (files !== null) {
-      reader.readAsDataURL(files[0]);
+    if (files === null) {
+      return;
     }
+    setSrc(URL.createObjectURL(files[0]));
   };
 
   return (
@@ -170,24 +164,6 @@ export function InsertImageDialog({
     <>
       {!mode && (
         <DialogButtonsList>
-          <Button
-            data-test-id="image-modal-option-sample"
-            onClick={() =>
-              onClick(
-                hasModifier.current
-                  ? {
-                      altText:
-                        'Daylight fir trees forest glacier green high ice landscape',
-                      src: landscapeImage,
-                    }
-                  : {
-                      altText: 'Yellow flower in tilt shift lens',
-                      src: yellowFlowerImage,
-                    },
-              )
-            }>
-            Sample
-          </Button>
           <Button
             data-test-id="image-modal-option-url"
             onClick={() => setMode('url')}>
@@ -377,8 +353,8 @@ function getDragSelection(event: DragEvent): Range | null | undefined {
     target == null
       ? null
       : target.nodeType === 9
-      ? (target as Document).defaultView
-      : (target as Element).ownerDocument.defaultView;
+        ? (target as Document).defaultView
+        : (target as Element).ownerDocument.defaultView;
   const domSelection = getDOMSelection(targetWindow);
   if (document.caretRangeFromPoint) {
     range = document.caretRangeFromPoint(event.clientX, event.clientY);

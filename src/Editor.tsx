@@ -128,14 +128,14 @@ export default function Editor(): JSX.Element {
                 <AutoFocusPlugin />
                 <ClearEditorPlugin />
                 <ComponentPickerPlugin />
-                <EmojiPickerPlugin />
+                {/* <EmojiPickerPlugin /> */}
                 <AutoEmbedPlugin />
 
-                <MentionsPlugin />
-                <EmojisPlugin />
+                {/* <MentionsPlugin /> */}
+                {/* <EmojisPlugin /> */}
                 <HashtagPlugin />
                 <KeywordsPlugin />
-                <SpeechToTextPlugin />
+                {/* <SpeechToTextPlugin /> */}
                 <AutoLinkPlugin />
                 {isRichText ? (
                     <>
@@ -159,12 +159,12 @@ export default function Editor(): JSX.Element {
                         <TablePlugin hasCellMerge={tableCellMerge} hasCellBackgroundColor={tableCellBackgroundColor} />
                         <TableCellResizer />
                         <ImagesPlugin />
-                        <InlineImagePlugin />
+                        {/* <InlineImagePlugin /> */}
                         <LinkPlugin />
-                        <PollPlugin />
-                        <TwitterPlugin />
+                        {/* <PollPlugin /> */}
+                        {/* <TwitterPlugin /> */}
                         <YouTubePlugin />
-                        <FigmaPlugin />
+                        {/* <FigmaPlugin /> */}
                         <LexicalClickableLinkPlugin disabled={isEditable} />
                         <HorizontalRulePlugin />
                         <EquationsPlugin />
@@ -204,7 +204,7 @@ export default function Editor(): JSX.Element {
                 {(isCharLimit || isCharLimitUtf8) && (
                     <CharacterLimitPlugin charset={isCharLimit ? 'UTF-16' : 'UTF-8'} maxLength={5} />
                 )}
-                {isAutocomplete && <AutocompletePlugin />}
+                {/* {isAutocomplete && <AutocompletePlugin />} */}
                 <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
                 {shouldUseLexicalContextMenu && <ContextMenuPlugin />}
                 {/* 官方插件有问题，暂时注释掉 */}

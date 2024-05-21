@@ -646,8 +646,8 @@ export default function ToolbarPlugin({
         $isElementNode(matchingParent)
           ? matchingParent.getFormatType()
           : $isElementNode(node)
-          ? node.getFormatType()
-          : parent?.getFormatType() || 'left',
+            ? node.getFormatType()
+            : parent?.getFormatType() || 'left',
       );
     }
     if ($isRangeSelection(selection) || $isTableSelection(selection)) {
@@ -818,6 +818,12 @@ export default function ToolbarPlugin({
     }
   }, [editor, isLink, setIsLinkEditMode]);
 
+  const insertImage = useCallback(() => {
+    showModal('Insert Image', (onClose) => (
+      <InsertImageDialog activeEditor={activeEditor} onClose={onClose} />
+    ));
+  }, [activeEditor]);
+
   const onCodeLanguageSelect = useCallback(
     (value: string) => {
       activeEditor.update(() => {
@@ -831,9 +837,6 @@ export default function ToolbarPlugin({
     },
     [activeEditor, selectedElementKey],
   );
-  const insertGifOnClick = (payload: InsertImagePayload) => {
-    activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
-  };
 
   return (
     <div className="toolbar">
@@ -1033,6 +1036,14 @@ export default function ToolbarPlugin({
               <span className="text">Clear Formatting</span>
             </DropDownItem>
           </DropDown>
+
+          <button
+            disabled={!isEditable}
+            onClick={insertImage}
+            className={'toolbar-item'}
+            type="button">
+            <i className="format image" />
+          </button>
           <Divider />
           <DropDown
             disabled={!isEditable}
@@ -1059,7 +1070,7 @@ export default function ToolbarPlugin({
               <i className="icon page-break" />
               <span className="text">Page Break</span>
             </DropDownItem>
-            <DropDownItem
+            {/* <DropDownItem
               onClick={() => {
                 showModal('Insert Image', (onClose) => (
                   <InsertImageDialog
@@ -1071,8 +1082,8 @@ export default function ToolbarPlugin({
               className="item">
               <i className="icon image" />
               <span className="text">Image</span>
-            </DropDownItem>
-            <DropDownItem
+            </DropDownItem> */}
+            {/* <DropDownItem
               onClick={() => {
                 showModal('Insert Inline Image', (onClose) => (
                   <InsertInlineImageDialog
@@ -1084,7 +1095,7 @@ export default function ToolbarPlugin({
               className="item">
               <i className="icon image" />
               <span className="text">Inline Image</span>
-            </DropDownItem>
+            </DropDownItem> */}
             <DropDownItem
               onClick={() => {
                 activeEditor.dispatchCommand(
@@ -1109,7 +1120,7 @@ export default function ToolbarPlugin({
               <i className="icon table" />
               <span className="text">Table</span>
             </DropDownItem>
-            <DropDownItem
+            {/* <DropDownItem
               onClick={() => {
                 showModal('Insert Poll', (onClose) => (
                   <InsertPollDialog
@@ -1121,7 +1132,7 @@ export default function ToolbarPlugin({
               className="item">
               <i className="icon poll" />
               <span className="text">Poll</span>
-            </DropDownItem>
+            </DropDownItem> */}
             <DropDownItem
               onClick={() => {
                 showModal('Insert Columns Layout', (onClose) => (
@@ -1149,7 +1160,7 @@ export default function ToolbarPlugin({
               <i className="icon equation" />
               <span className="text">Equation</span>
             </DropDownItem>
-            <DropDownItem
+            {/* <DropDownItem
               onClick={() => {
                 editor.update(() => {
                   const root = $getRoot();
@@ -1160,7 +1171,7 @@ export default function ToolbarPlugin({
               className="item">
               <i className="icon sticky" />
               <span className="text">Sticky Note</span>
-            </DropDownItem>
+            </DropDownItem> */}
             <DropDownItem
               onClick={() => {
                 editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined);

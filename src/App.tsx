@@ -6,43 +6,42 @@
  *
  */
 
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import { SettingsContext, useSettings } from './context/SettingsContext';
-import { SharedAutocompleteContext } from './context/SharedAutocompleteContext';
-import { SharedHistoryContext } from './context/SharedHistoryContext';
-import { FlashMessageContext } from './context/FlashMessageContext';
+import {LexicalComposer} from '@lexical/react/LexicalComposer';
+import {SettingsContext, useSettings} from './context/SettingsContext';
+import {SharedAutocompleteContext} from './context/SharedAutocompleteContext';
+import {SharedHistoryContext} from './context/SharedHistoryContext';
+import {FlashMessageContext} from './context/FlashMessageContext';
 import Editor from './Editor';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
-import { TableContext } from './plugins/TablePlugin';
+import {TableContext} from './plugins/TablePlugin';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 
 import './style.less';
 
 export default function App(): JSX.Element {
+  const initialConfig = {
+    editorState: null,
+    namespace: 'S31Editor',
+    nodes: [...PlaygroundNodes],
+    onError: (error: Error) => {
+      throw error;
+    },
+    theme: PlaygroundEditorTheme,
+  };
 
-    const initialConfig = {
-        editorState: null,
-        namespace: 'S31Editor',
-        nodes: [...PlaygroundNodes],
-        onError: (error: Error) => {
-            throw error;
-        },
-        theme: PlaygroundEditorTheme,
-    };
-
-    return (
-        <LexicalComposer initialConfig={initialConfig}>
-            <SharedHistoryContext>
-                <TableContext>
-                    <SharedAutocompleteContext>
-                        <div className="s31-editor-shell">
-                            <Editor />
-                        </div>
-                    </SharedAutocompleteContext>
-                </TableContext>
-            </SharedHistoryContext>
-        </LexicalComposer>
-    );
+  return (
+    <LexicalComposer initialConfig={initialConfig}>
+      <SharedHistoryContext>
+        <TableContext>
+          <SharedAutocompleteContext>
+            <div className="s31-editor-shell">
+              <Editor />
+            </div>
+          </SharedAutocompleteContext>
+        </TableContext>
+      </SharedHistoryContext>
+    </LexicalComposer>
+  );
 }
 
 // export default function PlaygroundApp(): JSX.Element {

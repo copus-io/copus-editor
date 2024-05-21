@@ -31,8 +31,6 @@ function App(): JSX.Element {
     theme: PlaygroundEditorTheme,
   };
 
-  console.log('S31Editor');
-
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <SharedHistoryContext>

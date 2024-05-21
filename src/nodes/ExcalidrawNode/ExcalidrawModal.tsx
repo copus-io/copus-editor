@@ -21,7 +21,7 @@ import {createPortal} from 'react-dom';
 
 import Button from '../../ui/Button';
 import Modal from '../../ui/Modal';
-import getEditorPortal from '../utils/getEditorPortal';
+import getEditorPortal from '../../utils/getEditorPortal';
 
 export type ExcalidrawInitialElements = ExcalidrawInitialDataState['elements'];
 

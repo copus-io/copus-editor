@@ -27,6 +27,8 @@ import {EquationNode} from './EquationNode';
 import {ExcalidrawNode} from './ExcalidrawNode';
 import {FigmaNode} from './FigmaNode';
 import {ImageNode} from './ImageNode';
+import {AudioNode} from './AudioNode';
+import {VideoNode} from './VideoNode';
 import {InlineImageNode} from './InlineImageNode';
 import {KeywordNode} from './KeywordNode';
 import {LayoutContainerNode} from './LayoutContainerNode';
@@ -55,6 +57,8 @@ const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   // PollNode,
   // StickyNode,
   ImageNode,
+  AudioNode,
+  VideoNode,
   // InlineImageNode,
   // MentionNode,
   // EmojiNode,

@@ -95,6 +95,8 @@ import {INSERT_PAGE_BREAK} from '../PageBreakPlugin';
 import {InsertPollDialog} from '../PollPlugin';
 import {InsertTableDialog} from '../TablePlugin';
 import FontSize from './fontSize';
+import {InsertAudioDialog} from '../AudioPlugin';
+import {InsertVideoDialog} from '../VideoPlugin';
 
 const blockTypeToBlockName = {
   bullet: 'Bulleted List',
@@ -1180,6 +1182,32 @@ export default function ToolbarPlugin({
               <i className="icon caret-right" />
               <span className="text">Collapsible container</span>
             </DropDownItem>
+            <DropDownItem
+              onClick={() => {
+                showModal('Insert Audio', (onClose) => (
+                  <InsertAudioDialog
+                    activeEditor={activeEditor}
+                    onClose={onClose}
+                  />
+                ));
+              }}
+              className="item">
+              <i className="icon audio" />
+              <span className="text">Insert Audio</span>
+            </DropDownItem>
+            {/* <DropDownItem
+              onClick={() => {
+                showModal('Insert Video', (onClose) => (
+                  <InsertVideoDialog
+                    activeEditor={activeEditor}
+                    onClose={onClose}
+                  />
+                ));
+              }}
+              className="item">
+              <i className="icon video" />
+              <span className="text">Insert Video</span>
+            </DropDownItem> */}
             {EmbedConfigs.map((embedConfig) => (
               <DropDownItem
                 key={embedConfig.type}

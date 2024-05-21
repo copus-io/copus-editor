@@ -48,6 +48,8 @@ import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin';
 import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbarPlugin';
 import ImagesPlugin from './plugins/ImagesPlugin';
 import InlineImagePlugin from './plugins/InlineImagePlugin';
+import AudioPlugin from './plugins/AudioPlugin';
+import VideoPlugin from './plugins/VideoPlugin';
 import KeywordsPlugin from './plugins/KeywordsPlugin';
 import {LayoutPlugin} from './plugins/LayoutPlugin/LayoutPlugin';
 import LinkPlugin from './plugins/LinkPlugin';
@@ -164,6 +166,8 @@ export default function Editor(): JSX.Element {
             />
             <TableCellResizer />
             <ImagesPlugin />
+            <AudioPlugin />
+            <VideoPlugin />
             {/* <InlineImagePlugin /> */}
             <LinkPlugin />
             {/* <PollPlugin /> */}

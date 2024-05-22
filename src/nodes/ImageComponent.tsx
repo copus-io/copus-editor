@@ -96,36 +96,21 @@ function LazyImage({
 }): JSX.Element {
   useSuspenseImage(src);
 
-  if (uploading) {
-    return (
-      <div className="uploading-wrap">
-        <img
-          className={className || undefined}
-          src={src}
-          ref={imageRef}
-          style={{
-            height,
-            width,
-          }}
-          draggable="false"
-        />
-        <div className='uploading-text'>Uploading...</div>
-      </div>
-    );
-  }
-
   return (
-    <img
-      className={className || undefined}
-      src={src}
-      alt={altText}
-      ref={imageRef}
-      style={{
-        height,
-        width,
-      }}
-      draggable="false"
-    />
+    <>
+      <img
+        className={className || undefined}
+        src={src}
+        alt={altText}
+        ref={imageRef}
+        style={{
+          height,
+          width,
+        }}
+        draggable="false"
+      />
+      {uploading && <div className="uploading-text">Uploading...</div>}
+    </>
   );
 }
 
@@ -391,7 +376,7 @@ export default function ImageComponent({
   return (
     <Suspense fallback={null}>
       <>
-        <div draggable={draggable}>
+        <div draggable={draggable} className="uploading-wrap">
           <LazyImage
             className={
               isFocused

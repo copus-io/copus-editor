@@ -75,7 +75,7 @@ const editorUploadFiles = (uploadFiles: File, isImage?: boolean) => {
     }
 
     const formData = new FormData();
-    formData.append('file', files);
+    formData.append('file', uploadFiles);
     uploadImage(formData)
       .then((res) => {
         resolve(res);

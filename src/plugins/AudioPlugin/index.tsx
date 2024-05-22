@@ -41,7 +41,9 @@ import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
 
-export type InsertAudioPayload = Readonly<AudioPayload>;
+export type InsertAudioPayload = Readonly<AudioPayload> & {
+  file?: File;
+};
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
@@ -162,13 +164,6 @@ export function InsertAudioUploadedDialogBody({
         accept="audio/*"
         data-test-id="audio-modal-file-upload"
       />
-      {/* <TextInput
-        label="Alt Text"
-        placeholder="Descriptive alternative text"
-        onChange={setAltText}
-        value={altText}
-        data-test-id="image-modal-alt-text-input"
-      /> */}
       <DialogActions>
         <Button
           data-test-id="audio-modal-file-upload-btn"
@@ -219,18 +214,6 @@ export function InsertAudioDialog({
     <>
       {!mode && (
         <DialogButtonsList>
-          {/* <Button
-            data-test-id="image-modal-option-sample"
-            onClick={() => {
-              onClick({
-                src: 'https://cascads31.s3.ca-central-1.amazonaws.com/images/client/202309/prod/4bf6b25c0c6947b48115653c58a084af.m4a',
-                autoplay: false,
-                controls: true,
-              });
-            }}
-          >
-            Sample
-          </Button> */}
           <Button
             data-test-id="audio-modal-option-url"
             onClick={() => setMode('url')}>
@@ -265,10 +248,25 @@ export default function AudioPlugin({
       editor.registerCommand<InsertAudioPayload>(
         INSERT_AUDIO_COMMAND,
         (payload) => {
-          const audioNode = $createAudioNode(payload);
+          const {file, ...otherPayload} = payload;
+          const audioNode = $createAudioNode({
+            ...otherPayload,
+            uploading: !!file,
+          });
           $insertNodes([audioNode]);
           if ($isRootOrShadowRoot(audioNode.getParentOrThrow())) {
             $wrapNodeInElement(audioNode, $createParagraphNode).selectEnd();
+          }
+
+          if (file) {
+            editorUploadFiles(file).then((res) => {
+              if (res.status === 1) {
+                editor.update(() => {
+                  audioNode.setUploadState(false);
+                  audioNode.setSrc(res.data);
+                });
+              }
+            });
           }
 
           return true;
@@ -320,7 +318,6 @@ function onDragStart(event: DragEvent): boolean {
     'application/x-lexical-drag',
     JSON.stringify({
       data: {
-        // altText: node.__altText,
         key: node.getKey(),
         autoplay: node.__autoplay,
         controls: node.__controls,

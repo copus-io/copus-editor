@@ -71,6 +71,7 @@ export default function DragDropPaste(): null {
               editor.dispatchCommand(INSERT_AUDIO_COMMAND, {
                 src: URL.createObjectURL(file),
                 controls: true,
+                file: file,
               });
             }
           }

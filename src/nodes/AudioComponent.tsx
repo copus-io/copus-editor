@@ -6,14 +6,14 @@
  *
  */
 
-import type { LexicalEditor, NodeKey } from 'lexical';
+import type {LexicalEditor, NodeKey} from 'lexical';
 
 // import './ImageNode.css';
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
+import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
+import {useLexicalNodeSelection} from '@lexical/react/useLexicalNodeSelection';
 
-import { mergeRegister } from '@lexical/utils';
+import {mergeRegister} from '@lexical/utils';
 import {
   $getNodeByKey,
   $getSelection,
@@ -27,20 +27,22 @@ import {
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
 import * as React from 'react';
-import { Suspense, useCallback, useEffect, useRef } from 'react';
+import {Suspense, useCallback, useEffect, useRef} from 'react';
 
-import { $isAudioNode } from './AudioNode';
+import {$isAudioNode} from './AudioNode';
 
 export default function AudioComponent({
   src,
   nodeKey,
   controls,
   autoplay,
+  uploading,
 }: {
   nodeKey: NodeKey;
   controls: boolean;
   src: string;
   autoplay: boolean;
+  uploading: boolean;
 }): JSX.Element {
   const audioRef = useRef<null | HTMLAudioElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -65,12 +67,11 @@ export default function AudioComponent({
       }
       return false;
     },
-    [isSelected, nodeKey]
+    [isSelected, nodeKey],
   );
 
   const onEnter = useCallback(
     (event: KeyboardEvent) => {
-      console.log('onEnter');
       const latestSelection = $getSelection();
       const buttonElem = buttonRef.current;
       if (
@@ -86,13 +87,13 @@ export default function AudioComponent({
       }
       return false;
     },
-    [isSelected]
+    [isSelected],
   );
 
   useEffect(() => {
     let isMounted = true;
     const unregister = mergeRegister(
-      editor.registerUpdateListener(({ editorState }) => {
+      editor.registerUpdateListener(({editorState}) => {
         if (isMounted) {
           // setSelection(editorState.read(() => $getSelection()));
         }
@@ -103,7 +104,7 @@ export default function AudioComponent({
           activeEditorRef.current = activeEditor;
           return false;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand<MouseEvent>(
         CLICK_COMMAND,
@@ -121,7 +122,7 @@ export default function AudioComponent({
 
           return false;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         DRAGSTART_COMMAND,
@@ -134,19 +135,19 @@ export default function AudioComponent({
           }
           return false;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         KEY_DELETE_COMMAND,
         onDelete,
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         KEY_BACKSPACE_COMMAND,
         onDelete,
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
-      editor.registerCommand(KEY_ENTER_COMMAND, onEnter, COMMAND_PRIORITY_LOW)
+      editor.registerCommand(KEY_ENTER_COMMAND, onEnter, COMMAND_PRIORITY_LOW),
     );
     return () => {
       isMounted = false;
@@ -164,8 +165,7 @@ export default function AudioComponent({
 
   return (
     <Suspense fallback={null}>
-      <>
-        {/* <div draggable={draggable}> */}
+      <div draggable={false} className="uploading-wrap editor-audio">
         <audio
           className={isSelected ? `focused ` : ''}
           ref={audioRef}
@@ -173,8 +173,8 @@ export default function AudioComponent({
           autoPlay={false}
           controls={controls}
         />
-        {/* </div> */}
-      </>
+        {uploading && <div className="uploading-text">Uploading...</div>}
+      </div>
     </Suspense>
   );
 }

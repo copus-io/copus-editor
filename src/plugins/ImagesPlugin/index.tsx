@@ -211,7 +211,6 @@ export default function ImagesPlugin({
           }
 
           if (file) {
-            console.log(file);
             editorUploadFiles(file, true).then((res) => {
               if (res.status === 1) {
                 editor.update(() => {

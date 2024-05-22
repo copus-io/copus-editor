@@ -17,7 +17,7 @@ import type {
   Spread,
 } from 'lexical';
 
-import { $applyNodeReplacement, DecoratorNode } from 'lexical';
+import {$applyNodeReplacement, DecoratorNode} from 'lexical';
 import * as React from 'react';
 import AudioComponent from './AudioComponent';
 
@@ -26,14 +26,14 @@ export interface AudioPayload {
   src: string;
   controls?: boolean;
   autoplay?: boolean;
+  uploading?: boolean;
 }
 
 function convertAudioElement(domNode: Node): null | DOMConversionOutput {
   if (domNode instanceof HTMLAudioElement) {
-    console.log('domNode', domNode);
-    const { src, autoplay, controls } = domNode;
-    const node = $createAudioNode({ src, autoplay, controls });
-    return { node };
+    const {src, autoplay, controls} = domNode;
+    const node = $createAudioNode({src, autoplay, controls});
+    return {node};
   }
   return null;
 }
@@ -53,6 +53,7 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
   __src: string;
   __controls: boolean = true;
   __autoplay: boolean = false;
+  __uploading: boolean = false;
 
   static getType(): string {
     return 'audio';
@@ -63,12 +64,13 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
       node.__src,
       node.__autoplay,
       node.__controls,
-      node.__key
+      node.__key,
+      node.__uploading,
     );
   }
 
   static importJSON(serializedNode: SerializedAudioNode): AudioNode {
-    const { src, autoplay, controls } = serializedNode;
+    const {src, autoplay, controls} = serializedNode;
     const node = $createAudioNode({
       src,
       autoplay,
@@ -83,7 +85,7 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
     // element.setAttribute('alt', this.__altText);
     element.setAttribute('controls', this.__controls.toString());
     // element.setAttribute('autoplay', this.__autoplay.toString());
-    return { element };
+    return {element};
   }
 
   static importDOM(): DOMConversionMap | null {
@@ -100,12 +102,14 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
 
     autoplay?: boolean,
     controls?: boolean,
-    key?: NodeKey
+    key?: NodeKey,
+    uploading?: boolean,
   ) {
     super(key);
     this.__src = src;
     this.__controls = controls || true;
     this.__autoplay = autoplay || false;
+    this.__uploading = uploading || false;
   }
 
   exportJSON(): SerializedAudioNode {
@@ -131,6 +135,12 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
     const writable = this.getWritable();
     writable.__controls = controls;
   }
+
+  setUploadState(uploading: boolean): void {
+    const writable = this.getWritable();
+    writable.__uploading = uploading;
+  }
+
   // View
 
   createDOM(config: EditorConfig): HTMLElement {
@@ -151,14 +161,19 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
     return this.__src;
   }
 
+  setSrc(src: string): void {
+    const writable = this.getWritable();
+    writable.__src = src;
+  }
+
   decorate(): JSX.Element {
-    console.log('this.__src', this.__src, this.__autoplay, this.__controls);
     return (
       <AudioComponent
         src={this.__src}
         nodeKey={this.getKey()}
         autoplay={this.__autoplay}
         controls={this.__controls}
+        uploading={this.__uploading}
       />
     );
   }
@@ -219,12 +234,15 @@ export function $createAudioNode({
   autoplay,
   controls,
   key,
+  uploading,
 }: AudioPayload): AudioNode {
-  return $applyNodeReplacement(new AudioNode(src, autoplay, controls, key));
+  return $applyNodeReplacement(
+    new AudioNode(src, autoplay, controls, key, uploading),
+  );
 }
 
 export function $isAudioNode(
-  node: LexicalNode | null | undefined
+  node: LexicalNode | null | undefined,
 ): node is AudioNode {
   return node instanceof AudioNode;
 }

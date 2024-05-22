@@ -39,8 +39,11 @@ import Button from '../../ui/Button';
 import {DialogActions, DialogButtonsList} from '../../ui/Dialog';
 import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
+import editorUploadFiles from '../../utils/editorUploadFiles';
 
-export type InsertImagePayload = Readonly<ImagePayload>;
+export type InsertImagePayload = Readonly<ImagePayload> & {
+  file?: File;
+};
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
@@ -91,16 +94,14 @@ export function InsertImageUploadedDialogBody({
 }: {
   onClick: (payload: InsertImagePayload) => void;
 }) {
-  const [src, setSrc] = useState('');
+  const [file, setFile] = useState<File>();
   const [altText, setAltText] = useState('');
-
-  const isDisabled = src === '';
 
   const loadImage = (files: FileList | null) => {
     if (files === null) {
       return;
     }
-    setSrc(URL.createObjectURL(files[0]));
+    setFile(files[0]);
   };
 
   return (
@@ -121,8 +122,12 @@ export function InsertImageUploadedDialogBody({
       <DialogActions>
         <Button
           data-test-id="image-modal-file-upload-btn"
-          disabled={isDisabled}
-          onClick={() => onClick({altText, src})}>
+          disabled={!file}
+          onClick={() => {
+            if (file) {
+              onClick({altText, src: URL.createObjectURL(file), file});
+            }
+          }}>
           Confirm
         </Button>
       </DialogActions>
@@ -194,10 +199,28 @@ export default function ImagesPlugin({
       editor.registerCommand<InsertImagePayload>(
         INSERT_IMAGE_COMMAND,
         (payload) => {
-          const imageNode = $createImageNode(payload);
+          const {file, ...otherPayload} = payload;
+          const imageNode = $createImageNode({
+            ...otherPayload,
+            captionsEnabled: !file,
+            uploading: !!file,
+          });
           $insertNodes([imageNode]);
           if ($isRootOrShadowRoot(imageNode.getParentOrThrow())) {
             $wrapNodeInElement(imageNode, $createParagraphNode).selectEnd();
+          }
+
+          if (file) {
+            console.log(file);
+            editorUploadFiles(file, true).then((res) => {
+              if (res.status === 1) {
+                editor.update(() => {
+                  imageNode.setUploadState(false);
+                  imageNode.setCaptionsEnabled(true);
+                  imageNode.setSrc(res.data);
+                });
+              }
+            });
           }
 
           return true;

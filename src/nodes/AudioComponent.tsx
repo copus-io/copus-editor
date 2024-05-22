@@ -108,8 +108,6 @@ export default function AudioComponent({
       editor.registerCommand<MouseEvent>(
         CLICK_COMMAND,
         (payload) => {
-          console.log('CLICK_COMMAND');
-
           const event = payload;
           if (event.target === audioRef.current) {
             if (event.shiftKey) {

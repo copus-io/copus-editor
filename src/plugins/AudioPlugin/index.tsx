@@ -39,7 +39,7 @@ import Button from '../../ui/Button';
 import {DialogActions, DialogButtonsList} from '../../ui/Dialog';
 import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
-import EditorUploadFiles from '../../utils/editorUploadFiles';
+import editorUploadFiles from '../../utils/editorUploadFiles';
 
 export type InsertAudioPayload = Readonly<AudioPayload>;
 
@@ -138,7 +138,7 @@ export function InsertAudioUploadedDialogBody({
 
       setUploading(true);
 
-      EditorUploadFiles(audiofiles![0]).then((res) => {
+      editorUploadFiles(audiofiles![0]).then((res) => {
         console.log('EditorUploadFiles', res);
         if (res.data.data) {
           // setSrc(res.data.data);

@@ -35,6 +35,7 @@ export interface ImagePayload {
   src: string;
   width?: number;
   captionsEnabled?: boolean;
+  uploading?: boolean;
 }
 
 function $convertImageElement(domNode: Node): null | DOMConversionOutput {
@@ -70,6 +71,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   __caption: LexicalEditor;
   // Captions cannot yet be used within editor cells
   __captionsEnabled: boolean;
+  __uploading: boolean;
 
   static getType(): string {
     return 'image';
@@ -86,6 +88,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
       node.__caption,
       node.__captionsEnabled,
       node.__key,
+      node.__uploading,
     );
   }
 
@@ -136,6 +139,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     caption?: LexicalEditor,
     captionsEnabled?: boolean,
     key?: NodeKey,
+    uploading?: boolean,
   ) {
     super(key);
     this.__src = src;
@@ -146,6 +150,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     this.__showCaption = showCaption || false;
     this.__caption = caption || createEditor();
     this.__captionsEnabled = captionsEnabled || captionsEnabled === undefined;
+    this.__uploading = uploading || false;
   }
 
   exportJSON(): SerializedImageNode {
@@ -169,6 +174,16 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     const writable = this.getWritable();
     writable.__width = width;
     writable.__height = height;
+  }
+
+  setUploadState(uploading: boolean): void {
+    const writable = this.getWritable();
+    writable.__uploading = uploading;
+  }
+
+  setCaptionsEnabled(captionsEnabled: boolean): void {
+    const writable = this.getWritable();
+    writable.__captionsEnabled = captionsEnabled;
   }
 
   setShowCaption(showCaption: boolean): void {
@@ -196,6 +211,11 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     return this.__src;
   }
 
+  setSrc(src: string): void {
+    const writable = this.getWritable();
+    writable.__src = src;
+  }
+
   getAltText(): string {
     return this.__altText;
   }
@@ -214,6 +234,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
           caption={this.__caption}
           captionsEnabled={this.__captionsEnabled}
           resizable={true}
+          uploading={this.__uploading}
         />
       </Suspense>
     );
@@ -230,6 +251,7 @@ export function $createImageNode({
   showCaption,
   caption,
   key,
+  uploading,
 }: ImagePayload): ImageNode {
   return $applyNodeReplacement(
     new ImageNode(
@@ -242,6 +264,7 @@ export function $createImageNode({
       caption,
       captionsEnabled,
       key,
+      uploading,
     ),
   );
 }

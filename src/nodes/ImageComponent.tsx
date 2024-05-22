@@ -83,6 +83,7 @@ function LazyImage({
   width,
   height,
   maxWidth,
+  uploading,
 }: {
   altText: string;
   className: string | null;
@@ -91,8 +92,28 @@ function LazyImage({
   maxWidth: number;
   src: string;
   width: 'inherit' | number;
+  uploading?: boolean;
 }): JSX.Element {
   useSuspenseImage(src);
+
+  if (uploading) {
+    return (
+      <div className="uploading-wrap">
+        <img
+          className={className || undefined}
+          src={src}
+          ref={imageRef}
+          style={{
+            height,
+            width,
+          }}
+          draggable="false"
+        />
+        <div className='uploading-text'>Uploading...</div>
+      </div>
+    );
+  }
+
   return (
     <img
       className={className || undefined}
@@ -101,7 +122,6 @@ function LazyImage({
       ref={imageRef}
       style={{
         height,
-        // maxWidth,
         width,
       }}
       draggable="false"
@@ -120,6 +140,7 @@ export default function ImageComponent({
   showCaption,
   caption,
   captionsEnabled,
+  uploading,
 }: {
   altText: string;
   caption: LexicalEditor;
@@ -131,6 +152,7 @@ export default function ImageComponent({
   src: string;
   width: 'inherit' | number;
   captionsEnabled: boolean;
+  uploading?: boolean;
 }): JSX.Element {
   const imageRef = useRef<null | HTMLImageElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -382,6 +404,7 @@ export default function ImageComponent({
             width={width}
             height={height}
             maxWidth={maxWidth}
+            uploading={uploading}
           />
         </div>
         {showCaption && (

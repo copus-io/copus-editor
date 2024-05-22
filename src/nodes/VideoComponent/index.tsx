@@ -119,8 +119,6 @@ export default function VideoComponent({
       editor.registerCommand<MouseEvent>(
         CLICK_COMMAND,
         (payload) => {
-          console.log('CLICK_COMMAND');
-
           const event = payload;
           if (event.target === videoRef.current) {
             if (event.shiftKey) {

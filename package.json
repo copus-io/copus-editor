@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host --port 3000",
+    "build:demo": "vite build",
     "clean": "rm -rf ./dist/*",
     "build": "npm run clean && tsc && npm run copyfiles",
     "copyfiles": "copyfiles -a -u 1 src/**/*.svg src/**/*.css src/**/*.less dist",

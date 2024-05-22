@@ -12,28 +12,37 @@
 import './index.css';
 
 import * as React from 'react';
-import { createRoot } from 'react-dom/client';
+import {createRoot} from 'react-dom/client';
 
 import App from '../src/App';
 
 // Handle runtime errors
 const showErrorOverlay = (err: Event) => {
-    const ErrorOverlay = customElements.get('vite-error-overlay');
-    if (!ErrorOverlay) {
-        return;
-    }
-    const overlay = new ErrorOverlay(err);
-    const body = document.body;
-    if (body !== null) {
-        body.appendChild(overlay);
-    }
+  const ErrorOverlay = customElements.get('vite-error-overlay');
+  if (!ErrorOverlay) {
+    return;
+  }
+  const overlay = new ErrorOverlay(err);
+  const body = document.body;
+  if (body !== null) {
+    body.appendChild(overlay);
+  }
 };
 
 window.addEventListener('error', showErrorOverlay);
-window.addEventListener('unhandledrejection', ({ reason }) => showErrorOverlay(reason));
+window.addEventListener('unhandledrejection', ({reason}) =>
+  showErrorOverlay(reason),
+);
+
+const data = '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"哈哈哈哈😄","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
 
 createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>
+  <React.StrictMode>
+    <App
+      initialValue={data}
+      onChange={(status) => {
+        console.log(status);
+      }}
+    />
+  </React.StrictMode>,
 );

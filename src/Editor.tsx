@@ -70,12 +70,18 @@ import TwitterPlugin from './plugins/TwitterPlugin';
 import YouTubePlugin from './plugins/YouTubePlugin';
 import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
+import {OnChangePlugin} from '@lexical/react/LexicalOnChangePlugin';
+import {EditorState, SerializedEditorState} from 'lexical';
 
 const skipCollaborationInit =
   // @ts-expect-error
   window.parent != null && window.parent.frames.right === window;
 
-export default function Editor(): JSX.Element {
+export interface EditorProps {
+  onChange?: (state: SerializedEditorState) => void;
+}
+
+export default function Editor({onChange}: EditorProps): JSX.Element {
   const {historyState} = useSharedHistoryContext();
   const {
     settings: {
@@ -202,6 +208,12 @@ export default function Editor(): JSX.Element {
                 />
               </>
             )}
+            <OnChangePlugin
+              onChange={(editorState) => {
+                onChange?.(editorState.toJSON());
+              }}
+              ignoreSelectionChange
+            />
           </>
         ) : (
           <>

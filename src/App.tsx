@@ -7,7 +7,6 @@
  */
 
 import {LexicalComposer} from '@lexical/react/LexicalComposer';
-import {SettingsContext, useSettings} from './context/SettingsContext';
 import {SharedAutocompleteContext} from './context/SharedAutocompleteContext';
 import {SharedHistoryContext} from './context/SharedHistoryContext';
 import {FlashMessageContext} from './context/FlashMessageContext';
@@ -15,20 +14,27 @@ import Editor from './Editor';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
 import {TableContext} from './plugins/TablePlugin';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
-
 import './style.less';
 import {useEffect} from 'react';
 import getEditorPortal from './utils/getEditorPortal';
+import {SerializedEditorState} from 'lexical';
 
-function App(): JSX.Element {
+export interface EditorProps {
+  readOnly?: boolean;
+  onChange?: (state: SerializedEditorState) => void;
+  initialValue?: string;
+}
+
+function App(props: EditorProps): JSX.Element {
   const initialConfig = {
-    editorState: null,
+    editorState: props.initialValue ?? null,
     namespace: 'S31Editor',
     nodes: [...PlaygroundNodes],
     onError: (error: Error) => {
       throw error;
     },
     theme: PlaygroundEditorTheme,
+    editable: props.readOnly !== true,
   };
 
   return (
@@ -37,7 +43,7 @@ function App(): JSX.Element {
         <TableContext>
           <SharedAutocompleteContext>
             <div className="s31-editor-shell">
-              <Editor />
+              <Editor onChange={props.onChange} />
             </div>
           </SharedAutocompleteContext>
         </TableContext>
@@ -46,24 +52,14 @@ function App(): JSX.Element {
   );
 }
 
-export default function Main(): JSX.Element {
+export default function Main(props: EditorProps): JSX.Element {
   useEffect(() => {
-    getEditorPortal()
+    getEditorPortal();
   }, []);
 
   return (
     <FlashMessageContext>
-      <App />
+      <App {...props} />
     </FlashMessageContext>
   );
 }
-
-// export default function PlaygroundApp(): JSX.Element {
-//     return (
-//         <SettingsContext>
-//             <FlashMessageContext>
-//                 <App />
-//             </FlashMessageContext>
-//         </SettingsContext>
-//     );
-// }

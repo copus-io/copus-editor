@@ -1,32 +1,29 @@
 {
-    "compilerOptions": {
-        "target": "ES2019",
-        "lib": ["ESNext", "dom"],
-        "module": "ESNext",
-        "jsx": "react-jsx",
-        "moduleResolution": "Bundler",
-        "noEmit": true,
-        "strict": true,
-        "baseUrl": ".",
-        "rootDir": "./src",
-        "typeRoots": ["node_modules/@types"],
-        "skipLibCheck": true,
-        "resolveJsonModule": true,
-        "allowJs": true,
-        "outDir": "./dist",
-        "declaration": true,
-        "rootDirs": ["./src"],
-        "esModuleInterop": true,
-        "importHelpers": true,
-        "downlevelIteration": true,
-        "experimentalDecorators": true,
-        "sourceMap": true,
-        "paths": {
-            "shared/*": ["src/shared/*"]
-        }
-    },
-    "include": ["./src", "demo/setupEnv.ts"],
-    "exclude": ["**/dist/**", "**/npm/**", "**/node_modules/**"],
-    "typedocOptions": { "logLevel": "Verbose" },
-    "ts-node": { "require": ["tsconfig-paths/register"], "transpileOnly": true }
+  "compilerOptions": {
+    "target": "ES2019",
+    "lib": ["ESNext", "dom"],
+    "module": "ES2020",
+    "jsx": "react-jsx",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "baseUrl": ".",
+    "rootDir": "./src",
+    "typeRoots": ["node_modules/@types"],
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "outDir": "./dist",
+    "declaration": true,
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "shared/*": ["src/shared/*"]
+    }
+  },
+  "include": ["./src"],
+  "exclude": ["**/dist/**", "**/npm/**", "**/node_modules/**"],
+  "typedocOptions": {"logLevel": "Verbose"},
+  "ts-node": {"require": ["tsconfig-paths/register"], "transpileOnly": true}
 }

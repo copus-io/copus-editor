@@ -14,9 +14,6 @@ import type {
   RangeSelection,
 } from 'lexical';
 
-// import './ImageNode.css';
-import styles from './index.module.css';
-
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 

@@ -47,10 +47,8 @@ import {Suspense, useCallback, useEffect, useRef, useState} from 'react';
 
 import {useSettings} from '../context/SettingsContext';
 import {useSharedHistoryContext} from '../context/SharedHistoryContext';
-import EmojisPlugin from '../plugins/EmojisPlugin';
 import KeywordsPlugin from '../plugins/KeywordsPlugin';
 import LinkPlugin from '../plugins/LinkPlugin';
-import MentionsPlugin from '../plugins/MentionsPlugin';
 import TreeViewPlugin from '../plugins/TreeViewPlugin';
 import ContentEditable from '../ui/ContentEditable';
 import ImageResizer from '../ui/ImageResizer';

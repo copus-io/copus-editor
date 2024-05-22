@@ -41,14 +41,8 @@ import {
   LexicalNode,
 } from 'lexical';
 
-import {
-  $createEquationNode,
-  $isEquationNode,
-  EquationNode,
-} from '../../nodes/EquationNode';
 import {$createImageNode, $isImageNode, ImageNode} from '../../nodes/ImageNode';
 import {$createTweetNode, $isTweetNode, TweetNode} from '../../nodes/TweetNode';
-import emojiList from '../../utils/emoji-list';
 
 export const HR: ElementTransformer = {
   dependencies: [HorizontalRuleNode],
@@ -92,41 +86,6 @@ export const IMAGE: TextMatchTransformer = {
     textNode.replace(imageNode);
   },
   trigger: ')',
-  type: 'text-match',
-};
-
-const EMOJI: TextMatchTransformer = {
-  dependencies: [],
-  export: () => null,
-  importRegExp: /:([a-z0-9_]+):/,
-  regExp: /:([a-z0-9_]+):/,
-  replace: (textNode, [, name]) => {
-    const emoji = emojiList.find((e) => e.aliases.includes(name))?.emoji;
-    if (emoji) {
-      textNode.replace($createTextNode(emoji));
-    }
-  },
-  trigger: ':',
-  type: 'text-match',
-};
-
-export const EQUATION: TextMatchTransformer = {
-  dependencies: [EquationNode],
-  export: (node) => {
-    if (!$isEquationNode(node)) {
-      return null;
-    }
-
-    return `$${node.getEquation()}$`;
-  },
-  importRegExp: /\$([^$]+?)\$/,
-  regExp: /\$([^$]+?)\$$/,
-  replace: (textNode, match) => {
-    const [, equation] = match;
-    const equationNode = $createEquationNode(equation, true);
-    textNode.replace(equationNode);
-  },
-  trigger: '$',
   type: 'text-match',
 };
 
@@ -309,7 +268,7 @@ export const PLAYGROUND_TRANSFORMERS: Array<Transformer> = [
   HR,
   IMAGE,
   // EMOJI,
-  EQUATION,
+  // EQUATION,
   // TWEET,
   CHECK_LIST,
   ...ELEMENT_TRANSFORMERS,

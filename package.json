@@ -1,6 +1,6 @@
 {
   "name": "s31-editor",
-  "version": "0.15.0-0",
+  "version": "0.15.0-1",
   "type": "module",
   "scripts": {
     "dev": "vite --host --port 3000",
@@ -32,18 +32,13 @@
     "@lexical/table": "0.15.0",
     "@lexical/text": "^0.15.0",
     "@lexical/utils": "0.15.0",
-    "@lexical/yjs": "^0.15.0",
     "compressorjs": "^1.2.1",
-    "katex": "^0.15.2",
     "lexical": "0.15.0",
     "lodash-es": "^4.17.21",
-    "prettier": "^3.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^3.1.4",
-    "tslib": "^2.6.2",
-    "y-websocket": "^1.5.4",
-    "yjs": ">=13.5.42"
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",

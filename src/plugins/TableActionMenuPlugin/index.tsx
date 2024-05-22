@@ -43,7 +43,7 @@ import {
 import * as React from 'react';
 import {ReactPortal, useCallback, useEffect, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
-import invariant from 'shared/invariant';
+import invariant from '../../shared/invariant';
 
 import useModal from '../../hooks/useModal';
 import ColorPicker from '../../ui/ColorPicker';

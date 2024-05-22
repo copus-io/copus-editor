@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $wrapNodeInElement, mergeRegister } from '@lexical/utils';
+import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
+import {$wrapNodeInElement, mergeRegister} from '@lexical/utils';
 import {
   $createParagraphNode,
   $createRangeSelection,
@@ -25,8 +25,8 @@ import {
   LexicalEditor,
   createCommand,
 } from 'lexical';
-import { useEffect, useRef, useState } from 'react';
-import { CAN_USE_DOM } from '../../shared/canUseDOM';
+import {useEffect, useRef, useState} from 'react';
+import {CAN_USE_DOM} from '../../shared/canUseDOM';
 
 import {
   $createVideoNode,
@@ -35,12 +35,15 @@ import {
   VideoPayload,
 } from '../../nodes/VideoNode';
 import Button from '../../ui/Button';
-import { DialogActions, DialogButtonsList } from '../../ui/Dialog';
+import {DialogActions, DialogButtonsList} from '../../ui/Dialog';
 import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
+import useFlashMessage from '../../hooks/useFlashMessage';
 
-export type InsertVideoPayload = Readonly<VideoPayload>;
+export type InsertVideoPayload = Readonly<VideoPayload> & {
+  file?: File;
+};
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
@@ -63,7 +66,7 @@ export function InsertVideoUriDialogBody({
     <>
       <TextInput
         label="Video URL"
-        placeholder="i.e. https://source.unsplash.com/random"
+        placeholder="https://example.com/video.mp4"
         onChange={setSrc}
         value={src}
         data-test-id="Video-modal-url-input"
@@ -97,8 +100,7 @@ export function InsertVideoUriDialogBody({
               width: width ?? 300,
               height: height ?? 200,
             })
-          }
-        >
+          }>
           Confirm
         </Button>
       </DialogActions>
@@ -111,63 +113,14 @@ export function InsertVideoUploadedDialogBody({
 }: {
   onClick: (payload: InsertVideoPayload) => void;
 }) {
-  // const [src, setSrc] = useState('');
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [videofile, setVideofile] = useState<File>();
+  const showFlashMessage = useFlashMessage();
 
-  const [altText, setAltText] = useState('');
-  const [Videofiles, setVideofiles] = useState<any>();
-  const [uploading, setUploading] = useState(false);
-
-  // console.log('imagefiles ===========', imagefiles);
-
-  // const isDisabled = src === '';
-  // const isDisabled = imagefiles === null;
-
-  const loadFiles = async (files: FileList | null) => {
-    if (files !== null) {
-      setVideofiles(files);
-      setIsDisabled(false);
-      // console.log('EditorUploadFiles loadFiles', files[0]);
-    } else {
-      setIsDisabled(true);
+  const loadFiles = (files: FileList | null) => {
+    if (files === null) {
+      return;
     }
-
-    // const reader = new FileReader();
-    // reader.onload = function () {
-    //   console.log('EditorUploadImage reader', reader);
-
-    //   if (typeof reader.result === 'string') {
-    //     setSrc(reader.result);
-    //   }
-    //   return '';
-    // };
-    // if (files !== null) {
-    //   reader.readAsBinaryString(files[0]);
-    // }
-    // const res = await EditorUploadImage(files);
-    // console.log('EditorUploadImage', res);
-    // return '';
-  };
-
-  const onConfirm = () => {
-    if (Videofiles !== null) {
-      setIsDisabled(true);
-
-      setUploading(true);
-
-      editorUploadFiles(Videofiles![0]).then((res) => {
-        console.log('EditorUploadFiles', res);
-        if (res.data.data) {
-          // setSrc(res.data.data);
-          onClick({
-            src: res.data.data,
-            // controls:true
-          });
-        }
-        // return '';
-        setIsDisabled(false);
-      });
-    }
+    setVideofile(files[0]);
   };
 
   return (
@@ -175,29 +128,21 @@ export function InsertVideoUploadedDialogBody({
       <FileInput
         label="Video Upload"
         onChange={loadFiles}
-        // accept="image/*"
-        accept="Video/*"
+        accept="video/*"
         data-test-id="Video-modal-file-upload"
       />
-      {/* <TextInput
-        label="Alt Text"
-        placeholder="Descriptive alternative text"
-        onChange={setAltText}
-        value={altText}
-        data-test-id="image-modal-alt-text-input"
-      /> */}
       <DialogActions>
         <Button
           data-test-id="Video-modal-file-upload-btn"
-          disabled={isDisabled}
-          // onClick={() => onClick({ altText, src })}
-          onClick={onConfirm}
-        >
-          {uploading && (
-            <span className="mr-2">
-              <i className="fa fa-circle-o-notch fa-spin " />
-            </span>
-          )}
+          onClick={() => {
+            if (videofile) {
+              if (videofile.size > 10000000) {
+                showFlashMessage('Video file size should be less than 10MB');
+                return;
+              }
+              onClick({src: URL.createObjectURL(videofile), file: videofile});
+            }
+          }}>
           Confirm
         </Button>
       </DialogActions>
@@ -227,10 +172,7 @@ export function InsertVideoDialog({
   }, [activeEditor]);
 
   const onClick = (payload: InsertVideoPayload) => {
-    console.log('payload', payload, activeEditor);
-    activeEditor.dispatchCommand(INSERT_VIDEO_COMMAND, {
-      ...payload,
-    });
+    activeEditor.dispatchCommand(INSERT_VIDEO_COMMAND, payload);
     onClose();
   };
 
@@ -238,28 +180,14 @@ export function InsertVideoDialog({
     <>
       {!mode && (
         <DialogButtonsList>
-          {/* <Button
-            data-test-id="image-modal-option-sample"
-            onClick={() => {
-              onClick({
-                src: 'https://cascads31.s3.ca-central-1.amazonaws.com/images/client/202309/prod/4bf6b25c0c6947b48115653c58a084af.m4a',
-                autoplay: false,
-                controls: true,
-              });
-            }}
-          >
-            Sample
-          </Button> */}
           <Button
             data-test-id="Video-modal-option-url"
-            onClick={() => setMode('url')}
-          >
+            onClick={() => setMode('url')}>
             URL
           </Button>
           <Button
             data-test-id="Video-modal-option-file"
-            onClick={() => setMode('file')}
-          >
+            onClick={() => setMode('file')}>
             File
           </Button>
         </DialogButtonsList>
@@ -286,37 +214,52 @@ export default function VideoPlugin({
       editor.registerCommand<InsertVideoPayload>(
         INSERT_VIDEO_COMMAND,
         (payload) => {
-          const VideoNode = $createVideoNode(payload);
-          $insertNodes([VideoNode]);
-          if ($isRootOrShadowRoot(VideoNode.getParentOrThrow())) {
-            $wrapNodeInElement(VideoNode, $createParagraphNode).selectEnd();
+          const {file, ...otherPayload} = payload;
+          const videoNode = $createVideoNode({
+            ...otherPayload,
+            uploading: !!file,
+          });
+          $insertNodes([videoNode]);
+          if ($isRootOrShadowRoot(videoNode.getParentOrThrow())) {
+            $wrapNodeInElement(videoNode, $createParagraphNode).selectEnd();
+          }
+
+          if (file) {
+            editorUploadFiles(file).then((res) => {
+              if (res.status === 1) {
+                editor.update(() => {
+                  videoNode.setUploadState(false);
+                  videoNode.setSrc(res.data);
+                });
+              }
+            });
           }
 
           return true;
         },
-        COMMAND_PRIORITY_EDITOR
+        COMMAND_PRIORITY_EDITOR,
       ),
       editor.registerCommand<DragEvent>(
         DRAGSTART_COMMAND,
         (event) => {
           return onDragStart(event);
         },
-        COMMAND_PRIORITY_HIGH
+        COMMAND_PRIORITY_HIGH,
       ),
       editor.registerCommand<DragEvent>(
         DRAGOVER_COMMAND,
         (event) => {
           return onDragover(event);
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand<DragEvent>(
         DROP_COMMAND,
         (event) => {
           return onDrop(event, editor);
         },
-        COMMAND_PRIORITY_HIGH
-      )
+        COMMAND_PRIORITY_HIGH,
+      ),
     );
   }, [captionsEnabled, editor]);
 
@@ -350,7 +293,7 @@ function onDragStart(event: DragEvent): boolean {
         width: node.__width,
       },
       type: 'video',
-    })
+    }),
   );
 
   return true;
@@ -405,7 +348,7 @@ function getDragVideoData(event: DragEvent): null | InsertVideoPayload {
   if (!dragData) {
     return null;
   }
-  const { type, data } = JSON.parse(dragData);
+  const {type, data} = JSON.parse(dragData);
   if (type !== 'Video') {
     return null;
   }
@@ -438,8 +381,8 @@ function getDragSelection(event: DragEvent): Range | null | undefined {
     target == null
       ? null
       : target.nodeType === 9
-      ? (target as Document).defaultView
-      : (target as Element).ownerDocument.defaultView;
+        ? (target as Document).defaultView
+        : (target as Element).ownerDocument.defaultView;
   const domSelection = getDOMSelection(targetWindow);
   if (document.caretRangeFromPoint) {
     range = document.caretRangeFromPoint(event.clientX, event.clientY);

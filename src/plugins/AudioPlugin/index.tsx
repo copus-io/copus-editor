@@ -40,6 +40,7 @@ import {DialogActions, DialogButtonsList} from '../../ui/Dialog';
 import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
+import useFlashMessage from '../../hooks/useFlashMessage';
 
 export type InsertAudioPayload = Readonly<AudioPayload> & {
   file?: File;
@@ -94,65 +95,14 @@ export function InsertAudioUploadedDialogBody({
 }: {
   onClick: (payload: InsertAudioPayload) => void;
 }) {
-  // const [src, setSrc] = useState('');
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [audiofile, setAudiofile] = useState<File>();
+  const showFlashMessage = useFlashMessage();
 
-  const [altText, setAltText] = useState('');
-  const [audiofiles, setAudiofiles] = useState<any>();
-  const [uploading, setUploading] = useState(false);
-
-  // console.log('imagefiles ===========', imagefiles);
-
-  // const isDisabled = src === '';
-  // const isDisabled = imagefiles === null;
-
-  const loadFiles = async (files: FileList | null) => {
-    console.log('EditorUploadFiles loadFiles', files);
-
-    if (files !== null) {
-      setAudiofiles(files);
-      setIsDisabled(false);
-      // console.log('EditorUploadFiles loadFiles', files[0]);
-    } else {
-      setIsDisabled(true);
+  const loadFiles = (files: FileList | null) => {
+    if (files === null) {
+      return;
     }
-
-    // const reader = new FileReader();
-    // reader.onload = function () {
-    //   console.log('EditorUploadImage reader', reader);
-
-    //   if (typeof reader.result === 'string') {
-    //     setSrc(reader.result);
-    //   }
-    //   return '';
-    // };
-    // if (files !== null) {
-    //   reader.readAsBinaryString(files[0]);
-    // }
-    // const res = await EditorUploadImage(files);
-    // console.log('EditorUploadImage', res);
-    // return '';
-  };
-
-  const onConfirm = () => {
-    if (audiofiles !== null) {
-      setIsDisabled(true);
-
-      setUploading(true);
-
-      editorUploadFiles(audiofiles![0]).then((res) => {
-        console.log('EditorUploadFiles', res);
-        if (res.data.data) {
-          // setSrc(res.data.data);
-          onClick({
-            src: res.data.data,
-            // controls:true
-          });
-        }
-        // return '';
-        setIsDisabled(false);
-      });
-    }
+    setAudiofile(files[0]);
   };
 
   return (
@@ -160,21 +110,21 @@ export function InsertAudioUploadedDialogBody({
       <FileInput
         label="Audio Upload"
         onChange={loadFiles}
-        // accept="image/*"
         accept="audio/*"
         data-test-id="audio-modal-file-upload"
       />
       <DialogActions>
         <Button
           data-test-id="audio-modal-file-upload-btn"
-          disabled={isDisabled}
-          // onClick={() => onClick({ altText, src })}
-          onClick={onConfirm}>
-          {uploading && (
-            <span className="mr-2">
-              <i className="fa fa-circle-o-notch fa-spin " />
-            </span>
-          )}
+          onClick={() => {
+            if (audiofile) {
+              if (audiofile.size > 10000000) {
+                showFlashMessage('Audio file size should be less than 10MB');
+                return;
+              }
+              onClick({src: URL.createObjectURL(audiofile), file: audiofile});
+            }
+          }}>
           Confirm
         </Button>
       </DialogActions>
@@ -204,9 +154,7 @@ export function InsertAudioDialog({
   }, [activeEditor]);
 
   const onClick = (payload: InsertAudioPayload) => {
-    activeEditor.dispatchCommand(INSERT_AUDIO_COMMAND, {
-      ...payload,
-    });
+    activeEditor.dispatchCommand(INSERT_AUDIO_COMMAND, payload);
     onClose();
   };
 

@@ -15,6 +15,7 @@ import {useEffect} from 'react';
 import {INSERT_IMAGE_COMMAND} from '../ImagesPlugin';
 import {INSERT_AUDIO_COMMAND} from '../AudioPlugin';
 import useFlashMessage from '../../hooks/useFlashMessage';
+import {INSERT_VIDEO_COMMAND} from '../VideoPlugin';
 
 const ACCEPTABLE_IMAGE_TYPES = [
   'image/',
@@ -32,6 +33,13 @@ const ACCEPTABLE_AUDIO_TYPES = [
   'audio/x-mpeg',
 ];
 
+const ACCEPTABLE_VIDEO_TYPES = [
+  'video/',
+  'video/mp4',
+  'video/webm',
+  'video/ogg',
+];
+
 export default function DragDropPaste(): null {
   const [editor] = useLexicalComposerContext();
   const showFlashMessage = useFlashMessage();
@@ -43,7 +51,11 @@ export default function DragDropPaste(): null {
         (async () => {
           const filesResult = await mediaFileReader(
             files,
-            [ACCEPTABLE_IMAGE_TYPES, ACCEPTABLE_AUDIO_TYPES].flatMap((x) => x),
+            [
+              ACCEPTABLE_IMAGE_TYPES,
+              ACCEPTABLE_AUDIO_TYPES,
+              ACCEPTABLE_VIDEO_TYPES,
+            ].flatMap((x) => x),
           );
 
           if (files.length > filesResult.length) {
@@ -51,6 +63,7 @@ export default function DragDropPaste(): null {
           }
 
           for (const {file} of filesResult) {
+            console.log(file);
             if (isMimeType(file, ACCEPTABLE_IMAGE_TYPES)) {
               if (file.size > 10000000) {
                 showFlashMessage('Image file size should be less than 10MB');
@@ -69,6 +82,18 @@ export default function DragDropPaste(): null {
                 return;
               }
               editor.dispatchCommand(INSERT_AUDIO_COMMAND, {
+                src: URL.createObjectURL(file),
+                controls: true,
+                file: file,
+              });
+            }
+
+            if (isMimeType(file, ACCEPTABLE_VIDEO_TYPES)) {
+              if (file.size > 10000000) {
+                showFlashMessage('Video file size should be less than 10MB');
+                return;
+              }
+              editor.dispatchCommand(INSERT_VIDEO_COMMAND, {
                 src: URL.createObjectURL(file),
                 controls: true,
                 file: file,

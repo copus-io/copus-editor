@@ -213,11 +213,15 @@ export default function ImagesPlugin({
           if (file) {
             editorUploadFiles(file, true).then((res) => {
               if (res.status === 1) {
-                editor.update(() => {
-                  imageNode.setUploadState(false);
-                  imageNode.setCaptionsEnabled(true);
-                  imageNode.setSrc(res.data);
-                });
+                const img = new Image();
+                img.onload = () => {
+                  editor.update(() => {
+                    imageNode.setUploadState(false);
+                    imageNode.setCaptionsEnabled(true);
+                    imageNode.setSrc(res.data);
+                  });
+                };
+                img.src = res.data;
               }
             });
           }

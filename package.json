@@ -1,10 +1,11 @@
 {
   "name": "s31-editor",
-  "version": "0.15.0-1",
+  "version": "0.15.0-2",
   "type": "module",
   "scripts": {
     "dev": "vite --host --port 3000",
-    "build": "tsc && npm run copyfiles",
+    "clean": "rm -rf ./dist/*",
+    "build": "npm run clean && tsc && npm run copyfiles",
     "copyfiles": "copyfiles -a -u 1 src/**/*.svg src/**/*.css src/**/*.less dist",
     "preview": "vite preview"
   },

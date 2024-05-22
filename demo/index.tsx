@@ -34,12 +34,13 @@ window.addEventListener('unhandledrejection', ({reason}) =>
   showErrorOverlay(reason),
 );
 
-const data = '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"哈哈哈哈😄","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
+const data =
+  '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"哈哈哈哈😄","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <App
-      initialValue={data}
+      // initialValue={data}
       onChange={(status) => {
         console.log(status);
       }}

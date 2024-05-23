@@ -8,8 +8,6 @@
 
 import type {EditorThemeClasses} from 'lexical';
 
-import './PlaygroundEditorTheme.module.less';
-
 const theme: EditorThemeClasses = {
   autocomplete: 'PlaygroundEditorTheme__autocomplete',
   blockCursor: 'PlaygroundEditorTheme__blockCursor',

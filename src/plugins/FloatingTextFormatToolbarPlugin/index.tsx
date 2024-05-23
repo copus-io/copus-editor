@@ -5,9 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-import './index.module.less';
-
 import {$isCodeHighlightNode} from '@lexical/code';
 import {$isLinkNode, TOGGLE_LINK_COMMAND} from '@lexical/link';
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';

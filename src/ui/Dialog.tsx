@@ -5,9 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-import './Dialog.module.less';
-
 import {ReactNode} from 'react';
 
 type Props = Readonly<{

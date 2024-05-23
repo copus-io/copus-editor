@@ -5,9 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-import './ContentEditable.module.less';
-
 import {ContentEditable} from '@lexical/react/LexicalContentEditable';
 
 export default function LexicalContentEditable({

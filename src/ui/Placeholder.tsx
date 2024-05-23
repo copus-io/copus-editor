@@ -5,9 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-import './Placeholder.module.less';
-
 import {ReactNode} from 'react';
 
 export default function Placeholder({

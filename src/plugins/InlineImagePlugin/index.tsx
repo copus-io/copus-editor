@@ -7,8 +7,6 @@
  */
 import type {Position} from '../../nodes/InlineImageNode';
 
-import '../../nodes/InlineImageNode.module.less';
-
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 import {$wrapNodeInElement, mergeRegister} from '@lexical/utils';
 import {

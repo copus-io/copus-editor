@@ -5,11 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-import './Select.module.less';
-
-import * as React from 'react';
-
 type SelectIntrinsicProps = JSX.IntrinsicElements['select'];
 interface SelectProps extends SelectIntrinsicProps {
   label: string;

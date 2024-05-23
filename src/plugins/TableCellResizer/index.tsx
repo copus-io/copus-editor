@@ -7,9 +7,6 @@
  */
 import type {TableDOMCell} from '@lexical/table';
 import type {LexicalEditor} from 'lexical';
-
-import './index.module.less';
-
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 import useLexicalEditable from '@lexical/react/useLexicalEditable';
 import {

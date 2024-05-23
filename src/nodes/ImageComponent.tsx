@@ -13,8 +13,6 @@ import type {
   NodeKey,
 } from 'lexical';
 
-import './ImageNode.module.less';
-
 import {AutoFocusPlugin} from '@lexical/react/LexicalAutoFocusPlugin';
 import {useCollaborationContext} from '@lexical/react/LexicalCollaborationContext';
 import {CollaborationPlugin} from '@lexical/react/LexicalCollaborationPlugin';
@@ -103,6 +101,7 @@ function LazyImage({
         ref={imageRef}
         style={{
           height,
+          maxWidth,
           width,
         }}
         draggable="false"

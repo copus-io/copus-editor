@@ -6,8 +6,6 @@
  *
  */
 
-import './ExcalidrawModal.module.less';
-
 import {Excalidraw} from '@excalidraw/excalidraw';
 import {
   AppState,

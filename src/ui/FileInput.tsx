@@ -5,9 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-import './Input.module.less';
-
 type Props = Readonly<{
   'data-test-id'?: string;
   accept?: string;

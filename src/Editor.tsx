@@ -36,7 +36,6 @@ import ComponentPickerPlugin from './plugins/ComponentPickerPlugin';
 import ContextMenuPlugin from './plugins/ContextMenuPlugin';
 import DragDropPaste from './plugins/DragDropPastePlugin';
 import DraggableBlockPlugin from './plugins/DraggableBlockPlugin';
-import ExcalidrawPlugin from './plugins/ExcalidrawPlugin';
 import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin';
 import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbarPlugin';
 import ImagesPlugin from './plugins/ImagesPlugin';
@@ -173,7 +172,6 @@ export default function Editor({onChange}: EditorProps): JSX.Element {
             <LexicalClickableLinkPlugin disabled={isEditable} />
             <HorizontalRulePlugin />
             {/* <EquationsPlugin /> */}
-            <ExcalidrawPlugin />
             <TabFocusPlugin />
             <TabIndentationPlugin />
             <CollapsiblePlugin />

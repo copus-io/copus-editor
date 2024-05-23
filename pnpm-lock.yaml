@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@excalidraw/excalidraw':
-        specifier: ^0.17.0
-        version: 0.17.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@lexical/clipboard':
         specifier: 0.15.0
         version: 0.15.0
@@ -383,12 +380,6 @@ packages:
     engines: {node: '>=12'}
     cpu: [x64]
     os: [win32]
-
-  '@excalidraw/excalidraw@0.17.6':
-    resolution: {integrity: sha512-fyCl+zG/Z5yhHDh5Fq2ZGmphcrALmuOdtITm8gN4d8w4ntnaopTXcTfnAAaU3VleDC6LhTkoLOTG6P5kgREiIg==}
-    peerDependencies:
-      react: ^17.0.2 || ^18.2.0
-      react-dom: ^17.0.2 || ^18.2.0
 
   '@jridgewell/gen-mapping@0.3.5':
     resolution: {integrity: sha512-IzL8ZoEDIBRWEzlCcRhOaCupYyN5gdIK+Q6fbFdPDg6HqX6jpkItn7DFIpW9LQzXG6Df9sA7+OKnq0qlz/GaQg==}
@@ -1509,11 +1500,6 @@ snapshots:
 
   '@esbuild/win32-x64@0.20.2':
     optional: true
-
-  '@excalidraw/excalidraw@0.17.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
 
   '@jridgewell/gen-mapping@0.3.5':
     dependencies:

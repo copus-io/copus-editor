@@ -43,7 +43,7 @@ function App(props: EditorProps): JSX.Element {
         <TableContext>
           <SharedAutocompleteContext>
             <div className={styles['s31-editor-shell']}>
-              <Editor onChange={props.onChange} />
+              <Editor onChange={props.onChange} readOnly={props.readOnly}/>
             </div>
           </SharedAutocompleteContext>
         </TableContext>

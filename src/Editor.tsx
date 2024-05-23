@@ -67,10 +67,11 @@ const skipCollaborationInit =
   window.parent != null && window.parent.frames.right === window;
 
 export interface EditorProps {
+  readOnly?: boolean;
   onChange?: (state: SerializedEditorState) => void;
 }
 
-export default function Editor({onChange}: EditorProps): JSX.Element {
+export default function Editor({onChange, readOnly}: EditorProps): JSX.Element {
   const {historyState} = useSharedHistoryContext();
   const {
     settings: {
@@ -117,6 +118,18 @@ export default function Editor({onChange}: EditorProps): JSX.Element {
       window.removeEventListener('resize', updateViewPortWidth);
     };
   }, [isSmallWidthViewport]);
+
+  if (readOnly) {
+    return (
+      <div className="editor-container plain-text">
+        <PlainTextPlugin
+          contentEditable={<ContentEditable />}
+          placeholder={placeholder}
+          ErrorBoundary={LexicalErrorBoundary}
+        />
+      </div>
+    );
+  }
 
   return (
     <>

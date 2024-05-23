@@ -6,6 +6,10 @@
     font-weight: 400;
 
     :global {
+        * {
+            box-sizing: content-box;
+        }
+
         @import './nodes/styles.less';
         @import './ui/styles.less';
         @import './plugins/styles.less';

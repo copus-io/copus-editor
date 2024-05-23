@@ -13,7 +13,7 @@ import type {
   NodeKey,
 } from 'lexical';
 
-import './ImageNode.css';
+import './ImageNode.module.less';
 
 import {AutoFocusPlugin} from '@lexical/react/LexicalAutoFocusPlugin';
 import {useCollaborationContext} from '@lexical/react/LexicalCollaborationContext';

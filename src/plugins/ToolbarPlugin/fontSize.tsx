@@ -6,7 +6,7 @@
  *
  */
 
-import './fontSize.css';
+import './fontSize.module.less';
 
 import {$patchStyleText} from '@lexical/selection';
 import {$getSelection, LexicalEditor} from 'lexical';

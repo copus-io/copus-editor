@@ -6,9 +6,7 @@
  *
  */
 
-import './Input.css';
-
-import * as React from 'react';
+import './Input.module.less';
 
 type Props = Readonly<{
   'data-test-id'?: string;

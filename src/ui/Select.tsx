@@ -6,7 +6,7 @@
  *
  */
 
-import './Select.css';
+import './Select.module.less';
 
 import * as React from 'react';
 

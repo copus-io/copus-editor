@@ -14,7 +14,7 @@ import Editor from './Editor';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
 import {TableContext} from './plugins/TablePlugin';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
-import './style.less';
+import './style.module.less';
 import {useEffect} from 'react';
 import getEditorPortal from './utils/getEditorPortal';
 import {SerializedEditorState} from 'lexical';

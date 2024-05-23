@@ -6,9 +6,8 @@
  *
  */
 
-import './Dialog.css';
+import './Dialog.module.less';
 
-import * as React from 'react';
 import {ReactNode} from 'react';
 
 type Props = Readonly<{

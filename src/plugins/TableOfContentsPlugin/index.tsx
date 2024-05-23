@@ -9,7 +9,7 @@ import type {TableOfContentsEntry} from '@lexical/react/LexicalTableOfContents';
 import type {HeadingTagType} from '@lexical/rich-text';
 import type {NodeKey} from 'lexical';
 
-import './index.css';
+import './index.module.less';
 
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 import LexicalTableOfContents from '@lexical/react/LexicalTableOfContents';

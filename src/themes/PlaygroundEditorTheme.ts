@@ -8,7 +8,7 @@
 
 import type {EditorThemeClasses} from 'lexical';
 
-import './PlaygroundEditorTheme.css';
+import './PlaygroundEditorTheme.module.less';
 
 const theme: EditorThemeClasses = {
   autocomplete: 'PlaygroundEditorTheme__autocomplete',

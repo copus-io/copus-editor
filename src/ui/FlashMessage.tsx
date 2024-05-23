@@ -6,7 +6,7 @@
  *
  */
 
-import './FlashMessage.css';
+import './FlashMessage.module.less';
 
 import {ReactNode} from 'react';
 import {createPortal} from 'react-dom';

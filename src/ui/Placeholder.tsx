@@ -6,9 +6,8 @@
  *
  */
 
-import './Placeholder.css';
+import './Placeholder.module.less';
 
-import * as React from 'react';
 import {ReactNode} from 'react';
 
 export default function Placeholder({

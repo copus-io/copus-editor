@@ -6,7 +6,7 @@
  *
  */
 
-import './index.css';
+import './index.module.less';
 
 import {
   $isCodeNode,

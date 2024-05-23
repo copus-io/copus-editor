@@ -6,7 +6,7 @@
  *
  */
 
-import './Input.css';
+import './Input.module.less';
 
 import * as React from 'react';
 import {HTMLInputTypeAttribute} from 'react';

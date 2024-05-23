@@ -71,8 +71,7 @@ import {
   UNDO_COMMAND,
 } from 'lexical';
 import {Dispatch, useCallback, useEffect, useState} from 'react';
-import * as React from 'react';
-import {IS_APPLE} from 'shared/environment';
+import {IS_APPLE} from '../../shared/environment';
 
 import useModal from '../../hooks/useModal';
 import DropDown, {DropDownItem} from '../../ui/DropDown';
@@ -1153,7 +1152,7 @@ export default function ToolbarPlugin({
               <i className="icon audio" />
               <span className="text">Insert Audio</span>
             </DropDownItem>
-            {/* <DropDownItem
+            <DropDownItem
               onClick={() => {
                 showModal('Insert Video', (onClose) => (
                   <InsertVideoDialog
@@ -1165,7 +1164,7 @@ export default function ToolbarPlugin({
               className="item">
               <i className="icon video" />
               <span className="text">Insert Video</span>
-            </DropDownItem> */}
+            </DropDownItem>
             {EmbedConfigs.map((embedConfig) => (
               <DropDownItem
                 key={embedConfig.type}

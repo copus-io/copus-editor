@@ -5,9 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-import './fontSize.css';
-
 import {$patchStyleText} from '@lexical/selection';
 import {$getSelection, LexicalEditor} from 'lexical';
 import * as React from 'react';

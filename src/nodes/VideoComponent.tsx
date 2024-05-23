@@ -14,10 +14,10 @@ import type {
   RangeSelection,
 } from 'lexical';
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
+import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
+import {useLexicalNodeSelection} from '@lexical/react/useLexicalNodeSelection';
 
-import { mergeRegister } from '@lexical/utils';
+import {mergeRegister} from '@lexical/utils';
 import {
   $getNodeByKey,
   $getSelection,
@@ -31,9 +31,9 @@ import {
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
 import * as React from 'react';
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import {Suspense, useCallback, useEffect, useRef, useState} from 'react';
 
-import { $isVideoNode } from '../VideoNode';
+import {$isVideoNode} from './VideoNode';
 
 export default function VideoComponent({
   src,
@@ -42,6 +42,7 @@ export default function VideoComponent({
   autoplay,
   width,
   height,
+  uploading,
 }: {
   nodeKey: NodeKey;
   controls: boolean;
@@ -49,6 +50,7 @@ export default function VideoComponent({
   autoplay: boolean;
   width: 'inherit' | number;
   height: 'inherit' | number;
+  uploading?: boolean;
 }): JSX.Element {
   const videoRef = useRef<null | HTMLVideoElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -73,7 +75,7 @@ export default function VideoComponent({
       }
       return false;
     },
-    [isSelected, nodeKey]
+    [isSelected, nodeKey],
   );
 
   const onEnter = useCallback(
@@ -94,13 +96,13 @@ export default function VideoComponent({
       }
       return false;
     },
-    [isSelected]
+    [isSelected],
   );
 
   useEffect(() => {
     let isMounted = true;
     const unregister = mergeRegister(
-      editor.registerUpdateListener(({ editorState }) => {
+      editor.registerUpdateListener(({editorState}) => {
         if (isMounted) {
           setSelection(editorState.read(() => $getSelection()));
         }
@@ -111,7 +113,7 @@ export default function VideoComponent({
           activeEditorRef.current = activeEditor;
           return false;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand<MouseEvent>(
         CLICK_COMMAND,
@@ -129,7 +131,7 @@ export default function VideoComponent({
 
           return false;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         DRAGSTART_COMMAND,
@@ -142,19 +144,19 @@ export default function VideoComponent({
           }
           return false;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         KEY_DELETE_COMMAND,
         onDelete,
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         KEY_BACKSPACE_COMMAND,
         onDelete,
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
-      editor.registerCommand(KEY_ENTER_COMMAND, onEnter, COMMAND_PRIORITY_LOW)
+      editor.registerCommand(KEY_ENTER_COMMAND, onEnter, COMMAND_PRIORITY_LOW),
     );
     return () => {
       isMounted = false;
@@ -174,19 +176,18 @@ export default function VideoComponent({
 
   return (
     <Suspense fallback={null}>
-      <>
-        {/* <div draggable={draggable}> */}
+      <div draggable={draggable} className="uploading-wrap editor-video">
         <video
           className={isSelected ? `focused ` : ''}
           ref={videoRef}
           src={src}
           autoPlay={false}
           controls={controls}
-          width={width}
-          height={height}
+          width={uploading ? 240 : width}
+          height={uploading ? 180 : height}
         />
-        {/* </div> */}
-      </>
+        {uploading && <div className="uploading-text">Uploading...</div>}
+      </div>
     </Suspense>
   );
 }

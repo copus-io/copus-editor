@@ -5,10 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-import './Placeholder.css';
-
-import * as React from 'react';
 import {ReactNode} from 'react';
 
 export default function Placeholder({

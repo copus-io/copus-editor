@@ -8,8 +8,6 @@
 import type {Position} from './InlineImageNode';
 import type {BaseSelection, LexicalEditor, NodeKey} from 'lexical';
 
-import './InlineImageNode.css';
-
 import {AutoFocusPlugin} from '@lexical/react/LexicalAutoFocusPlugin';
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';

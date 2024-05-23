@@ -26,8 +26,7 @@ import {
   LexicalEditor,
 } from 'lexical';
 import {useEffect, useRef, useState} from 'react';
-import * as React from 'react';
-import {CAN_USE_DOM} from 'shared/canUseDOM';
+import {CAN_USE_DOM} from '../../shared/canUseDOM';
 
 import {
   $createImageNode,
@@ -40,6 +39,7 @@ import {DialogActions, DialogButtonsList} from '../../ui/Dialog';
 import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
+import useFlashMessage from '../../hooks/useFlashMessage';
 
 export type InsertImagePayload = Readonly<ImagePayload> & {
   file?: File;
@@ -97,6 +97,8 @@ export function InsertImageUploadedDialogBody({
   const [file, setFile] = useState<File>();
   const [altText, setAltText] = useState('');
 
+  const showFlashMessage = useFlashMessage();
+
   const loadImage = (files: FileList | null) => {
     if (files === null) {
       return;
@@ -125,6 +127,10 @@ export function InsertImageUploadedDialogBody({
           disabled={!file}
           onClick={() => {
             if (file) {
+              if (file.size > 10000000) {
+                showFlashMessage('Image file size should be less than 10MB');
+                return;
+              }
               onClick({altText, src: URL.createObjectURL(file), file});
             }
           }}>

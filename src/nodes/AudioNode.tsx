@@ -18,7 +18,6 @@ import type {
 } from 'lexical';
 
 import {$applyNodeReplacement, DecoratorNode} from 'lexical';
-import * as React from 'react';
 import AudioComponent from './AudioComponent';
 
 export interface AudioPayload {
@@ -41,9 +40,7 @@ function convertAudioElement(domNode: Node): null | DOMConversionOutput {
 export type SerializedAudioNode = Spread<
   {
     src: string;
-
     controls: boolean;
-
     autoplay: boolean;
   },
   SerializedLexicalNode
@@ -114,11 +111,6 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
 
   exportJSON(): SerializedAudioNode {
     return {
-      // altText: this.getAltText(),
-      // caption: this.__caption.toJSON(),
-      // height: this.__height === 'inherit' ? 0 : this.__height,
-      // maxWidth: this.__maxWidth,
-      // showCaption: this.__showCaption,
       src: this.getSrc(),
       type: 'audio',
       autoplay: this.__autoplay,
@@ -177,57 +169,7 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
       />
     );
   }
-
-  // decorate(): JSX.Element {
-  //   console.log('decorate', this.getKey());
-  //   return (
-  //     <Suspense fallback={null}>
-  //       <ImageComponent
-  //         src={this.__src}
-  //         altText={this.__altText}
-  //         width={this.__width}
-  //         height={this.__height}
-  //         maxWidth={this.__maxWidth}
-  //         nodeKey={this.getKey()}
-  //         showCaption={this.__showCaption}
-  //         caption={this.__caption}
-  //         captionsEnabled={this.__captionsEnabled}
-  //         resizable={true}
-  //       />
-  //     </Suspense>
-  //   );
-  // }
 }
-// function AudioComponent({
-//   src,
-//   nodeKey,
-//   controls,
-//   autoplay,
-// }: {
-//   nodeKey: NodeKey;
-//   src: string;
-//   controls: boolean;
-//   autoplay: boolean;
-// }): JSX.Element {
-//   // const [suggestion] = useSharedAutocompleteContext();
-//   // const userAgentData = window.navigator.userAgentData;
-//   // const isMobile =
-//   //   userAgentData !== undefined
-//   //     ? userAgentData.mobile
-//   //     : window.innerWidth <= 800 && window.innerHeight <= 600;
-//   // TODO Move to theme
-//   return (
-//     <Suspense fallback={null}>
-//       <div>
-//         <audio src={src} autoPlay={false} controls={controls} />
-//       </div>
-//     </Suspense>
-//     // <span style={{ color: '#ccc' }} spellCheck="false">
-//     //   {/* {suggestion} {isMobile ? '(SWIPE \u2B95)' : '(TAB)'} */}
-//     //   <audio src={src} controls autoPlay></audio>
-//     // </span>
-//   );
-// }
 
 export function $createAudioNode({
   src,

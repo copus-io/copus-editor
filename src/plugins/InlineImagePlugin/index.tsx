@@ -7,8 +7,6 @@
  */
 import type {Position} from '../../nodes/InlineImageNode';
 
-import '../../nodes/InlineImageNode.css';
-
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 import {$wrapNodeInElement, mergeRegister} from '@lexical/utils';
 import {
@@ -31,7 +29,7 @@ import {
 } from 'lexical';
 import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
-import {CAN_USE_DOM} from 'shared/canUseDOM';
+import {CAN_USE_DOM} from '../../shared/canUseDOM';
 
 import {
   $createInlineImageNode,

@@ -5,11 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-import './Input.css';
-
-import * as React from 'react';
-
 type Props = Readonly<{
   'data-test-id'?: string;
   accept?: string;

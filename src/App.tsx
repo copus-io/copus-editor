@@ -14,7 +14,7 @@ import Editor from './Editor';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
 import {TableContext} from './plugins/TablePlugin';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
-import './style.less';
+import styles from './style.module.less';
 import {useEffect} from 'react';
 import getEditorPortal from './utils/getEditorPortal';
 import {SerializedEditorState} from 'lexical';
@@ -42,7 +42,7 @@ function App(props: EditorProps): JSX.Element {
       <SharedHistoryContext>
         <TableContext>
           <SharedAutocompleteContext>
-            <div className="s31-editor-shell">
+            <div className={styles['s31-editor-shell']}>
               <Editor onChange={props.onChange} />
             </div>
           </SharedAutocompleteContext>

@@ -59,9 +59,8 @@ export default defineConfig(({command}) => {
     ],
     resolve: {
       alias: {
-        shared: fileURLToPath(new URL('./src/shared', import.meta.url)),
+        // shared: fileURLToPath(new URL('./src/shared', import.meta.url)),
       },
-      // alias: moduleResolution(command === 'serve' ? 'source' : 'development'),
     },
   };
 });

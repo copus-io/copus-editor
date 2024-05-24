@@ -41,8 +41,8 @@ createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <App
       // initialValue={data}
-      onChange={(status) => {
-        console.log(status);
+      onChange={(status, html) => {
+        console.log(status, html);
       }}
     />
   </React.StrictMode>,

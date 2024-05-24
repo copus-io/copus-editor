@@ -17,11 +17,11 @@ import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 import styles from './style.module.less';
 import {useEffect} from 'react';
 import getEditorPortal from './utils/getEditorPortal';
-import {SerializedEditorState} from 'lexical';
+import {EditorState, SerializedEditorState} from 'lexical';
 
 export interface EditorProps {
   readOnly?: boolean;
-  onChange?: (state: SerializedEditorState) => void;
+  onChange?: (editorState: EditorState, html: string) => void;
   initialValue?: string;
 }
 
@@ -43,7 +43,7 @@ function App(props: EditorProps): JSX.Element {
         <TableContext>
           <SharedAutocompleteContext>
             <div className={styles['s31-editor-shell']}>
-              <Editor onChange={props.onChange} readOnly={props.readOnly}/>
+              <Editor onChange={props.onChange} readOnly={props.readOnly} />
             </div>
           </SharedAutocompleteContext>
         </TableContext>

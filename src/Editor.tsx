@@ -21,8 +21,7 @@ import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
 import {TabIndentationPlugin} from '@lexical/react/LexicalTabIndentationPlugin';
 import {TablePlugin} from '@lexical/react/LexicalTablePlugin';
 import useLexicalEditable from '@lexical/react/useLexicalEditable';
-import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {CAN_USE_DOM} from './shared/canUseDOM';
 
 import {useSettings} from './context/SettingsContext';
@@ -61,6 +60,8 @@ import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
 import {OnChangePlugin} from '@lexical/react/LexicalOnChangePlugin';
 import {EditorState, SerializedEditorState} from 'lexical';
+import {$generateHtmlFromNodes} from '@lexical/html';
+import {debounce} from 'lodash-es';
 
 const skipCollaborationInit =
   // @ts-expect-error
@@ -68,7 +69,7 @@ const skipCollaborationInit =
 
 export interface EditorProps {
   readOnly?: boolean;
-  onChange?: (state: SerializedEditorState) => void;
+  onChange?: (editorState: EditorState, html: string) => void;
 }
 
 export default function Editor({onChange, readOnly}: EditorProps): JSX.Element {
@@ -118,6 +119,15 @@ export default function Editor({onChange, readOnly}: EditorProps): JSX.Element {
       window.removeEventListener('resize', updateViewPortWidth);
     };
   }, [isSmallWidthViewport]);
+
+  const onChangeDebounce = useCallback(
+    debounce((editorState, editor) => {
+      editorState.read(() => {
+        onChange?.(editorState, $generateHtmlFromNodes(editor));
+      });
+    }, 400),
+    [onChange],
+  );
 
   if (readOnly) {
     return (
@@ -209,12 +219,7 @@ export default function Editor({onChange, readOnly}: EditorProps): JSX.Element {
                 />
               </>
             )}
-            <OnChangePlugin
-              onChange={(editorState) => {
-                onChange?.(editorState.toJSON());
-              }}
-              ignoreSelectionChange
-            />
+            <OnChangePlugin onChange={onChangeDebounce} ignoreSelectionChange />
           </>
         ) : (
           <>

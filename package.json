@@ -1,19 +1,20 @@
 {
   "name": "s31-editor",
-  "version": "0.15.0-7",
+  "version": "0.15.0-8",
   "type": "module",
   "scripts": {
     "dev": "vite --host --port 3000",
     "build:demo": "vite build",
-    "clean": "rm -rf ./dist/*",
-    "build": "npm run clean && tsc && npm run copyfiles",
-    "copyfiles": "copyfiles -u 1 src/**/*.svg src/*.less src/**/*.less src/**/**/*.less dist",
+    "build:lib": "vite build -c vite.prod.js",
+    "build:es": "npm run clean && tsc && npm run copyfiles",
+    "clean": "rm -rf ./es/*",
+    "copyfiles": "copyfiles -u 1 src/**/*.svg src/*.less src/**/*.less src/**/**/*.less es",
     "preview": "vite preview"
   },
-  "main": "dist/App.js",
-  "types": "dist/App.d.ts",
+  "main": "lib/s31-editor.js",
+  "types": "es/index.d.ts",
   "files": [
-    "dist",
+    "lib",
     "package.json"
   ],
   "dependencies": {

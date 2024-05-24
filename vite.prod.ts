@@ -23,24 +23,22 @@ const require = createRequire(import.meta.url);
 export default defineConfig(({command}) => {
   return {
     build: {
-      outDir: 'build',
+      target: 'esnext',
+      outDir: 'lib',
       rollupOptions: {
-        input: {
-          main: new URL('./index.html', import.meta.url).pathname,
-        },
+        external: ['react', 'react-dom'],
+      },
+      cssMinify: false,
+      minify: false,
+      lib: {
+        entry: 'src/index.tsx',
+        name: 's31-editor',
+        formats: ['es'],
       },
     },
     define: {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     },
-    plugins: [
-      react(),
-      // commonjs(),
-    ],
-    resolve: {
-      alias: {
-        // shared: fileURLToPath(new URL('./src/shared', import.meta.url)),
-      },
-    },
+    plugins: [react()],
   };
 });

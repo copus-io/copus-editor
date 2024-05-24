@@ -20,6 +20,9 @@ test-results
 playwright-report
 /SOURCE_CODE_REVIEW.md
 
+/es
+/lib
+
 npm-debug.log*
 
 .vscode/*

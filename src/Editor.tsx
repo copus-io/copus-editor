@@ -21,8 +21,7 @@ import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
 import {TabIndentationPlugin} from '@lexical/react/LexicalTabIndentationPlugin';
 import {TablePlugin} from '@lexical/react/LexicalTablePlugin';
 import useLexicalEditable from '@lexical/react/useLexicalEditable';
-import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {CAN_USE_DOM} from './shared/canUseDOM';
 
 import {useSettings} from './context/SettingsContext';
@@ -36,7 +35,6 @@ import ComponentPickerPlugin from './plugins/ComponentPickerPlugin';
 import ContextMenuPlugin from './plugins/ContextMenuPlugin';
 import DragDropPaste from './plugins/DragDropPastePlugin';
 import DraggableBlockPlugin from './plugins/DraggableBlockPlugin';
-import ExcalidrawPlugin from './plugins/ExcalidrawPlugin';
 import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin';
 import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbarPlugin';
 import ImagesPlugin from './plugins/ImagesPlugin';
@@ -62,16 +60,19 @@ import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
 import {OnChangePlugin} from '@lexical/react/LexicalOnChangePlugin';
 import {EditorState, SerializedEditorState} from 'lexical';
+import {$generateHtmlFromNodes} from '@lexical/html';
+import {debounce} from 'lodash-es';
 
 const skipCollaborationInit =
   // @ts-expect-error
   window.parent != null && window.parent.frames.right === window;
 
 export interface EditorProps {
-  onChange?: (state: SerializedEditorState) => void;
+  readOnly?: boolean;
+  onChange?: (editorState: EditorState, html: string) => void;
 }
 
-export default function Editor({onChange}: EditorProps): JSX.Element {
+export default function Editor({onChange, readOnly}: EditorProps): JSX.Element {
   const {historyState} = useSharedHistoryContext();
   const {
     settings: {
@@ -118,6 +119,27 @@ export default function Editor({onChange}: EditorProps): JSX.Element {
       window.removeEventListener('resize', updateViewPortWidth);
     };
   }, [isSmallWidthViewport]);
+
+  const onChangeDebounce = useCallback(
+    debounce((editorState, editor) => {
+      editorState.read(() => {
+        onChange?.(editorState, $generateHtmlFromNodes(editor));
+      });
+    }, 400),
+    [onChange],
+  );
+
+  if (readOnly) {
+    return (
+      <div className="editor-container plain-text">
+        <PlainTextPlugin
+          contentEditable={<ContentEditable />}
+          placeholder={placeholder}
+          ErrorBoundary={LexicalErrorBoundary}
+        />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -173,7 +195,6 @@ export default function Editor({onChange}: EditorProps): JSX.Element {
             <LexicalClickableLinkPlugin disabled={isEditable} />
             <HorizontalRulePlugin />
             {/* <EquationsPlugin /> */}
-            <ExcalidrawPlugin />
             <TabFocusPlugin />
             <TabIndentationPlugin />
             <CollapsiblePlugin />
@@ -198,12 +219,7 @@ export default function Editor({onChange}: EditorProps): JSX.Element {
                 />
               </>
             )}
-            <OnChangePlugin
-              onChange={(editorState) => {
-                onChange?.(editorState.toJSON());
-              }}
-              ignoreSelectionChange
-            />
+            <OnChangePlugin onChange={onChangeDebounce} ignoreSelectionChange />
           </>
         ) : (
           <>

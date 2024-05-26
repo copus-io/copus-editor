@@ -1,4 +1,3 @@
-
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -26,7 +25,6 @@ module.exports = {
 
   globals: {
     JSX: true,
-    __DEV__: true,
   },
 
   overrides: [

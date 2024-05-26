@@ -13,7 +13,7 @@
 import * as React from 'react';
 import {createRoot} from 'react-dom/client';
 
-import App from '../src/App';
+import App from '../src';
 import './index.css';
 
 // Handle runtime errors
@@ -41,8 +41,8 @@ createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <App
       // initialValue={data}
-      onChange={(status) => {
-        console.log(status);
+      onChange={(status, html) => {
+        console.log(status, html);
       }}
     />
   </React.StrictMode>,

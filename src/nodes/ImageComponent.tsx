@@ -368,8 +368,10 @@ export default function ImageComponent({
     settings: {showNestedEditorTreeView},
   } = useSettings();
 
-  const draggable = isSelected && $isNodeSelection(selection) && !isResizing;
-  const isFocused = isSelected || isResizing;
+  const isEditable = editor.isEditable();
+  const draggable = isEditable && isSelected && $isNodeSelection(selection) && !isResizing;
+  const isFocused = isEditable && isSelected || isResizing;
+
   return (
     <Suspense fallback={null}>
       <>

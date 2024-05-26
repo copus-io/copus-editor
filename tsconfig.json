@@ -12,7 +12,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "allowJs": true,
-    "outDir": "./dist",
+    "outDir": "./es",
     "declaration": true,
     "esModuleInterop": true,
     "importHelpers": true,

@@ -12,12 +12,11 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "allowJs": true,
-    "outDir": "./es",
+    "emitDeclarationOnly": true,
     "declaration": true,
+    "declarationDir": "./dist/types",
     "esModuleInterop": true,
-    "importHelpers": true,
-    "downlevelIteration": true,
-    "experimentalDecorators": true
+    "importHelpers": true
   },
   "include": ["./src"],
   "exclude": ["**/dist/**", "**/npm/**", "**/node_modules/**"],

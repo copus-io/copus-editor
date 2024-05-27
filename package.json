@@ -6,15 +6,13 @@
     "dev": "vite --host --port 3000",
     "build:demo": "vite build",
     "build:lib": "vite build -c vite.prod.js",
-    "build:es": "npm run clean && tsc && npm run copyfiles",
-    "clean": "rm -rf ./es/*",
-    "copyfiles": "copyfiles -u 1 src/**/*.svg src/*.less src/**/*.less src/**/**/*.less es",
+    "publish": "npm run build:lib && tsc && npm publish",
     "preview": "vite preview"
   },
-  "main": "lib/s31-editor.js",
-  "types": "es/index.d.ts",
+  "main": "dist/lib/s31-editor.js",
+  "types": "dist/types/index.d.ts",
   "files": [
-    "lib",
+    "dist",
     "package.json"
   ],
   "dependencies": {

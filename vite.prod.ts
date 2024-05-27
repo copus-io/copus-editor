@@ -24,7 +24,7 @@ export default defineConfig(({command}) => {
   return {
     build: {
       target: 'esnext',
-      outDir: 'lib',
+      outDir: 'dist/lib',
       rollupOptions: {
         external: ['react', 'react-dom'],
       },

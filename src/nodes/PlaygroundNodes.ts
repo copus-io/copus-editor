@@ -31,6 +31,7 @@ import {LayoutItemNode} from './LayoutItemNode';
 import {PageBreakNode} from './PageBreakNode';
 import {TweetNode} from './TweetNode';
 import {YouTubeNode} from './YouTubeNode';
+import { EmojiNode } from './EmojiNode';
 
 const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   HeadingNode,
@@ -53,7 +54,7 @@ const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   VideoNode,
   // InlineImageNode,
   // MentionNode,
-  // EmojiNode,
+  EmojiNode,
   // EquationNode,
   // AutocompleteNode,
   KeywordNode,

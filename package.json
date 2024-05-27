@@ -1,6 +1,6 @@
 {
   "name": "s31-editor",
-  "version": "0.15.0-8",
+  "version": "0.15.0-9",
   "type": "module",
   "scripts": {
     "dev": "vite --host --port 3000",
@@ -38,6 +38,7 @@
     "compressorjs": "^1.2.1",
     "lexical": "0.15.0",
     "lodash-es": "^4.17.21",
+    "mammoth": "^1.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^3.1.4",

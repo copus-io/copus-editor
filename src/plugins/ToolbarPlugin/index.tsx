@@ -92,6 +92,7 @@ import {InsertTableDialog} from '../TablePlugin';
 import FontSize from './fontSize';
 import {InsertAudioDialog} from '../AudioPlugin';
 import {InsertVideoDialog} from '../VideoPlugin';
+import {ImportDocxDialog} from '../ImportDocxPlugin';
 
 const blockTypeToBlockName = {
   bullet: 'Bulleted List',
@@ -821,6 +822,12 @@ export default function ToolbarPlugin({
     ));
   }, [activeEditor]);
 
+  const importDocx = useCallback(() => {
+    showModal('Import Word File', (onClose) => (
+      <ImportDocxDialog activeEditor={activeEditor} onClose={onClose} />
+    ));
+  }, [activeEditor]);
+
   const onCodeLanguageSelect = useCallback(
     (value: string) => {
       activeEditor.update(() => {
@@ -1040,6 +1047,13 @@ export default function ToolbarPlugin({
             className={'toolbar-item'}
             type="button">
             <i className="format image" />
+          </button>
+          <button
+            disabled={!isEditable}
+            onClick={importDocx}
+            className={'toolbar-item'}
+            type="button">
+            <i className="format word" />
           </button>
           <Divider />
           <DropDown

@@ -412,7 +412,6 @@ export default function ImageComponent({
                 }
                 ErrorBoundary={LexicalErrorBoundary}
               />
-              {showNestedEditorTreeView === true ? <TreeViewPlugin /> : null}
             </LexicalNestedComposer>
           </div>
         )}

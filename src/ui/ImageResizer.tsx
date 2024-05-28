@@ -263,48 +263,48 @@ export default function ImageResizer({
           Add Caption
         </button>
       )}
-      <div
+      {/* <div
         className="image-resizer image-resizer-n"
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.north);
         }}
-      />
+      /> */}
       <div
         className="image-resizer image-resizer-ne"
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.north | Direction.east);
         }}
       />
-      <div
+      {/* <div
         className="image-resizer image-resizer-e"
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.east);
         }}
-      />
+      /> */}
       <div
         className="image-resizer image-resizer-se"
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.south | Direction.east);
         }}
       />
-      <div
+      {/* <div
         className="image-resizer image-resizer-s"
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.south);
         }}
-      />
+      /> */}
       <div
         className="image-resizer image-resizer-sw"
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.south | Direction.west);
         }}
       />
-      <div
+      {/* <div
         className="image-resizer image-resizer-w"
         onPointerDown={(event) => {
           handlePointerDown(event, Direction.west);
         }}
-      />
+      /> */}
       <div
         className="image-resizer image-resizer-nw"
         onPointerDown={(event) => {

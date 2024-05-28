@@ -12,7 +12,7 @@ export async function uploadImage(params: FormData) {
   }).then((res) => res.json());
 }
 
-const editorUploadFiles = (uploadFiles: File, isImage?: boolean) => {
+const editorUploadFiles = (uploadFiles: File | Blob, isImage?: boolean) => {
   return new Promise<any>((resolve, reject) => {
     if (isImage) {
       let img = new Image();

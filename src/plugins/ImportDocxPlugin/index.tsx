@@ -16,16 +16,16 @@ import {
   LexicalCommand,
   LexicalEditor,
 } from 'lexical';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 import {$createPageBreakNode, PageBreakNode} from '../../nodes/PageBreakNode';
 import FileInput from '../../ui/FileInput';
-import TextInput from '../../ui/TextInput';
 import {DialogActions} from '../../ui/Dialog';
 import Button from '../../ui/Button';
 import useFlashMessage from '../../hooks/useFlashMessage';
 import mammoth from 'mammoth/mammoth.browser';
 import {$generateNodesFromDOM} from '@lexical/html';
+import editorUploadFiles from '../../utils/editorUploadFiles';
 
 export type ImportDocxPayload = {
   file?: File;
@@ -73,6 +73,7 @@ export function ImportDocxDialog({
 }) {
   const [file, setFile] = useState<File>();
   const [isConverting, setConverting] = useState(false);
+  const [convertImageCount, setConvertImageCount] = useState(0);
 
   const showFlashMessage = useFlashMessage();
 
@@ -84,6 +85,60 @@ export function ImportDocxDialog({
     setFile(files[0]);
   };
 
+  const handleConvert = useCallback(async () => {
+    if (file) {
+      if (file.size > 500000000) {
+        showFlashMessage('Word file size should be less than 10MB');
+        return;
+      }
+
+      setConverting(true);
+      let count = 0;
+      try {
+        const result = await mammoth.convertToHtml(
+          {arrayBuffer: file},
+          {
+            convertImage: mammoth.images.imgElement(async (image: any) => {
+              count++;
+              setConvertImageCount(count);
+
+              const imageBuffer = await image.read();
+              const imageFile = new File(
+                [imageBuffer],
+                `image.${image.contentType.split('/')[1]}`,
+                {type: image.contentType},
+              );
+
+              const res = await editorUploadFiles(imageFile, true);
+              console.log('res', res);
+              if (res.status === 1) {
+                return {
+                  src: res.data,
+                };
+              }
+              return null;
+            }),
+          },
+        );
+
+        const html = result.value;
+        const parser = new DOMParser();
+        const dom = parser.parseFromString(html, 'text/html');
+        activeEditor.update(() => {
+          const nodes = $generateNodesFromDOM(activeEditor, dom);
+          $insertNodes(nodes);
+        });
+      } catch (error) {
+        showFlashMessage('Error converting Word file');
+        console.error(error);
+      }
+
+      onClose();
+
+      // activeEditor.dispatchCommand(INSERT_IMPORT_DOCX, {file});
+    }
+  }, [file, activeEditor, onClose, showFlashMessage]);
+
   return (
     <>
       <FileInput
@@ -92,56 +147,10 @@ export function ImportDocxDialog({
         accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"
       />
       <DialogActions>
-        <Button
-          disabled={!file || isConverting}
-          onClick={() => {
-            if (file) {
-              if (file.size > 500000000) {
-                showFlashMessage('Word file size should be less than 10MB');
-                return;
-              }
-
-              setConverting(true);
-              mammoth
-                .convertToHtml({arrayBuffer: file})
-                .then(function (result) {
-                  const html = result.value;
-                  const parser = new DOMParser();
-                  const dom = parser.parseFromString(html, 'text/html');
-                  activeEditor.update(() => {
-                    const nodes = $generateNodesFromDOM(activeEditor, dom);
-                    $insertNodes(nodes);
-                  });
-                  onClose();
-                })
-                .catch(function (error) {
-                  console.error(error);
-                })
-                .finally(() => {
-                  setConverting(false);
-                });
-
-              // var reader = new FileReader();
-
-              // reader.onload = function (loadEvent) {
-              //   var arrayBuffer = loadEvent.target.result;
-              //   mammoth
-              //     .convertToHtml({arrayBuffer: arrayBuffer})
-              //     .then(function (result) {
-              //       console.log(result);
-              //       var html = result.value; // The generated HTML
-              //       var messages = result.messages; // Any messages, such as warnings during conversion
-              //     })
-              //     .catch(function (error) {
-              //       console.error(error);
-              //     });
-              // };
-
-              // reader.readAsArrayBuffer(file);
-
-              // activeEditor.dispatchCommand(INSERT_IMPORT_DOCX, {file});
-            }
-          }}>
+        {convertImageCount > 0 && (
+          <span>Convert Image {convertImageCount} ...</span>
+        )}
+        <Button disabled={!file || isConverting} onClick={handleConvert}>
           {isConverting ? 'Converting...' : 'Confirm'}
         </Button>
       </DialogActions>

@@ -33,7 +33,6 @@
     "@lexical/table": "0.15.0",
     "@lexical/text": "^0.15.0",
     "@lexical/utils": "0.15.0",
-    "compressorjs": "^1.2.1",
     "lexical": "0.15.0",
     "lodash-es": "^4.17.21",
     "mammoth": "^1.7.2",

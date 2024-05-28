@@ -1,6 +1,6 @@
 {
   "name": "s31-editor",
-  "version": "0.15.0-9",
+  "version": "0.15.0-10",
   "type": "module",
   "scripts": {
     "dev": "vite --host --port 3000",

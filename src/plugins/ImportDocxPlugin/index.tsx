@@ -23,6 +23,7 @@ import FileInput from '../../ui/FileInput';
 import {DialogActions} from '../../ui/Dialog';
 import Button from '../../ui/Button';
 import useFlashMessage from '../../hooks/useFlashMessage';
+// @ts-ignore
 import mammoth from 'mammoth/mammoth.browser';
 import {$generateNodesFromDOM} from '@lexical/html';
 import editorUploadFiles from '../../utils/editorUploadFiles';

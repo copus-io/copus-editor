@@ -42,6 +42,7 @@ import editorUploadFiles from '../../utils/editorUploadFiles';
 import useFlashMessage from '../../hooks/useFlashMessage';
 import {useSharedHistoryContext} from '../../context/SharedHistoryContext';
 import {clearTempHistory} from '../../utils/clearTempHistory';
+import {mineTypeMap} from '../../utils/constant';
 
 export type InsertVideoPayload = Readonly<VideoPayload> & {
   file?: File;
@@ -138,8 +139,8 @@ export function InsertVideoUploadedDialogBody({
           data-test-id="Video-modal-file-upload-btn"
           onClick={() => {
             if (videofile) {
-              if (videofile.size > 10000000) {
-                showFlashMessage('Video file size should be less than 10MB');
+              if (videofile.size > mineTypeMap.video.limitSize) {
+                showFlashMessage(mineTypeMap.video.limitMessage);
                 return;
               }
               onClick({src: URL.createObjectURL(videofile), file: videofile});
@@ -231,6 +232,10 @@ export default function VideoPlugin({
             editorUploadFiles(file).then((res) => {
               if (res.status === 1) {
                 editor.update(() => {
+                  const _node = editor
+                    .getEditorState()
+                    ._nodeMap.get(videoNode.getKey());
+                  if (!_node) return;
                   videoNode.setUploadState(false);
                   videoNode.setSrc(res.data);
                 });

@@ -43,6 +43,7 @@ import editorUploadFiles from '../../utils/editorUploadFiles';
 import useFlashMessage from '../../hooks/useFlashMessage';
 import {useSharedHistoryContext} from '../../context/SharedHistoryContext';
 import {clearTempHistory} from '../../utils/clearTempHistory';
+import {mineTypeMap} from '../../utils/constant';
 
 export type InsertAudioPayload = Readonly<AudioPayload> & {
   file?: File;
@@ -120,8 +121,8 @@ export function InsertAudioUploadedDialogBody({
           data-test-id="audio-modal-file-upload-btn"
           onClick={() => {
             if (audiofile) {
-              if (audiofile.size > 10000000) {
-                showFlashMessage('Audio file size should be less than 10MB');
+              if (audiofile.size > mineTypeMap.audio.limitSize) {
+                showFlashMessage(mineTypeMap.audio.limitMessage);
                 return;
               }
               onClick({src: URL.createObjectURL(audiofile), file: audiofile});
@@ -213,6 +214,10 @@ export default function AudioPlugin({
             editorUploadFiles(file).then((res) => {
               if (res.status === 1) {
                 editor.update(() => {
+                  const _node = editor
+                    .getEditorState()
+                    ._nodeMap.get(audioNode.getKey());
+                  if (!_node) return;
                   audioNode.setUploadState(false);
                   audioNode.setSrc(res.data);
                 });

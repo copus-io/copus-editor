@@ -10,6 +10,7 @@ import {$wrapNodeInElement, mergeRegister} from '@lexical/utils';
 import {
   $createParagraphNode,
   $createRangeSelection,
+  $getNodeByKey,
   $getSelection,
   $insertNodes,
   $isNodeSelection,
@@ -42,6 +43,7 @@ import editorUploadFiles from '../../utils/editorUploadFiles';
 import useFlashMessage from '../../hooks/useFlashMessage';
 import {useSharedHistoryContext} from '../../context/SharedHistoryContext';
 import {clearTempHistory} from '../../utils/clearTempHistory';
+import {mineTypeMap} from '../../utils/constant';
 
 export type InsertImagePayload = Readonly<ImagePayload> & {
   file?: File;
@@ -129,8 +131,8 @@ export function InsertImageUploadedDialogBody({
           disabled={!file}
           onClick={() => {
             if (file) {
-              if (file.size > 10000000) {
-                showFlashMessage('Image file size should be less than 10MB');
+              if (file.size > mineTypeMap.image.limitSize) {
+                showFlashMessage(mineTypeMap.image.limitMessage);
                 return;
               }
               onClick({altText, src: URL.createObjectURL(file), file});
@@ -225,6 +227,10 @@ export default function ImagesPlugin({
                 const img = new Image();
                 img.onload = () => {
                   editor.update(() => {
+                    const _node = editor
+                      .getEditorState()
+                      ._nodeMap.get(imageNode.getKey());
+                    if (!_node) return;
                     imageNode.setUploadState(false);
                     imageNode.setCaptionsEnabled(true);
                     imageNode.setSrc(res.data);

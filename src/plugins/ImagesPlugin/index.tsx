@@ -40,6 +40,8 @@ import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
 import useFlashMessage from '../../hooks/useFlashMessage';
+import {useSharedHistoryContext} from '../../context/SharedHistoryContext';
+import {clearTempHistory} from '../../utils/clearTempHistory';
 
 export type InsertImagePayload = Readonly<ImagePayload> & {
   file?: File;
@@ -195,6 +197,7 @@ export default function ImagesPlugin({
   captionsEnabled?: boolean;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
+  const {historyState} = useSharedHistoryContext();
 
   useEffect(() => {
     if (!editor.hasNodes([ImageNode])) {
@@ -226,6 +229,7 @@ export default function ImagesPlugin({
                     imageNode.setCaptionsEnabled(true);
                     imageNode.setSrc(res.data);
                   });
+                  clearTempHistory(imageNode, historyState);
                 };
                 img.src = res.data;
               }

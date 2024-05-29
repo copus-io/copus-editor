@@ -63,7 +63,6 @@ export default function DragDropPaste(): null {
           }
 
           for (const {file} of filesResult) {
-            console.log(file);
             if (isMimeType(file, ACCEPTABLE_IMAGE_TYPES)) {
               if (file.size > 10000000) {
                 showFlashMessage('Image file size should be less than 10MB');

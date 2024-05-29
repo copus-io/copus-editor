@@ -41,6 +41,8 @@ import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
 import useFlashMessage from '../../hooks/useFlashMessage';
+import {useSharedHistoryContext} from '../../context/SharedHistoryContext';
+import {clearTempHistory} from '../../utils/clearTempHistory';
 
 export type InsertAudioPayload = Readonly<AudioPayload> & {
   file?: File;
@@ -186,6 +188,7 @@ export default function AudioPlugin({
   captionsEnabled?: boolean;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
+  const {historyState} = useSharedHistoryContext();
 
   useEffect(() => {
     if (!editor.hasNodes([AudioNode])) {
@@ -213,6 +216,7 @@ export default function AudioPlugin({
                   audioNode.setUploadState(false);
                   audioNode.setSrc(res.data);
                 });
+                clearTempHistory(audioNode, historyState);
               }
             });
           }

@@ -16,29 +16,23 @@ import {INSERT_IMAGE_COMMAND} from '../ImagesPlugin';
 import {INSERT_AUDIO_COMMAND} from '../AudioPlugin';
 import useFlashMessage from '../../hooks/useFlashMessage';
 import {INSERT_VIDEO_COMMAND} from '../VideoPlugin';
+import editorUploadFiles from '../../utils/editorUploadFiles';
+import {
+  ACCEPTABLE_AUDIO_TYPES,
+  ACCEPTABLE_IMAGE_TYPES,
+  ACCEPTABLE_VIDEO_TYPES,
+  mineTypeMap,
+} from '../../utils/constant';
 
-const ACCEPTABLE_IMAGE_TYPES = [
-  'image/',
-  'image/heic',
-  'image/heif',
-  'image/gif',
-  'image/webp',
-];
+const commandMap = {
+  image: INSERT_IMAGE_COMMAND,
+  audio: INSERT_AUDIO_COMMAND,
+  video: INSERT_VIDEO_COMMAND,
+};
 
-const ACCEPTABLE_AUDIO_TYPES = [
-  'audio/',
-  'audio/mpeg',
-  'audio/m4a',
-  'audio/mp3',
-  'audio/x-mpeg',
-];
-
-const ACCEPTABLE_VIDEO_TYPES = [
-  'video/',
-  'video/mp4',
-  'video/webm',
-  'video/ogg',
-];
+function getMimeType(file: File): string {
+  return file.type.split('/')[0];
+}
 
 export default function DragDropPaste(): null {
   const [editor] = useLexicalComposerContext();
@@ -59,44 +53,23 @@ export default function DragDropPaste(): null {
           );
 
           if (files.length > filesResult.length) {
-            showFlashMessage('Some file types are not supported');
+            showFlashMessage('File types are not supported');
           }
 
           for (const {file} of filesResult) {
-            console.log(file);
-            if (isMimeType(file, ACCEPTABLE_IMAGE_TYPES)) {
-              if (file.size > 10000000) {
-                showFlashMessage('Image file size should be less than 10MB');
-                return;
-              }
-              editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
+            const mimeType = getMimeType(file) as keyof typeof mineTypeMap;
+            const {limitSize, limitMessage} = mineTypeMap[mimeType];
+
+            if (file.size > limitSize) {
+              showFlashMessage(limitMessage);
+              return;
+            }
+
+            let res = await editorUploadFiles(file, mimeType);
+            if (res?.status === 1) {
+              editor.dispatchCommand(commandMap[mimeType], {
                 altText: file.name,
-                src: URL.createObjectURL(file),
-                file: file,
-              });
-            }
-
-            if (isMimeType(file, ACCEPTABLE_AUDIO_TYPES)) {
-              if (file.size > 10000000) {
-                showFlashMessage('Audio file size should be less than 10MB');
-                return;
-              }
-              editor.dispatchCommand(INSERT_AUDIO_COMMAND, {
-                src: URL.createObjectURL(file),
-                controls: true,
-                file: file,
-              });
-            }
-
-            if (isMimeType(file, ACCEPTABLE_VIDEO_TYPES)) {
-              if (file.size > 10000000) {
-                showFlashMessage('Video file size should be less than 10MB');
-                return;
-              }
-              editor.dispatchCommand(INSERT_VIDEO_COMMAND, {
-                src: URL.createObjectURL(file),
-                controls: true,
-                file: file,
+                src: res.data,
               });
             }
           }

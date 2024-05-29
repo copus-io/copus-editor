@@ -34,7 +34,7 @@ function App(props: EditorProps): JSX.Element {
       throw error;
     },
     theme: PlaygroundEditorTheme,
-    editable: props.readOnly !== true,
+    editable: false,
   };
 
   return (

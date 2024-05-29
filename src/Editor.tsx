@@ -61,7 +61,8 @@ import Placeholder from './ui/Placeholder';
 import {OnChangePlugin} from '@lexical/react/LexicalOnChangePlugin';
 import {EditorState, SerializedEditorState} from 'lexical';
 import {$generateHtmlFromNodes} from '@lexical/html';
-import {debounce} from 'lodash-es';
+import {debounce, set} from 'lodash-es';
+import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 
 const skipCollaborationInit =
   // @ts-expect-error
@@ -74,6 +75,7 @@ export interface EditorProps {
 
 export default function Editor({onChange, readOnly}: EditorProps): JSX.Element {
   const {historyState} = useSharedHistoryContext();
+  const [editor] = useLexicalComposerContext();
   const {
     settings: {
       // isCollab,
@@ -128,6 +130,13 @@ export default function Editor({onChange, readOnly}: EditorProps): JSX.Element {
     }, 400),
     [onChange],
   );
+
+  // 防止编辑器滚动到底部
+  useEffect(() => {
+    if (!readOnly) {
+      editor.setEditable(true);
+    }
+  }, [editor]);
 
   if (readOnly) {
     return (

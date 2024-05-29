@@ -25,7 +25,7 @@ import {
   LexicalEditor,
   createCommand,
 } from 'lexical';
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {CAN_USE_DOM} from '../../shared/canUseDOM';
 
 import {
@@ -40,10 +40,9 @@ import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
 import useFlashMessage from '../../hooks/useFlashMessage';
+import {mineTypeMap} from '../../utils/constant';
 
-export type InsertVideoPayload = Readonly<VideoPayload> & {
-  file?: File;
-};
+export type InsertVideoPayload = Readonly<VideoPayload>;
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
@@ -114,6 +113,7 @@ export function InsertVideoUploadedDialogBody({
   onClick: (payload: InsertVideoPayload) => void;
 }) {
   const [videofile, setVideofile] = useState<File>();
+  const [isUploading, setIsUploading] = useState(false);
   const showFlashMessage = useFlashMessage();
 
   const loadFiles = (files: FileList | null) => {
@@ -122,6 +122,21 @@ export function InsertVideoUploadedDialogBody({
     }
     setVideofile(files[0]);
   };
+
+  const handleUpload = useCallback(async () => {
+    if (videofile) {
+      if (videofile.size > mineTypeMap['video'].limitSize) {
+        showFlashMessage(mineTypeMap['video'].limitMessage);
+        return;
+      }
+      setIsUploading(true);
+      let res = await editorUploadFiles(videofile);
+      if (res?.status === 1) {
+        onClick({src: res.data});
+      }
+      setIsUploading(false);
+    }
+  }, [videofile, onClick, showFlashMessage]);
 
   return (
     <>
@@ -134,16 +149,9 @@ export function InsertVideoUploadedDialogBody({
       <DialogActions>
         <Button
           data-test-id="Video-modal-file-upload-btn"
-          onClick={() => {
-            if (videofile) {
-              if (videofile.size > 10000000) {
-                showFlashMessage('Video file size should be less than 10MB');
-                return;
-              }
-              onClick({src: URL.createObjectURL(videofile), file: videofile});
-            }
-          }}>
-          Confirm
+          disabled={!videofile || isUploading}
+          onClick={handleUpload}>
+          {isUploading ? 'Uploading' : 'Confirm'}
         </Button>
       </DialogActions>
     </>
@@ -214,25 +222,10 @@ export default function VideoPlugin({
       editor.registerCommand<InsertVideoPayload>(
         INSERT_VIDEO_COMMAND,
         (payload) => {
-          const {file, ...otherPayload} = payload;
-          const videoNode = $createVideoNode({
-            ...otherPayload,
-            uploading: !!file,
-          });
+          const videoNode = $createVideoNode(payload);
           $insertNodes([videoNode]);
           if ($isRootOrShadowRoot(videoNode.getParentOrThrow())) {
             $wrapNodeInElement(videoNode, $createParagraphNode).selectEnd();
-          }
-
-          if (file) {
-            editorUploadFiles(file).then((res) => {
-              if (res.status === 1) {
-                editor.update(() => {
-                  videoNode.setUploadState(false);
-                  videoNode.setSrc(res.data);
-                });
-              }
-            });
           }
 
           return true;

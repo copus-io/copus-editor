@@ -34,13 +34,11 @@ export default function AudioComponent({
   nodeKey,
   controls,
   autoplay,
-  uploading,
 }: {
   nodeKey: NodeKey;
   controls: boolean;
   src: string;
   autoplay: boolean;
-  uploading: boolean;
 }): JSX.Element {
   const audioRef = useRef<null | HTMLAudioElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -163,7 +161,7 @@ export default function AudioComponent({
 
   return (
     <Suspense fallback={null}>
-      <div draggable={false} className="uploading-wrap editor-audio">
+      <div draggable={false} className="editor-audio">
         <audio
           className={isSelected ? `focused ` : ''}
           ref={audioRef}
@@ -171,7 +169,6 @@ export default function AudioComponent({
           autoPlay={false}
           controls={controls}
         />
-        {uploading && <div className="uploading-text">Uploading...</div>}
       </div>
     </Suspense>
   );

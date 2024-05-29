@@ -25,8 +25,7 @@ import {
   LexicalCommand,
   LexicalEditor,
 } from 'lexical';
-import {useEffect, useRef, useState} from 'react';
-import * as React from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {CAN_USE_DOM} from '../../shared/canUseDOM';
 
 import {
@@ -41,10 +40,9 @@ import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
 import useFlashMessage from '../../hooks/useFlashMessage';
+import {mineTypeMap} from '../../utils/constant';
 
-export type InsertAudioPayload = Readonly<AudioPayload> & {
-  file?: File;
-};
+export type InsertAudioPayload = Readonly<AudioPayload>;
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
@@ -96,6 +94,7 @@ export function InsertAudioUploadedDialogBody({
   onClick: (payload: InsertAudioPayload) => void;
 }) {
   const [audiofile, setAudiofile] = useState<File>();
+  const [isUploading, setIsUploading] = useState(false);
   const showFlashMessage = useFlashMessage();
 
   const loadFiles = (files: FileList | null) => {
@@ -104,6 +103,21 @@ export function InsertAudioUploadedDialogBody({
     }
     setAudiofile(files[0]);
   };
+
+  const handleUpload = useCallback(async () => {
+    if (audiofile) {
+      if (audiofile.size > mineTypeMap['audio'].limitSize) {
+        showFlashMessage(mineTypeMap['audio'].limitMessage);
+        return;
+      }
+      setIsUploading(true);
+      let res = await editorUploadFiles(audiofile);
+      if (res?.status === 1) {
+        onClick({src: res.data});
+      }
+      setIsUploading(false);
+    }
+  }, [audiofile, onClick, showFlashMessage]);
 
   return (
     <>
@@ -116,16 +130,9 @@ export function InsertAudioUploadedDialogBody({
       <DialogActions>
         <Button
           data-test-id="audio-modal-file-upload-btn"
-          onClick={() => {
-            if (audiofile) {
-              if (audiofile.size > 10000000) {
-                showFlashMessage('Audio file size should be less than 10MB');
-                return;
-              }
-              onClick({src: URL.createObjectURL(audiofile), file: audiofile});
-            }
-          }}>
-          Confirm
+          disabled={!audiofile || isUploading}
+          onClick={handleUpload}>
+          {isUploading ? 'Uploading' : 'Confirm'}
         </Button>
       </DialogActions>
     </>
@@ -196,25 +203,10 @@ export default function AudioPlugin({
       editor.registerCommand<InsertAudioPayload>(
         INSERT_AUDIO_COMMAND,
         (payload) => {
-          const {file, ...otherPayload} = payload;
-          const audioNode = $createAudioNode({
-            ...otherPayload,
-            uploading: !!file,
-          });
+          const audioNode = $createAudioNode(payload);
           $insertNodes([audioNode]);
           if ($isRootOrShadowRoot(audioNode.getParentOrThrow())) {
             $wrapNodeInElement(audioNode, $createParagraphNode).selectEnd();
-          }
-
-          if (file) {
-            editorUploadFiles(file).then((res) => {
-              if (res.status === 1) {
-                editor.update(() => {
-                  audioNode.setUploadState(false);
-                  audioNode.setSrc(res.data);
-                });
-              }
-            });
           }
 
           return true;

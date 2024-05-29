@@ -25,7 +25,6 @@ export interface AudioPayload {
   src: string;
   controls?: boolean;
   autoplay?: boolean;
-  uploading?: boolean;
 }
 
 function convertAudioElement(domNode: Node): null | DOMConversionOutput {
@@ -50,7 +49,6 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
   __src: string;
   __controls: boolean = true;
   __autoplay: boolean = false;
-  __uploading: boolean = false;
 
   static getType(): string {
     return 'audio';
@@ -62,7 +60,6 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
       node.__autoplay,
       node.__controls,
       node.__key,
-      node.__uploading,
     );
   }
 
@@ -100,13 +97,11 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
     autoplay?: boolean,
     controls?: boolean,
     key?: NodeKey,
-    uploading?: boolean,
   ) {
     super(key);
     this.__src = src;
     this.__controls = controls || true;
     this.__autoplay = autoplay || false;
-    this.__uploading = uploading || false;
   }
 
   exportJSON(): SerializedAudioNode {
@@ -126,11 +121,6 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
   setControls(controls: boolean): void {
     const writable = this.getWritable();
     writable.__controls = controls;
-  }
-
-  setUploadState(uploading: boolean): void {
-    const writable = this.getWritable();
-    writable.__uploading = uploading;
   }
 
   // View
@@ -165,7 +155,6 @@ export class AudioNode extends DecoratorNode<JSX.Element> {
         nodeKey={this.getKey()}
         autoplay={this.__autoplay}
         controls={this.__controls}
-        uploading={this.__uploading}
       />
     );
   }
@@ -176,10 +165,9 @@ export function $createAudioNode({
   autoplay,
   controls,
   key,
-  uploading,
 }: AudioPayload): AudioNode {
   return $applyNodeReplacement(
-    new AudioNode(src, autoplay, controls, key, uploading),
+    new AudioNode(src, autoplay, controls, key),
   );
 }
 

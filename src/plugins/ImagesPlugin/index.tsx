@@ -25,7 +25,7 @@ import {
   LexicalCommand,
   LexicalEditor,
 } from 'lexical';
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {CAN_USE_DOM} from '../../shared/canUseDOM';
 
 import {
@@ -40,10 +40,9 @@ import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
 import useFlashMessage from '../../hooks/useFlashMessage';
+import {mineTypeMap} from '../../utils/constant';
 
-export type InsertImagePayload = Readonly<ImagePayload> & {
-  file?: File;
-};
+export type InsertImagePayload = Readonly<ImagePayload>;
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
@@ -96,6 +95,7 @@ export function InsertImageUploadedDialogBody({
 }) {
   const [file, setFile] = useState<File>();
   const [altText, setAltText] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
   const showFlashMessage = useFlashMessage();
 
@@ -105,6 +105,21 @@ export function InsertImageUploadedDialogBody({
     }
     setFile(files[0]);
   };
+
+  const handleUpload = useCallback(async () => {
+    if (file) {
+      if (file.size > mineTypeMap['image'].limitSize) {
+        showFlashMessage(mineTypeMap['image'].limitMessage);
+        return;
+      }
+      setIsUploading(true);
+      let res = await editorUploadFiles(file, 'image');
+      if (res?.status === 1) {
+        onClick({altText, src: res.data});
+      }
+      setIsUploading(false);
+    }
+  }, [file, altText, onClick, showFlashMessage]);
 
   return (
     <>
@@ -124,17 +139,9 @@ export function InsertImageUploadedDialogBody({
       <DialogActions>
         <Button
           data-test-id="image-modal-file-upload-btn"
-          disabled={!file}
-          onClick={() => {
-            if (file) {
-              if (file.size > 10000000) {
-                showFlashMessage('Image file size should be less than 10MB');
-                return;
-              }
-              onClick({altText, src: URL.createObjectURL(file), file});
-            }
-          }}>
-          Confirm
+          disabled={!file || isUploading}
+          onClick={handleUpload}>
+          {isUploading ? 'Uploading' : 'Confirm'}
         </Button>
       </DialogActions>
     </>
@@ -205,33 +212,11 @@ export default function ImagesPlugin({
       editor.registerCommand<InsertImagePayload>(
         INSERT_IMAGE_COMMAND,
         (payload) => {
-          const {file, ...otherPayload} = payload;
-          const imageNode = $createImageNode({
-            ...otherPayload,
-            captionsEnabled: !file,
-            uploading: !!file,
-          });
+          const imageNode = $createImageNode(payload);
           $insertNodes([imageNode]);
           if ($isRootOrShadowRoot(imageNode.getParentOrThrow())) {
             $wrapNodeInElement(imageNode, $createParagraphNode).selectEnd();
           }
-
-          if (file) {
-            editorUploadFiles(file, true).then((res) => {
-              if (res.status === 1) {
-                const img = new Image();
-                img.onload = () => {
-                  editor.update(() => {
-                    imageNode.setUploadState(false);
-                    imageNode.setCaptionsEnabled(true);
-                    imageNode.setSrc(res.data);
-                  });
-                };
-                img.src = res.data;
-              }
-            });
-          }
-
           return true;
         },
         COMMAND_PRIORITY_EDITOR,

@@ -42,6 +42,7 @@ export default function VideoComponent({
   autoplay,
   width,
   height,
+  uploading,
 }: {
   nodeKey: NodeKey;
   controls: boolean;
@@ -49,6 +50,7 @@ export default function VideoComponent({
   autoplay: boolean;
   width: 'inherit' | number;
   height: 'inherit' | number;
+  uploading?: boolean;
 }): JSX.Element {
   const videoRef = useRef<null | HTMLVideoElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -174,16 +176,17 @@ export default function VideoComponent({
 
   return (
     <Suspense fallback={null}>
-      <div draggable={draggable} className="editor-video">
+      <div draggable={draggable} className="uploading-wrap editor-video">
         <video
           className={isSelected ? `focused ` : ''}
           ref={videoRef}
           src={src}
           autoPlay={false}
           controls={controls}
-          width={width}
-          height={height}
+          width={uploading ? 240 : width}
+          height={uploading ? 180 : height}
         />
+        {uploading && <div className="uploading-text">Uploading...</div>}
       </div>
     </Suspense>
   );

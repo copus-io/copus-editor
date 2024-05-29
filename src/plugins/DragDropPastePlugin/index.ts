@@ -16,7 +16,6 @@ import {INSERT_IMAGE_COMMAND} from '../ImagesPlugin';
 import {INSERT_AUDIO_COMMAND} from '../AudioPlugin';
 import useFlashMessage from '../../hooks/useFlashMessage';
 import {INSERT_VIDEO_COMMAND} from '../VideoPlugin';
-import editorUploadFiles from '../../utils/editorUploadFiles';
 import {
   ACCEPTABLE_AUDIO_TYPES,
   ACCEPTABLE_IMAGE_TYPES,
@@ -53,25 +52,22 @@ export default function DragDropPaste(): null {
           );
 
           if (files.length > filesResult.length) {
-            showFlashMessage('File types are not supported');
+            showFlashMessage('Some file types are not supported');
           }
 
           for (const {file} of filesResult) {
             const mimeType = getMimeType(file) as keyof typeof mineTypeMap;
             const {limitSize, limitMessage} = mineTypeMap[mimeType];
-
             if (file.size > limitSize) {
               showFlashMessage(limitMessage);
               return;
             }
 
-            let res = await editorUploadFiles(file, mimeType);
-            if (res?.status === 1) {
-              editor.dispatchCommand(commandMap[mimeType], {
-                altText: file.name,
-                src: res.data,
-              });
-            }
+            editor.dispatchCommand(commandMap[mimeType], {
+              altText: file.name,
+              src: URL.createObjectURL(file),
+              file: file,
+            });
           }
         })();
         return true;

@@ -11,9 +11,9 @@ export async function uploadImage(params: FormData) {
   }).then((res) => res.json());
 }
 
-const editorUploadFiles = (uploadFiles: File, mimeType?: string) => {
+const editorUploadFiles = (uploadFiles: File, isImage?: boolean) => {
   return new Promise<any>((resolve, reject) => {
-    if (mimeType === 'image') {
+    if (isImage) {
       compressImage(uploadFiles).then((myImage) => {
         const formData = new FormData();
         formData.append('file', myImage);

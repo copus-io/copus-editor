@@ -25,7 +25,8 @@ import {
   LexicalCommand,
   LexicalEditor,
 } from 'lexical';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
+import * as React from 'react';
 import {CAN_USE_DOM} from '../../shared/canUseDOM';
 
 import {
@@ -40,9 +41,13 @@ import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
 import useFlashMessage from '../../hooks/useFlashMessage';
+import {useSharedHistoryContext} from '../../context/SharedHistoryContext';
+import {clearTempHistory} from '../../utils/clearTempHistory';
 import {mineTypeMap} from '../../utils/constant';
 
-export type InsertAudioPayload = Readonly<AudioPayload>;
+export type InsertAudioPayload = Readonly<AudioPayload> & {
+  file?: File;
+};
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
@@ -94,7 +99,6 @@ export function InsertAudioUploadedDialogBody({
   onClick: (payload: InsertAudioPayload) => void;
 }) {
   const [audiofile, setAudiofile] = useState<File>();
-  const [isUploading, setIsUploading] = useState(false);
   const showFlashMessage = useFlashMessage();
 
   const loadFiles = (files: FileList | null) => {
@@ -103,21 +107,6 @@ export function InsertAudioUploadedDialogBody({
     }
     setAudiofile(files[0]);
   };
-
-  const handleUpload = useCallback(async () => {
-    if (audiofile) {
-      if (audiofile.size > mineTypeMap['audio'].limitSize) {
-        showFlashMessage(mineTypeMap['audio'].limitMessage);
-        return;
-      }
-      setIsUploading(true);
-      let res = await editorUploadFiles(audiofile);
-      if (res?.status === 1) {
-        onClick({src: res.data});
-      }
-      setIsUploading(false);
-    }
-  }, [audiofile, onClick, showFlashMessage]);
 
   return (
     <>
@@ -130,9 +119,16 @@ export function InsertAudioUploadedDialogBody({
       <DialogActions>
         <Button
           data-test-id="audio-modal-file-upload-btn"
-          disabled={!audiofile || isUploading}
-          onClick={handleUpload}>
-          {isUploading ? 'Uploading' : 'Confirm'}
+          onClick={() => {
+            if (audiofile) {
+              if (audiofile.size > mineTypeMap.audio.limitSize) {
+                showFlashMessage(mineTypeMap.audio.limitMessage);
+                return;
+              }
+              onClick({src: URL.createObjectURL(audiofile), file: audiofile});
+            }
+          }}>
+          Confirm
         </Button>
       </DialogActions>
     </>
@@ -193,6 +189,7 @@ export default function AudioPlugin({
   captionsEnabled?: boolean;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
+  const {historyState} = useSharedHistoryContext();
 
   useEffect(() => {
     if (!editor.hasNodes([AudioNode])) {
@@ -203,10 +200,30 @@ export default function AudioPlugin({
       editor.registerCommand<InsertAudioPayload>(
         INSERT_AUDIO_COMMAND,
         (payload) => {
-          const audioNode = $createAudioNode(payload);
+          const {file, ...otherPayload} = payload;
+          const audioNode = $createAudioNode({
+            ...otherPayload,
+            uploading: !!file,
+          });
           $insertNodes([audioNode]);
           if ($isRootOrShadowRoot(audioNode.getParentOrThrow())) {
             $wrapNodeInElement(audioNode, $createParagraphNode).selectEnd();
+          }
+
+          if (file) {
+            editorUploadFiles(file).then((res) => {
+              if (res.status === 1) {
+                editor.update(() => {
+                  const _node = editor
+                    .getEditorState()
+                    ._nodeMap.get(audioNode.getKey());
+                  if (!_node) return;
+                  audioNode.setUploadState(false);
+                  audioNode.setSrc(res.data);
+                });
+                clearTempHistory(audioNode, historyState);
+              }
+            });
           }
 
           return true;

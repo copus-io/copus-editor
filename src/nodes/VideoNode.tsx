@@ -28,6 +28,7 @@ export interface VideoPayload {
   autoplay?: boolean;
   height?: number;
   width?: number;
+  uploading?: boolean;
 }
 
 function convertVideoElement(domNode: Node): null | DOMConversionOutput {
@@ -60,6 +61,7 @@ export class VideoNode extends DecoratorNode<JSX.Element> {
   __autoplay: boolean = false;
   __width: 'inherit' | number;
   __height: 'inherit' | number;
+  __uploading: boolean = false;
   static getType(): string {
     return 'video';
   }
@@ -114,6 +116,7 @@ export class VideoNode extends DecoratorNode<JSX.Element> {
     width?: 'inherit' | number,
     height?: 'inherit' | number,
     key?: NodeKey,
+    uploading?: boolean,
   ) {
     super(key);
     this.__src = src;
@@ -121,6 +124,7 @@ export class VideoNode extends DecoratorNode<JSX.Element> {
     this.__autoplay = autoplay || false;
     this.__width = width || 'inherit';
     this.__height = height || 'inherit';
+    this.__uploading = uploading || false;
   }
 
   exportJSON(): SerializedVideoNode {
@@ -157,6 +161,11 @@ export class VideoNode extends DecoratorNode<JSX.Element> {
     writable.__height = height;
   }
 
+  setUploadState(uploading: boolean): void {
+    const writable = this.getWritable();
+    writable.__uploading = uploading;
+  }
+
   createDOM(config: EditorConfig): HTMLElement {
     const span = document.createElement('span');
     const theme = config.theme;
@@ -189,6 +198,7 @@ export class VideoNode extends DecoratorNode<JSX.Element> {
         controls={this.__controls}
         width={this.__width}
         height={this.__height}
+        uploading={this.__uploading}
       />
     );
   }
@@ -201,9 +211,10 @@ export function $createVideoNode({
   width,
   height,
   key,
+  uploading,
 }: VideoPayload): VideoNode {
   return $applyNodeReplacement(
-    new VideoNode(src, autoplay, controls, width, height, key),
+    new VideoNode(src, autoplay, controls, width, height, key, uploading),
   );
 }
 

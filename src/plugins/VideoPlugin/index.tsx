@@ -236,6 +236,7 @@ export default function VideoPlugin({
                     .getEditorState()
                     ._nodeMap.get(videoNode.getKey());
                   if (!_node) return;
+                  URL.revokeObjectURL(payload.src);
                   videoNode.setUploadState(false);
                   videoNode.setSrc(res.data);
                 });

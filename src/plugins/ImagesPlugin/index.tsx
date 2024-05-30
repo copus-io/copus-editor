@@ -231,6 +231,7 @@ export default function ImagesPlugin({
                       .getEditorState()
                       ._nodeMap.get(imageNode.getKey());
                     if (!_node) return;
+                    URL.revokeObjectURL(payload.src);
                     imageNode.setUploadState(false);
                     imageNode.setCaptionsEnabled(true);
                     imageNode.setSrc(res.data);

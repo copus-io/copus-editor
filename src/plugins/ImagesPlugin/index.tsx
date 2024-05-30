@@ -10,6 +10,7 @@ import {$wrapNodeInElement, mergeRegister} from '@lexical/utils';
 import {
   $createParagraphNode,
   $createRangeSelection,
+  $getNodeByKey,
   $getSelection,
   $insertNodes,
   $isNodeSelection,
@@ -25,7 +26,7 @@ import {
   LexicalCommand,
   LexicalEditor,
 } from 'lexical';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {CAN_USE_DOM} from '../../shared/canUseDOM';
 
 import {
@@ -40,9 +41,13 @@ import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
 import useFlashMessage from '../../hooks/useFlashMessage';
+import {useSharedHistoryContext} from '../../context/SharedHistoryContext';
+import {clearTempHistory} from '../../utils/clearTempHistory';
 import {mineTypeMap} from '../../utils/constant';
 
-export type InsertImagePayload = Readonly<ImagePayload>;
+export type InsertImagePayload = Readonly<ImagePayload> & {
+  file?: File;
+};
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
@@ -95,7 +100,6 @@ export function InsertImageUploadedDialogBody({
 }) {
   const [file, setFile] = useState<File>();
   const [altText, setAltText] = useState('');
-  const [isUploading, setIsUploading] = useState(false);
 
   const showFlashMessage = useFlashMessage();
 
@@ -105,21 +109,6 @@ export function InsertImageUploadedDialogBody({
     }
     setFile(files[0]);
   };
-
-  const handleUpload = useCallback(async () => {
-    if (file) {
-      if (file.size > mineTypeMap['image'].limitSize) {
-        showFlashMessage(mineTypeMap['image'].limitMessage);
-        return;
-      }
-      setIsUploading(true);
-      let res = await editorUploadFiles(file, 'image');
-      if (res?.status === 1) {
-        onClick({altText, src: res.data});
-      }
-      setIsUploading(false);
-    }
-  }, [file, altText, onClick, showFlashMessage]);
 
   return (
     <>
@@ -139,9 +128,17 @@ export function InsertImageUploadedDialogBody({
       <DialogActions>
         <Button
           data-test-id="image-modal-file-upload-btn"
-          disabled={!file || isUploading}
-          onClick={handleUpload}>
-          {isUploading ? 'Uploading' : 'Confirm'}
+          disabled={!file}
+          onClick={() => {
+            if (file) {
+              if (file.size > mineTypeMap.image.limitSize) {
+                showFlashMessage(mineTypeMap.image.limitMessage);
+                return;
+              }
+              onClick({altText, src: URL.createObjectURL(file), file});
+            }
+          }}>
+          Confirm
         </Button>
       </DialogActions>
     </>
@@ -202,6 +199,7 @@ export default function ImagesPlugin({
   captionsEnabled?: boolean;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
+  const {historyState} = useSharedHistoryContext();
 
   useEffect(() => {
     if (!editor.hasNodes([ImageNode])) {
@@ -212,11 +210,39 @@ export default function ImagesPlugin({
       editor.registerCommand<InsertImagePayload>(
         INSERT_IMAGE_COMMAND,
         (payload) => {
-          const imageNode = $createImageNode(payload);
+          const {file, ...otherPayload} = payload;
+          const imageNode = $createImageNode({
+            ...otherPayload,
+            captionsEnabled: !file,
+            uploading: !!file,
+          });
           $insertNodes([imageNode]);
           if ($isRootOrShadowRoot(imageNode.getParentOrThrow())) {
             $wrapNodeInElement(imageNode, $createParagraphNode).selectEnd();
           }
+
+          if (file) {
+            editorUploadFiles(file, true).then((res) => {
+              if (res.status === 1) {
+                const img = new Image();
+                img.onload = () => {
+                  editor.update(() => {
+                    const _node = editor
+                      .getEditorState()
+                      ._nodeMap.get(imageNode.getKey());
+                    if (!_node) return;
+                    URL.revokeObjectURL(payload.src);
+                    imageNode.setUploadState(false);
+                    imageNode.setCaptionsEnabled(true);
+                    imageNode.setSrc(res.data);
+                  });
+                  clearTempHistory(imageNode, historyState);
+                };
+                img.src = res.data;
+              }
+            });
+          }
+
           return true;
         },
         COMMAND_PRIORITY_EDITOR,

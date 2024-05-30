@@ -79,6 +79,7 @@ function LazyImage({
   width,
   height,
   maxWidth,
+  uploading,
 }: {
   altText: string;
   className: string | null;
@@ -87,22 +88,26 @@ function LazyImage({
   maxWidth: number;
   src: string;
   width: 'inherit' | number;
+  uploading?: boolean;
 }): JSX.Element {
   useSuspenseImage(src);
 
   return (
-    <img
-      className={className || undefined}
-      src={src}
-      alt={altText}
-      ref={imageRef}
-      style={{
-        height,
-        // maxWidth,
-        width,
-      }}
-      draggable="false"
-    />
+    <>
+      <img
+        className={className || undefined}
+        src={src}
+        alt={altText}
+        ref={imageRef}
+        style={{
+          height,
+          // maxWidth,
+          width,
+        }}
+        draggable="false"
+      />
+      {uploading && <div className="uploading-text">Uploading...</div>}
+    </>
   );
 }
 
@@ -117,6 +122,7 @@ export default function ImageComponent({
   showCaption,
   caption,
   captionsEnabled,
+  uploading,
 }: {
   altText: string;
   caption: LexicalEditor;
@@ -128,6 +134,7 @@ export default function ImageComponent({
   src: string;
   width: 'inherit' | number;
   captionsEnabled: boolean;
+  uploading?: boolean;
 }): JSX.Element {
   const imageRef = useRef<null | HTMLImageElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -362,14 +369,13 @@ export default function ImageComponent({
   } = useSettings();
 
   const isEditable = editor.isEditable();
-  const draggable =
-    isEditable && isSelected && $isNodeSelection(selection) && !isResizing;
-  const isFocused = (isEditable && isSelected) || isResizing;
+  const draggable = isEditable && isSelected && $isNodeSelection(selection) && !isResizing;
+  const isFocused = isEditable && isSelected || isResizing;
 
   return (
     <Suspense fallback={null}>
       <>
-        <div draggable={draggable}>
+        <div draggable={draggable} className="uploading-wrap">
           <LazyImage
             className={
               isFocused
@@ -382,6 +388,7 @@ export default function ImageComponent({
             width={width}
             height={height}
             maxWidth={maxWidth}
+            uploading={uploading}
           />
         </div>
         {showCaption && (

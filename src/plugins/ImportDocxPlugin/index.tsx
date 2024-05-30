@@ -110,7 +110,7 @@ export function ImportDocxDialog({
                 {type: image.contentType},
               );
 
-              const res = await editorUploadFiles(imageFile, 'image');
+              const res = await editorUploadFiles(imageFile, true);
               if (res.status === 1) {
                 return {
                   src: res.data,

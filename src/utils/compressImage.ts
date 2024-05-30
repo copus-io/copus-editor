@@ -1,5 +1,6 @@
 export async function compressImage(imageFile: File): Promise<File> {
   return new Promise((resolve, reject) => {
+    const imageUrl = URL.createObjectURL(imageFile);
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
@@ -15,11 +16,13 @@ export async function compressImage(imageFile: File): Promise<File> {
           type: blob.type,
         });
         resolve(myImage);
+        URL.revokeObjectURL(imageUrl);
       }, 'image/webp');
     };
     img.onerror = () => {
       reject(new Error('Failed to load image.'));
+      URL.revokeObjectURL(imageUrl);
     };
-    img.src = URL.createObjectURL(imageFile);
+    img.src = imageUrl;
   });
 }

@@ -124,6 +124,25 @@ export function ImportDocxDialog({
         const html = result.value;
         const parser = new DOMParser();
         const dom = parser.parseFromString(html, 'text/html');
+
+        dom.querySelectorAll('table').forEach((table) => {
+          const tds = table.querySelectorAll('td');
+          tds.forEach((td) => {
+            // 不支持百分比，这里简单处理
+            const root = activeEditor._rootElement;
+            if (root) {
+              const style = root.computedStyleMap();
+              const width =
+                root.clientWidth -
+                // @ts-ignore
+                style?.get('padding-left')?.value -
+                // @ts-ignore
+                style?.get('padding-right')?.value;
+              td.style.width = `${width / tds.length}px`;
+            }
+          });
+        });
+
         activeEditor.update(() => {
           const nodes = $generateNodesFromDOM(activeEditor, dom);
           $insertNodes(nodes);
@@ -134,8 +153,6 @@ export function ImportDocxDialog({
       }
 
       onClose();
-
-      // activeEditor.dispatchCommand(INSERT_IMPORT_DOCX, {file});
     }
   }, [file, activeEditor, onClose, showFlashMessage]);
 

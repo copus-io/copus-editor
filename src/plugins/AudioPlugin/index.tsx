@@ -218,6 +218,7 @@ export default function AudioPlugin({
                     .getEditorState()
                     ._nodeMap.get(audioNode.getKey());
                   if (!_node) return;
+                  URL.revokeObjectURL(payload.src);
                   audioNode.setUploadState(false);
                   audioNode.setSrc(res.data);
                 });

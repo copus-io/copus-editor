@@ -52,7 +52,7 @@ import TabFocusPlugin from './plugins/TabFocusPlugin';
 import TableCellActionMenuPlugin from './plugins/TableActionMenuPlugin';
 import TableCellResizer from './plugins/TableCellResizer';
 import TableOfContentsPlugin from './plugins/TableOfContentsPlugin';
-import ToolbarPlugin from './plugins/ToolbarPlugin';
+import ToolbarPlugin, {ToolbarConfig} from './plugins/ToolbarPlugin';
 import TreeViewPlugin from './plugins/TreeViewPlugin';
 import TwitterPlugin from './plugins/TwitterPlugin';
 import YouTubePlugin from './plugins/YouTubePlugin';
@@ -71,9 +71,14 @@ const skipCollaborationInit =
 export interface EditorProps {
   readOnly?: boolean;
   onChange?: (editorState: EditorState, html: string) => void;
+  toolbar?: ToolbarConfig;
 }
 
-export default function Editor({onChange, readOnly}: EditorProps): JSX.Element {
+export default function Editor({
+  onChange,
+  readOnly,
+  toolbar,
+}: EditorProps): JSX.Element {
   const {historyState} = useSharedHistoryContext();
   const [editor] = useLexicalComposerContext();
   const {
@@ -152,7 +157,12 @@ export default function Editor({onChange, readOnly}: EditorProps): JSX.Element {
 
   return (
     <>
-      {isRichText && <ToolbarPlugin setIsLinkEditMode={setIsLinkEditMode} />}
+      {isRichText && (
+        <ToolbarPlugin
+          setIsLinkEditMode={setIsLinkEditMode}
+          toolbarConfig={toolbar}
+        />
+      )}
       <div className={`editor-container ${!isRichText ? 'plain-text' : ''}`}>
         {isMaxLength && <MaxLengthPlugin maxLength={30} />}
         <DragDropPaste />

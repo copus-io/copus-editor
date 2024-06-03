@@ -529,6 +529,7 @@ export type ToolbarConfig = (
   | 'insert-more'
   | 'code-format'
   | 'element-format'
+  | 'columns-layout'
 )[];
 
 const defaultToolbarConfig: ToolbarConfig = [
@@ -554,9 +555,11 @@ const defaultToolbarConfig: ToolbarConfig = [
 export default function ToolbarPlugin({
   setIsLinkEditMode,
   toolbarConfig = defaultToolbarConfig,
+  showLabel,
 }: {
   setIsLinkEditMode: Dispatch<boolean>;
   toolbarConfig?: ToolbarConfig;
+  showLabel?: boolean;
 }): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
@@ -1159,18 +1162,18 @@ export default function ToolbarPlugin({
     ],
   );
 
-  const InsertImage = useCallback(
-    () => (
+  const InsertImage = useCallback(() => {
+    return (
       <button
         disabled={!isEditable}
         onClick={insertImage}
-        className={'toolbar-item'}
+        className="toolbar-item"
         type="button">
         <i className="format image" />
+        {showLabel && <span className="item-label">Insert Image</span>}
       </button>
-    ),
-    [insertImage, isEditable],
-  );
+    );
+  }, [insertImage, isEditable, showLabel]);
 
   const InsertAudio = useCallback(
     () => (
@@ -1180,9 +1183,10 @@ export default function ToolbarPlugin({
         className={'toolbar-item'}
         type="button">
         <i className="format audio" />
+        {showLabel && <span className="item-label">Insert Audio</span>}
       </button>
     ),
-    [insertAudio, isEditable],
+    [insertAudio, isEditable, showLabel],
   );
 
   const InsertVideo = useCallback(
@@ -1193,9 +1197,10 @@ export default function ToolbarPlugin({
         className={'toolbar-item'}
         type="button">
         <i className="format video" />
+        {showLabel && <span className="item-label">Insert Video</span>}
       </button>
     ),
-    [insertVideo, isEditable],
+    [insertVideo, isEditable, showLabel],
   );
 
   const ImportDocx = useCallback(
@@ -1206,9 +1211,10 @@ export default function ToolbarPlugin({
         className={'toolbar-item'}
         type="button">
         <i className="format word" />
+        {showLabel && <span className="item-label">Import Word</span>}
       </button>
     ),
-    [importDocx, isEditable],
+    [importDocx, isEditable, showLabel],
   );
 
   const InsertMore = useCallback(
@@ -1368,6 +1374,23 @@ export default function ToolbarPlugin({
     [codeLanguage, isEditable, onCodeLanguageSelect],
   );
 
+  const ColumnsLayout = useCallback(() => {
+    return (
+      <button
+        disabled={!isEditable}
+        onClick={() => {
+          showModal('Insert Columns Layout', (onClose) => (
+            <InsertLayoutDialog activeEditor={activeEditor} onClose={onClose} />
+          ));
+        }}
+        className="toolbar-item"
+        type="button">
+        <i className="format columns" />
+        {showLabel && <span className="item-label">Columns Layout</span>}
+      </button>
+    );
+  }, [activeEditor, isEditable, showModal, showLabel]);
+
   // Map of toolbar items
   const toolbarMap = useMemo(
     () => ({
@@ -1390,6 +1413,7 @@ export default function ToolbarPlugin({
       'import-docx': ImportDocx,
       'insert-more': InsertMore,
       'code-block': CodeBlock,
+      'columns-layout': ColumnsLayout,
     }),
     [
       BlockFormat,
@@ -1410,6 +1434,7 @@ export default function ToolbarPlugin({
       CodeFormat,
       Italic,
       Underline,
+      ColumnsLayout,
     ],
   );
 

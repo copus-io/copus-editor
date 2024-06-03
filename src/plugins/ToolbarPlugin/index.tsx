@@ -549,6 +549,7 @@ const defaultToolbarConfig: ToolbarConfig = [
   'import-docx',
   'insert-more',
   'code-format',
+  'divider',
   'element-format',
 ];
 
@@ -951,15 +952,12 @@ export default function ToolbarPlugin({
 
   const ElementFormat = useCallback(
     () => (
-      <>
-        <Divider />
-        <ElementFormatDropdown
-          disabled={!isEditable}
-          value={elementFormat}
-          editor={editor}
-          isRTL={isRTL}
-        />
-      </>
+      <ElementFormatDropdown
+        disabled={!isEditable}
+        value={elementFormat}
+        editor={editor}
+        isRTL={isRTL}
+      />
     ),
     [editor, elementFormat, isEditable, isRTL],
   );
@@ -1439,7 +1437,7 @@ export default function ToolbarPlugin({
   );
 
   const ToolbarList = useCallback(() => {
-    return toolbarConfig.map((item) => {
+    return toolbarConfig.map((item, index) => {
       if (blockType === 'code') {
         if (!['history', 'divider', 'block-format'].includes(item)) {
           return null;
@@ -1451,7 +1449,7 @@ export default function ToolbarPlugin({
       }
 
       const Component = toolbarMap[item];
-      return <Component key={item} />;
+      return <Component key={`${item}_${index}`} />;
     });
   }, [toolbarConfig, toolbarMap, blockType]);
 

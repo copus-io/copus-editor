@@ -72,12 +72,14 @@ export interface EditorProps {
   readOnly?: boolean;
   onChange?: (editorState: EditorState, html: string) => void;
   toolbar?: ToolbarConfig;
+  showLabel?: boolean;
 }
 
 export default function Editor({
   onChange,
   readOnly,
   toolbar,
+  showLabel,
 }: EditorProps): JSX.Element {
   const {historyState} = useSharedHistoryContext();
   const [editor] = useLexicalComposerContext();
@@ -161,6 +163,7 @@ export default function Editor({
         <ToolbarPlugin
           setIsLinkEditMode={setIsLinkEditMode}
           toolbarConfig={toolbar}
+          showLabel={showLabel}
         />
       )}
       <div className={`editor-container ${!isRichText ? 'plain-text' : ''}`}>

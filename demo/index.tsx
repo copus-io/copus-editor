@@ -44,6 +44,18 @@ function DemoApp() {
       onChange={(status, html) => {
         console.log(status, html);
       }}
+      // toolbar={[
+      //   'history',
+      //   'block-format',
+      //   'font',
+      //   'insert-image',
+      //   'insert-audio',
+      //   'insert-video',
+      //   'columns-layout',
+      //   'element-format',
+      //   'insert-more',
+      // ]}
+      // showLabel
     />
   );
 }

@@ -1242,6 +1242,7 @@
             flex-shrink: 0;
             align-items: center;
             justify-content: space-between;
+            box-sizing: border-box;
         }
 
         button.toolbar-item:disabled {
@@ -1301,6 +1302,19 @@
             height: 20px;
             text-align: left;
             padding-right: 10px;
+        }
+
+        .toolbar .toolbar-item .item-label {
+            display: flex;
+            line-height: 20px;
+            vertical-align: middle;
+            font-size: 14px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            height: 20px;
+            text-align: left;
+            margin-left: 8px;
+            opacity: 0.7;
         }
 
         .toolbar .toolbar-item .icon {

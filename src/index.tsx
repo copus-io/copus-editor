@@ -25,6 +25,7 @@ export interface EditorProps {
   onChange?: (editorState: EditorState, html: string) => void;
   initialValue?: string;
   toolbar?: ToolbarConfig;
+  showLabel?: boolean;
 }
 
 function App(props: EditorProps): JSX.Element {
@@ -49,6 +50,7 @@ function App(props: EditorProps): JSX.Element {
                 onChange={props.onChange}
                 readOnly={props.readOnly}
                 toolbar={props.toolbar}
+                showLabel={props.showLabel}
               />
             </div>
           </SharedAutocompleteContext>

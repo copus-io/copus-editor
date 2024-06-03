@@ -18,11 +18,14 @@ import styles from './style.module.less';
 import {useEffect} from 'react';
 import getEditorPortal from './utils/getEditorPortal';
 import {EditorState, SerializedEditorState} from 'lexical';
+import {ToolbarConfig} from './plugins/ToolbarPlugin';
 
 export interface EditorProps {
   readOnly?: boolean;
   onChange?: (editorState: EditorState, html: string) => void;
   initialValue?: string;
+  toolbar?: ToolbarConfig;
+  showLabel?: boolean;
 }
 
 function App(props: EditorProps): JSX.Element {
@@ -43,7 +46,12 @@ function App(props: EditorProps): JSX.Element {
         <TableContext>
           <SharedAutocompleteContext>
             <div className={styles['s31-editor-shell']}>
-              <Editor onChange={props.onChange} readOnly={props.readOnly} />
+              <Editor
+                onChange={props.onChange}
+                readOnly={props.readOnly}
+                toolbar={props.toolbar}
+                showLabel={props.showLabel}
+              />
             </div>
           </SharedAutocompleteContext>
         </TableContext>

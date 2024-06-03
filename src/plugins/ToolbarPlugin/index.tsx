@@ -70,7 +70,7 @@ import {
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
 } from 'lexical';
-import {Dispatch, useCallback, useEffect, useState} from 'react';
+import {Dispatch, useCallback, useEffect, useMemo, useState} from 'react';
 import {IS_APPLE} from '../../shared/environment';
 
 import useModal from '../../hooks/useModal';
@@ -509,10 +509,57 @@ function ElementFormatDropdown({
   );
 }
 
+export type ToolbarConfig = (
+  | 'history'
+  | 'divider'
+  | 'block-format'
+  | 'font'
+  | 'bold'
+  | 'italic'
+  | 'underline'
+  | 'code-block'
+  | 'link'
+  | 'font-color'
+  | 'bg-color'
+  | 'font-more'
+  | 'insert-image'
+  | 'insert-audio'
+  | 'insert-video'
+  | 'import-docx'
+  | 'insert-more'
+  | 'code-format'
+  | 'element-format'
+  | 'columns-layout'
+)[];
+
+const defaultToolbarConfig: ToolbarConfig = [
+  'history',
+  'divider',
+  'block-format',
+  'font',
+  'bold',
+  'italic',
+  'underline',
+  'code-block',
+  'link',
+  'font-color',
+  'bg-color',
+  'font-more',
+  'insert-image',
+  'import-docx',
+  'insert-more',
+  'code-format',
+  'element-format',
+];
+
 export default function ToolbarPlugin({
   setIsLinkEditMode,
+  toolbarConfig = defaultToolbarConfig,
+  showLabel,
 }: {
   setIsLinkEditMode: Dispatch<boolean>;
+  toolbarConfig?: ToolbarConfig;
+  showLabel?: boolean;
 }): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
@@ -822,6 +869,18 @@ export default function ToolbarPlugin({
     ));
   }, [activeEditor]);
 
+  const insertAudio = useCallback(() => {
+    showModal('Insert Audio', (onClose) => (
+      <InsertAudioDialog activeEditor={activeEditor} onClose={onClose} />
+    ));
+  }, [activeEditor]);
+
+  const insertVideo = useCallback(() => {
+    showModal('Insert Video', (onClose) => (
+      <InsertVideoDialog activeEditor={activeEditor} onClose={onClose} />
+    ));
+  }, [activeEditor]);
+
   const importDocx = useCallback(() => {
     showModal('Import Word File', (onClose) => (
       <ImportDocxDialog activeEditor={activeEditor} onClose={onClose} />
@@ -842,32 +901,39 @@ export default function ToolbarPlugin({
     [activeEditor, selectedElementKey],
   );
 
-  return (
-    <div className="toolbar">
-      <button
-        disabled={!canUndo || !isEditable}
-        onClick={() => {
-          activeEditor.dispatchCommand(UNDO_COMMAND, undefined);
-        }}
-        title={IS_APPLE ? 'Undo (⌘Z)' : 'Undo (Ctrl+Z)'}
-        type="button"
-        className="toolbar-item spaced"
-        aria-label="Undo">
-        <i className="format undo" />
-      </button>
-      <button
-        disabled={!canRedo || !isEditable}
-        onClick={() => {
-          activeEditor.dispatchCommand(REDO_COMMAND, undefined);
-        }}
-        title={IS_APPLE ? 'Redo (⌘Y)' : 'Redo (Ctrl+Y)'}
-        type="button"
-        className="toolbar-item"
-        aria-label="Redo">
-        <i className="format redo" />
-      </button>
-      <Divider />
-      {blockType in blockTypeToBlockName && activeEditor === editor && (
+  const History = useCallback(
+    () => (
+      <>
+        <button
+          disabled={!canUndo || !isEditable}
+          onClick={() => {
+            activeEditor.dispatchCommand(UNDO_COMMAND, undefined);
+          }}
+          title={IS_APPLE ? 'Undo (⌘Z)' : 'Undo (Ctrl+Z)'}
+          type="button"
+          className="toolbar-item spaced"
+          aria-label="Undo">
+          <i className="format undo" />
+        </button>
+        <button
+          disabled={!canRedo || !isEditable}
+          onClick={() => {
+            activeEditor.dispatchCommand(REDO_COMMAND, undefined);
+          }}
+          title={IS_APPLE ? 'Redo (⌘Y)' : 'Redo (Ctrl+Y)'}
+          type="button"
+          className="toolbar-item"
+          aria-label="Redo">
+          <i className="format redo" />
+        </button>
+      </>
+    ),
+    [activeEditor, canRedo, canUndo, isEditable],
+  );
+
+  const BlockFormat = useCallback(() => {
+    if (blockType in blockTypeToBlockName && activeEditor === editor) {
+      return (
         <>
           <BlockFormatDropDown
             disabled={!isEditable}
@@ -877,321 +943,521 @@ export default function ToolbarPlugin({
           />
           <Divider />
         </>
-      )}
-      {blockType === 'code' ? (
+      );
+    }
+
+    return null;
+  }, [activeEditor, blockType, editor, isEditable, rootType]);
+
+  const ElementFormat = useCallback(
+    () => (
+      <>
+        <Divider />
+        <ElementFormatDropdown
+          disabled={!isEditable}
+          value={elementFormat}
+          editor={editor}
+          isRTL={isRTL}
+        />
+      </>
+    ),
+    [editor, elementFormat, isEditable, isRTL],
+  );
+
+  const Font = useCallback(
+    () => (
+      <>
+        <FontDropDown
+          disabled={!isEditable}
+          style={'font-family'}
+          value={fontFamily}
+          editor={editor}
+        />
+        <Divider />
+        <FontSize
+          selectionFontSize={fontSize.slice(0, -2)}
+          editor={editor}
+          disabled={!isEditable}
+        />
+        <Divider />
+      </>
+    ),
+    [editor, fontFamily, fontSize, isEditable],
+  );
+
+  const Bold = useCallback(
+    () => (
+      <button
+        disabled={!isEditable}
+        onClick={() => {
+          activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
+        }}
+        className={'toolbar-item spaced ' + (isBold ? 'active' : '')}
+        title={IS_APPLE ? 'Bold (⌘B)' : 'Bold (Ctrl+B)'}
+        type="button"
+        aria-label={`Format text as bold. Shortcut: ${
+          IS_APPLE ? '⌘B' : 'Ctrl+B'
+        }`}>
+        <i className="format bold" />
+      </button>
+    ),
+    [activeEditor, isBold, isEditable],
+  );
+
+  const Italic = useCallback(
+    () => (
+      <button
+        disabled={!isEditable}
+        onClick={() => {
+          activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
+        }}
+        className={'toolbar-item spaced ' + (isItalic ? 'active' : '')}
+        title={IS_APPLE ? 'Italic (⌘I)' : 'Italic (Ctrl+I)'}
+        type="button"
+        aria-label={`Format text as italics. Shortcut: ${
+          IS_APPLE ? '⌘I' : 'Ctrl+I'
+        }`}>
+        <i className="format italic" />
+      </button>
+    ),
+    [activeEditor, isEditable, isItalic],
+  );
+
+  const Underline = useCallback(
+    () => (
+      <button
+        disabled={!isEditable}
+        onClick={() => {
+          activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
+        }}
+        className={'toolbar-item spaced ' + (isUnderline ? 'active' : '')}
+        title={IS_APPLE ? 'Underline (⌘U)' : 'Underline (Ctrl+U)'}
+        type="button"
+        aria-label={`Format text to underlined. Shortcut: ${
+          IS_APPLE ? '⌘U' : 'Ctrl+U'
+        }`}>
+        <i className="format underline" />
+      </button>
+    ),
+    [activeEditor, isEditable, isUnderline],
+  );
+
+  const CodeBlock = useCallback(
+    () => (
+      <button
+        disabled={!isEditable}
+        onClick={() => {
+          activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
+        }}
+        className={'toolbar-item spaced ' + (isCode ? 'active' : '')}
+        title="Insert code block"
+        type="button"
+        aria-label="Insert code block">
+        <i className="format code" />
+      </button>
+    ),
+    [activeEditor, isCode, isEditable],
+  );
+
+  const Link = useCallback(
+    () => (
+      <button
+        disabled={!isEditable}
+        onClick={insertLink}
+        className={'toolbar-item spaced ' + (isLink ? 'active' : '')}
+        aria-label="Insert link"
+        title="Insert link"
+        type="button">
+        <i className="format link" />
+      </button>
+    ),
+    [insertLink, isEditable, isLink],
+  );
+
+  const FontColor = useCallback(
+    () => (
+      <DropdownColorPicker
+        disabled={!isEditable}
+        buttonClassName="toolbar-item color-picker"
+        buttonAriaLabel="Formatting text color"
+        buttonIconClassName="icon font-color"
+        color={fontColor}
+        onChange={onFontColorSelect}
+        title="text color"
+      />
+    ),
+    [fontColor, isEditable, onFontColorSelect],
+  );
+
+  const BgColor = useCallback(
+    () => (
+      <DropdownColorPicker
+        disabled={!isEditable}
+        buttonClassName="toolbar-item color-picker"
+        buttonAriaLabel="Formatting background color"
+        buttonIconClassName="icon bg-color"
+        color={bgColor}
+        onChange={onBgColorSelect}
+        title="bg color"
+      />
+    ),
+    [bgColor, isEditable, onBgColorSelect],
+  );
+
+  const FontMore = useCallback(
+    () => (
+      <DropDown
+        disabled={!isEditable}
+        buttonClassName="toolbar-item spaced"
+        buttonLabel=""
+        buttonAriaLabel="Formatting options for additional text styles"
+        buttonIconClassName="icon dropdown-more">
+        <DropDownItem
+          onClick={() => {
+            activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
+          }}
+          className={'item ' + dropDownActiveClass(isStrikethrough)}
+          title="Strikethrough"
+          aria-label="Format text with a strikethrough">
+          <i className="icon strikethrough" />
+          <span className="text">Strikethrough</span>
+        </DropDownItem>
+        <DropDownItem
+          onClick={() => {
+            activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'subscript');
+          }}
+          className={'item ' + dropDownActiveClass(isSubscript)}
+          title="Subscript"
+          aria-label="Format text with a subscript">
+          <i className="icon subscript" />
+          <span className="text">Subscript</span>
+        </DropDownItem>
+        <DropDownItem
+          onClick={() => {
+            activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'superscript');
+          }}
+          className={'item ' + dropDownActiveClass(isSuperscript)}
+          title="Superscript"
+          aria-label="Format text with a superscript">
+          <i className="icon superscript" />
+          <span className="text">Superscript</span>
+        </DropDownItem>
+        <DropDownItem
+          onClick={clearFormatting}
+          className="item"
+          title="Clear text formatting"
+          aria-label="Clear all text formatting">
+          <i className="icon clear" />
+          <span className="text">Clear Formatting</span>
+        </DropDownItem>
+      </DropDown>
+    ),
+    [
+      activeEditor,
+      clearFormatting,
+      isEditable,
+      isStrikethrough,
+      isSubscript,
+      isSuperscript,
+    ],
+  );
+
+  const InsertImage = useCallback(() => {
+    return (
+      <button
+        disabled={!isEditable}
+        onClick={insertImage}
+        className="toolbar-item"
+        type="button">
+        <i className="format image" />
+        {showLabel && <span className="item-label">Insert Image</span>}
+      </button>
+    );
+  }, [insertImage, isEditable, showLabel]);
+
+  const InsertAudio = useCallback(
+    () => (
+      <button
+        disabled={!isEditable}
+        onClick={insertAudio}
+        className={'toolbar-item'}
+        type="button">
+        <i className="format audio" />
+        {showLabel && <span className="item-label">Insert Audio</span>}
+      </button>
+    ),
+    [insertAudio, isEditable, showLabel],
+  );
+
+  const InsertVideo = useCallback(
+    () => (
+      <button
+        disabled={!isEditable}
+        onClick={insertVideo}
+        className={'toolbar-item'}
+        type="button">
+        <i className="format video" />
+        {showLabel && <span className="item-label">Insert Video</span>}
+      </button>
+    ),
+    [insertVideo, isEditable, showLabel],
+  );
+
+  const ImportDocx = useCallback(
+    () => (
+      <button
+        disabled={!isEditable}
+        onClick={importDocx}
+        className={'toolbar-item'}
+        type="button">
+        <i className="format word" />
+        {showLabel && <span className="item-label">Import Word</span>}
+      </button>
+    ),
+    [importDocx, isEditable, showLabel],
+  );
+
+  const InsertMore = useCallback(
+    () => (
+      <>
+        <Divider />
         <DropDown
           disabled={!isEditable}
-          buttonClassName="toolbar-item code-language"
-          buttonLabel={getLanguageFriendlyName(codeLanguage)}
-          buttonAriaLabel="Select language">
-          {CODE_LANGUAGE_OPTIONS.map(([value, name]) => {
-            return (
-              <DropDownItem
-                className={`item ${dropDownActiveClass(
-                  value === codeLanguage,
-                )}`}
-                onClick={() => onCodeLanguageSelect(value)}
-                key={value}>
-                <span className="text">{name}</span>
-              </DropDownItem>
-            );
-          })}
+          buttonClassName="toolbar-item spaced"
+          buttonLabel="Insert"
+          buttonAriaLabel="Insert specialized editor node"
+          buttonIconClassName="icon plus">
+          <DropDownItem
+            onClick={() => {
+              activeEditor.dispatchCommand(
+                INSERT_HORIZONTAL_RULE_COMMAND,
+                undefined,
+              );
+            }}
+            className="item">
+            <i className="icon horizontal-rule" />
+            <span className="text">Horizontal Rule</span>
+          </DropDownItem>
+          <DropDownItem
+            onClick={() => {
+              activeEditor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
+            }}
+            className="item">
+            <i className="icon page-break" />
+            <span className="text">Page Break</span>
+          </DropDownItem>
+          <DropDownItem
+            onClick={() => {
+              showModal('Insert Image', (onClose) => (
+                <InsertImageDialog
+                  activeEditor={activeEditor}
+                  onClose={onClose}
+                />
+              ));
+            }}
+            className="item">
+            <i className="icon image" />
+            <span className="text">Insert Image</span>
+          </DropDownItem>
+          {/* <DropDownItem
+          onClick={() => {
+            showModal('Insert Inline Image', (onClose) => (
+              <InsertInlineImageDialog
+                activeEditor={activeEditor}
+                onClose={onClose}
+              />
+            ));
+          }}
+          className="item">
+          <i className="icon image" />
+          <span className="text">Inline Image</span>
+        </DropDownItem> */}
+          <DropDownItem
+            onClick={() => {
+              showModal('Insert Table', (onClose) => (
+                <InsertTableDialog
+                  activeEditor={activeEditor}
+                  onClose={onClose}
+                />
+              ));
+            }}
+            className="item">
+            <i className="icon table" />
+            <span className="text">Table</span>
+          </DropDownItem>
+          <DropDownItem
+            onClick={() => {
+              showModal('Insert Columns Layout', (onClose) => (
+                <InsertLayoutDialog
+                  activeEditor={activeEditor}
+                  onClose={onClose}
+                />
+              ));
+            }}
+            className="item">
+            <i className="icon columns" />
+            <span className="text">Columns Layout</span>
+          </DropDownItem>
+          <DropDownItem
+            onClick={() => {
+              editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined);
+            }}
+            className="item">
+            <i className="icon caret-right" />
+            <span className="text">Collapsible container</span>
+          </DropDownItem>
+          <DropDownItem
+            onClick={() => {
+              showModal('Insert Audio', (onClose) => (
+                <InsertAudioDialog
+                  activeEditor={activeEditor}
+                  onClose={onClose}
+                />
+              ));
+            }}
+            className="item">
+            <i className="icon audio" />
+            <span className="text">Insert Audio</span>
+          </DropDownItem>
+          <DropDownItem
+            onClick={() => {
+              showModal('Insert Video', (onClose) => (
+                <InsertVideoDialog
+                  activeEditor={activeEditor}
+                  onClose={onClose}
+                />
+              ));
+            }}
+            className="item">
+            <i className="icon video" />
+            <span className="text">Insert Video</span>
+          </DropDownItem>
+          {EmbedConfigs.map((embedConfig) => (
+            <DropDownItem
+              key={embedConfig.type}
+              onClick={() => {
+                activeEditor.dispatchCommand(
+                  INSERT_EMBED_COMMAND,
+                  embedConfig.type,
+                );
+              }}
+              className="item">
+              {embedConfig.icon}
+              <span className="text">{embedConfig.contentName}</span>
+            </DropDownItem>
+          ))}
         </DropDown>
-      ) : (
-        <>
-          <FontDropDown
-            disabled={!isEditable}
-            style={'font-family'}
-            value={fontFamily}
-            editor={editor}
-          />
-          <Divider />
-          <FontSize
-            selectionFontSize={fontSize.slice(0, -2)}
-            editor={editor}
-            disabled={!isEditable}
-          />
-          <Divider />
-          <button
-            disabled={!isEditable}
-            onClick={() => {
-              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
-            }}
-            className={'toolbar-item spaced ' + (isBold ? 'active' : '')}
-            title={IS_APPLE ? 'Bold (⌘B)' : 'Bold (Ctrl+B)'}
-            type="button"
-            aria-label={`Format text as bold. Shortcut: ${
-              IS_APPLE ? '⌘B' : 'Ctrl+B'
-            }`}>
-            <i className="format bold" />
-          </button>
-          <button
-            disabled={!isEditable}
-            onClick={() => {
-              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
-            }}
-            className={'toolbar-item spaced ' + (isItalic ? 'active' : '')}
-            title={IS_APPLE ? 'Italic (⌘I)' : 'Italic (Ctrl+I)'}
-            type="button"
-            aria-label={`Format text as italics. Shortcut: ${
-              IS_APPLE ? '⌘I' : 'Ctrl+I'
-            }`}>
-            <i className="format italic" />
-          </button>
-          <button
-            disabled={!isEditable}
-            onClick={() => {
-              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
-            }}
-            className={'toolbar-item spaced ' + (isUnderline ? 'active' : '')}
-            title={IS_APPLE ? 'Underline (⌘U)' : 'Underline (Ctrl+U)'}
-            type="button"
-            aria-label={`Format text to underlined. Shortcut: ${
-              IS_APPLE ? '⌘U' : 'Ctrl+U'
-            }`}>
-            <i className="format underline" />
-          </button>
-          <button
-            disabled={!isEditable}
-            onClick={() => {
-              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
-            }}
-            className={'toolbar-item spaced ' + (isCode ? 'active' : '')}
-            title="Insert code block"
-            type="button"
-            aria-label="Insert code block">
-            <i className="format code" />
-          </button>
-          <button
-            disabled={!isEditable}
-            onClick={insertLink}
-            className={'toolbar-item spaced ' + (isLink ? 'active' : '')}
-            aria-label="Insert link"
-            title="Insert link"
-            type="button">
-            <i className="format link" />
-          </button>
-          <DropdownColorPicker
-            disabled={!isEditable}
-            buttonClassName="toolbar-item color-picker"
-            buttonAriaLabel="Formatting text color"
-            buttonIconClassName="icon font-color"
-            color={fontColor}
-            onChange={onFontColorSelect}
-            title="text color"
-          />
-          <DropdownColorPicker
-            disabled={!isEditable}
-            buttonClassName="toolbar-item color-picker"
-            buttonAriaLabel="Formatting background color"
-            buttonIconClassName="icon bg-color"
-            color={bgColor}
-            onChange={onBgColorSelect}
-            title="bg color"
-          />
-          <DropDown
-            disabled={!isEditable}
-            buttonClassName="toolbar-item spaced"
-            buttonLabel=""
-            buttonAriaLabel="Formatting options for additional text styles"
-            buttonIconClassName="icon dropdown-more">
-            <DropDownItem
-              onClick={() => {
-                activeEditor.dispatchCommand(
-                  FORMAT_TEXT_COMMAND,
-                  'strikethrough',
-                );
-              }}
-              className={'item ' + dropDownActiveClass(isStrikethrough)}
-              title="Strikethrough"
-              aria-label="Format text with a strikethrough">
-              <i className="icon strikethrough" />
-              <span className="text">Strikethrough</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'subscript');
-              }}
-              className={'item ' + dropDownActiveClass(isSubscript)}
-              title="Subscript"
-              aria-label="Format text with a subscript">
-              <i className="icon subscript" />
-              <span className="text">Subscript</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                activeEditor.dispatchCommand(
-                  FORMAT_TEXT_COMMAND,
-                  'superscript',
-                );
-              }}
-              className={'item ' + dropDownActiveClass(isSuperscript)}
-              title="Superscript"
-              aria-label="Format text with a superscript">
-              <i className="icon superscript" />
-              <span className="text">Superscript</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={clearFormatting}
-              className="item"
-              title="Clear text formatting"
-              aria-label="Clear all text formatting">
-              <i className="icon clear" />
-              <span className="text">Clear Formatting</span>
-            </DropDownItem>
-          </DropDown>
+      </>
+    ),
+    [activeEditor, insertImage, importDocx, isEditable, showModal],
+  );
 
-          <button
-            disabled={!isEditable}
-            onClick={insertImage}
-            className={'toolbar-item'}
-            type="button">
-            <i className="format image" />
-          </button>
-          <button
-            disabled={!isEditable}
-            onClick={importDocx}
-            className={'toolbar-item'}
-            type="button">
-            <i className="format word" />
-          </button>
-          <Divider />
-          <DropDown
-            disabled={!isEditable}
-            buttonClassName="toolbar-item spaced"
-            buttonLabel="Insert"
-            buttonAriaLabel="Insert specialized editor node"
-            buttonIconClassName="icon plus">
-            <DropDownItem
-              onClick={() => {
-                activeEditor.dispatchCommand(
-                  INSERT_HORIZONTAL_RULE_COMMAND,
-                  undefined,
-                );
-              }}
-              className="item">
-              <i className="icon horizontal-rule" />
-              <span className="text">Horizontal Rule</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                activeEditor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
-              }}
-              className="item">
-              <i className="icon page-break" />
-              <span className="text">Page Break</span>
-            </DropDownItem>
-            {/* <DropDownItem
-              onClick={() => {
-                showModal('Insert Image', (onClose) => (
-                  <InsertImageDialog
-                    activeEditor={activeEditor}
-                    onClose={onClose}
-                  />
-                ));
-              }}
-              className="item">
-              <i className="icon image" />
-              <span className="text">Image</span>
-            </DropDownItem> */}
-            {/* <DropDownItem
-              onClick={() => {
-                showModal('Insert Inline Image', (onClose) => (
-                  <InsertInlineImageDialog
-                    activeEditor={activeEditor}
-                    onClose={onClose}
-                  />
-                ));
-              }}
-              className="item">
-              <i className="icon image" />
-              <span className="text">Inline Image</span>
-            </DropDownItem> */}
-            <DropDownItem
-              onClick={() => {
-                showModal('Insert Table', (onClose) => (
-                  <InsertTableDialog
-                    activeEditor={activeEditor}
-                    onClose={onClose}
-                  />
-                ));
-              }}
-              className="item">
-              <i className="icon table" />
-              <span className="text">Table</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                showModal('Insert Columns Layout', (onClose) => (
-                  <InsertLayoutDialog
-                    activeEditor={activeEditor}
-                    onClose={onClose}
-                  />
-                ));
-              }}
-              className="item">
-              <i className="icon columns" />
-              <span className="text">Columns Layout</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined);
-              }}
-              className="item">
-              <i className="icon caret-right" />
-              <span className="text">Collapsible container</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                showModal('Insert Audio', (onClose) => (
-                  <InsertAudioDialog
-                    activeEditor={activeEditor}
-                    onClose={onClose}
-                  />
-                ));
-              }}
-              className="item">
-              <i className="icon audio" />
-              <span className="text">Insert Audio</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                showModal('Insert Video', (onClose) => (
-                  <InsertVideoDialog
-                    activeEditor={activeEditor}
-                    onClose={onClose}
-                  />
-                ));
-              }}
-              className="item">
-              <i className="icon video" />
-              <span className="text">Insert Video</span>
-            </DropDownItem>
-            {EmbedConfigs.map((embedConfig) => (
-              <DropDownItem
-                key={embedConfig.type}
-                onClick={() => {
-                  activeEditor.dispatchCommand(
-                    INSERT_EMBED_COMMAND,
-                    embedConfig.type,
-                  );
-                }}
-                className="item">
-                {embedConfig.icon}
-                <span className="text">{embedConfig.contentName}</span>
-              </DropDownItem>
-            ))}
-          </DropDown>
-        </>
-      )}
-      <Divider />
-      <ElementFormatDropdown
+  const CodeFormat = useCallback(
+    () => (
+      <DropDown
         disabled={!isEditable}
-        value={elementFormat}
-        editor={editor}
-        isRTL={isRTL}
-      />
+        buttonClassName="toolbar-item code-language"
+        buttonLabel={getLanguageFriendlyName(codeLanguage)}
+        buttonAriaLabel="Select language">
+        {CODE_LANGUAGE_OPTIONS.map(([value, name]) => {
+          return (
+            <DropDownItem
+              className={`item ${dropDownActiveClass(value === codeLanguage)}`}
+              onClick={() => onCodeLanguageSelect(value)}
+              key={value}>
+              <span className="text">{name}</span>
+            </DropDownItem>
+          );
+        })}
+      </DropDown>
+    ),
+    [codeLanguage, isEditable, onCodeLanguageSelect],
+  );
 
+  const ColumnsLayout = useCallback(() => {
+    return (
+      <button
+        disabled={!isEditable}
+        onClick={() => {
+          showModal('Insert Columns Layout', (onClose) => (
+            <InsertLayoutDialog activeEditor={activeEditor} onClose={onClose} />
+          ));
+        }}
+        className="toolbar-item"
+        type="button">
+        <i className="format columns" />
+        {showLabel && <span className="item-label">Columns Layout</span>}
+      </button>
+    );
+  }, [activeEditor, isEditable, showModal, showLabel]);
+
+  // Map of toolbar items
+  const toolbarMap = useMemo(
+    () => ({
+      history: History,
+      divider: Divider,
+      'block-format': BlockFormat,
+      'element-format': ElementFormat,
+      'code-format': CodeFormat,
+      font: Font,
+      bold: Bold,
+      italic: Italic,
+      underline: Underline,
+      'font-color': FontColor,
+      'bg-color': BgColor,
+      'font-more': FontMore,
+      link: Link,
+      'insert-image': InsertImage,
+      'insert-audio': InsertAudio,
+      'insert-video': InsertVideo,
+      'import-docx': ImportDocx,
+      'insert-more': InsertMore,
+      'code-block': CodeBlock,
+      'columns-layout': ColumnsLayout,
+    }),
+    [
+      BlockFormat,
+      ElementFormat,
+      History,
+      FontColor,
+      FontMore,
+      Link,
+      Font,
+      BgColor,
+      InsertImage,
+      InsertAudio,
+      InsertVideo,
+      ImportDocx,
+      InsertMore,
+      CodeBlock,
+      Bold,
+      CodeFormat,
+      Italic,
+      Underline,
+      ColumnsLayout,
+    ],
+  );
+
+  const ToolbarList = useCallback(() => {
+    return toolbarConfig.map((item) => {
+      if (blockType === 'code') {
+        if (!['history', 'divider', 'block-format'].includes(item)) {
+          return null;
+        }
+      } else {
+        if (item === 'code-format') {
+          return null;
+        }
+      }
+
+      const Component = toolbarMap[item];
+      return <Component key={item} />;
+    });
+  }, [toolbarConfig, toolbarMap, blockType]);
+
+  return (
+    <div className="toolbar">
+      <ToolbarList />
       {modal}
     </div>
   );

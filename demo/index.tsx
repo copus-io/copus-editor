@@ -37,13 +37,31 @@ window.addEventListener('unhandledrejection', ({reason}) =>
 const data =
   '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"哈哈哈哈😄","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
 
-createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+function DemoApp() {
+  return (
     <App
       // initialValue={data}
       onChange={(status, html) => {
         console.log(status, html);
       }}
+      // toolbar={[
+      //   'history',
+      //   'block-format',
+      //   'font',
+      //   'insert-image',
+      //   'insert-audio',
+      //   'insert-video',
+      //   'columns-layout',
+      //   'element-format',
+      //   'insert-more',
+      // ]}
+      // showLabel
     />
+  );
+}
+
+createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <DemoApp />
   </React.StrictMode>,
 );

@@ -12,7 +12,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import react from '@vitejs/plugin-react';
 import {createRequire} from 'node:module';
 import {defineConfig} from 'vite';
-import {replaceCodePlugin} from 'vite-plugin-replace';
 
 // import moduleResolution from './shared/viteModuleResolution';
 // import viteCopyEsm from './viteCopyEsm';

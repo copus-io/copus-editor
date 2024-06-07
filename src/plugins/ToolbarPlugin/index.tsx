@@ -1439,7 +1439,9 @@ export default function ToolbarPlugin({
   const ToolbarList = useCallback(() => {
     return toolbarConfig.map((item, index) => {
       if (blockType === 'code') {
-        if (!['history', 'divider', 'block-format'].includes(item)) {
+        if (
+          !['history', 'divider', 'block-format', 'code-format'].includes(item)
+        ) {
           return null;
         }
       } else {

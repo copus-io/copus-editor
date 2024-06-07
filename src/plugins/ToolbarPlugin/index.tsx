@@ -78,7 +78,7 @@ import DropDown, {DropDownItem} from '../../ui/DropDown';
 import DropdownColorPicker from '../../ui/DropdownColorPicker';
 import {getSelectedNode} from '../../utils/getSelectedNode';
 import {sanitizeUrl} from '../../utils/url';
-import {EmbedConfigs} from '../AutoEmbedPlugin';
+import {EmbedConfigs, YoutubeEmbedConfig} from '../AutoEmbedPlugin';
 import {INSERT_COLLAPSIBLE_COMMAND} from '../CollapsiblePlugin';
 import {
   INSERT_IMAGE_COMMAND,
@@ -525,6 +525,7 @@ export type ToolbarConfig = (
   | 'insert-image'
   | 'insert-audio'
   | 'insert-video'
+  | 'insert-youtube'
   | 'import-docx'
   | 'insert-more'
   | 'code-format'
@@ -1201,6 +1202,27 @@ export default function ToolbarPlugin({
     [insertVideo, isEditable, showLabel],
   );
 
+  const InsertYoutubeVideo = useCallback(
+    () => (
+      <button
+        disabled={!isEditable}
+        onClick={() => {
+          activeEditor.dispatchCommand(
+            INSERT_EMBED_COMMAND,
+            YoutubeEmbedConfig.type,
+          );
+        }}
+        className={'toolbar-item'}
+        type="button">
+        <i className="format youtube" />
+        {showLabel && (
+          <span className="item-label">{YoutubeEmbedConfig.contentName}</span>
+        )}
+      </button>
+    ),
+    [isEditable, showLabel],
+  );
+
   const ImportDocx = useCallback(
     () => (
       <button
@@ -1408,6 +1430,7 @@ export default function ToolbarPlugin({
       'insert-image': InsertImage,
       'insert-audio': InsertAudio,
       'insert-video': InsertVideo,
+      'insert-youtube': InsertYoutubeVideo,
       'import-docx': ImportDocx,
       'insert-more': InsertMore,
       'code-block': CodeBlock,
@@ -1425,6 +1448,7 @@ export default function ToolbarPlugin({
       InsertImage,
       InsertAudio,
       InsertVideo,
+      InsertYoutubeVideo,
       ImportDocx,
       InsertMore,
       CodeBlock,

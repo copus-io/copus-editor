@@ -1,5 +1,5 @@
 {
-  "name": "s31-editor",
+  "name": "@copus/editor",
   "version": "0.16.0-1",
   "type": "module",
   "scripts": {

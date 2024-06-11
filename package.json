@@ -1,7 +1,10 @@
 {
   "name": "@copus/editor",
-  "version": "0.16.0-1",
+  "version": "0.16.0-2",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite --host --port 3000",
     "build:demo": "vite build",
@@ -9,7 +12,7 @@
     "build": "npm run build:lib && tsc",
     "preview": "vite preview"
   },
-  "main": "dist/lib/s31-editor.js",
+  "main": "dist/lib/index.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist",

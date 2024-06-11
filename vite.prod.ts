@@ -31,8 +31,9 @@ export default defineConfig(({command}) => {
       minify: false,
       lib: {
         entry: 'src/index.tsx',
-        name: 's31-editor',
+        name: 'copus-editor',
         formats: ['es'],
+        fileName: 'index',
       },
     },
     define: {

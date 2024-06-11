@@ -2,6 +2,9 @@
   "name": "@copus/editor",
   "version": "0.16.0-1.1",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite --host --port 3000",
     "build:demo": "vite build",

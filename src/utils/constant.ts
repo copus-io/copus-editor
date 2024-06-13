@@ -23,7 +23,7 @@ export const ACCEPTABLE_VIDEO_TYPES = [
 
 export const mineTypeMap = {
   image: {
-    limitSize: 1e7,
+    limitSize: 5e6,
     limitMessage: 'Image file size should be less than 10MB',
   },
   audio: {
@@ -31,7 +31,7 @@ export const mineTypeMap = {
     limitMessage: 'Audio file size should be less than 10MB',
   },
   video: {
-    limitSize: 1e7,
+    limitSize: 2e7,
     limitMessage: 'Video file size should be less than 10MB',
   },
 };

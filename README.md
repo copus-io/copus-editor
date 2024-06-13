@@ -8,8 +8,11 @@
 Copus editor is a rich text editor, customized based on Lexical, with some configuration features added and some less commonly used features streamlined
 
 ## Features
-- React-based component development
-- Customize the toolbar by using json configuration
+- [x] Customize the toolbar by using json configuration
+- [x] Insert image audio video, and upload files
+- [x] Import word(docx) file, 解析文件内容，上传图片并将内容插入到编辑器中
+- [x] 增加图片、音频、视频的上传时的加载体验功能，支持同时上传多个媒体文件
+- [ ] 加入双向链接功能
 
 
 ## License

@@ -1,6 +1,6 @@
 {
   "name": "@copus/editor",
-  "version": "0.16.0-3",
+  "version": "0.16.0-4",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -41,26 +41,24 @@
     "mammoth": "^1.7.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-error-boundary": "^3.1.4",
+    "react-error-boundary": "^4.0.13",
     "tslib": "^2.6.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
-    "@types/katex": "^0.16.7",
-    "@types/lodash-es": "^4.14.182",
-    "@types/node": "^20.12.12",
-    "@types/react": "^18.3.2",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^20.14.2",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.2.1",
-    "copyfiles": "^2.4.1",
+    "@vitejs/plugin-react": "^4.3.1",
     "less": "^4.2.0",
-    "prettier": "^3.2.5",
-    "prettier-plugin-hermes-parser": "^0.21.1",
+    "prettier": "^3.3.2",
+    "prettier-plugin-hermes-parser": "^0.22.0",
     "prettier-plugin-organize-attributes": "^1.0.0",
-    "prettier-plugin-tailwindcss": "^0.5.14",
+    "prettier-plugin-tailwindcss": "^0.6.4",
     "rollup-plugin-copy": "^3.5.0",
     "typescript": "^5.4.5",
-    "vite": "^5.2.12"
+    "vite": "^5.3.0"
   },
   "sideEffects": false
 }

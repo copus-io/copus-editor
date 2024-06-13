@@ -31,7 +31,7 @@ export interface EditorProps {
 function App(props: EditorProps): JSX.Element {
   const initialConfig = {
     editorState: props.initialValue ?? null,
-    namespace: 'S31Editor',
+    namespace: 'CopusEditor',
     nodes: [...PlaygroundNodes],
     onError: (error: Error) => {
       throw error;
@@ -45,7 +45,7 @@ function App(props: EditorProps): JSX.Element {
       <SharedHistoryContext>
         <TableContext>
           <SharedAutocompleteContext>
-            <div className={styles['s31-editor-shell']}>
+            <div className={styles['copus-editor-shell']}>
               <Editor
                 onChange={props.onChange}
                 readOnly={props.readOnly}

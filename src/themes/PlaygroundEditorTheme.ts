@@ -8,7 +8,7 @@
 
 import type {EditorThemeClasses} from 'lexical';
 
-const themeNamePrefix = 'S31EditorTheme';
+const themeNamePrefix = 'CopusEditorTheme';
 
 const theme: EditorThemeClasses = {
   autocomplete: `${themeNamePrefix}__autocomplete`,

@@ -1,8 +1,8 @@
 {
-  "bracketSpacing": false,
+  "bracketSpacing": true,
   "singleQuote": true,
   "bracketSameLine": true,
-  "printWidth": 80,
+  "printWidth": 120,
   "trailingComma": "all",
   "htmlWhitespaceSensitivity": "ignore",
   "attributeGroups": ["$DEFAULT", "^data-"],

@@ -13,7 +13,7 @@ import {FlashMessageContext} from './context/FlashMessageContext';
 import Editor from './Editor';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
 import {TableContext} from './plugins/TablePlugin';
-import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
+import CopusEditorTheme from './themes/CopusEditorTheme';
 import styles from './style.module.less';
 import {useEffect} from 'react';
 import getEditorPortal from './utils/getEditorPortal';
@@ -36,7 +36,7 @@ function App(props: EditorProps): JSX.Element {
     onError: (error: Error) => {
       throw error;
     },
-    theme: PlaygroundEditorTheme,
+    theme: CopusEditorTheme,
     editable: false,
   };
 

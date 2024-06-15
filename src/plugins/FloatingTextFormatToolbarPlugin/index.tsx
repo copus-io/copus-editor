@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import {$isCodeHighlightNode} from '@lexical/code';
-import {$isLinkNode, TOGGLE_LINK_COMMAND} from '@lexical/link';
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {mergeRegister} from '@lexical/utils';
+import { $isCodeHighlightNode } from '@lexical/code';
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { mergeRegister } from '@lexical/utils';
 import {
   $getSelection,
   $isParagraphNode,
@@ -19,14 +19,14 @@ import {
   LexicalEditor,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
-import {Dispatch, useCallback, useEffect, useRef, useState} from 'react';
-import * as React from 'react';
-import {createPortal} from 'react-dom';
+import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
-import {getDOMRangeRect} from '../../utils/getDOMRangeRect';
-import {getSelectedNode} from '../../utils/getSelectedNode';
-import {setFloatingElemPosition} from '../../utils/setFloatingElemPosition';
+import { getDOMRangeRect } from '../../utils/getDOMRangeRect';
+import { getSelectedNode } from '../../utils/getSelectedNode';
+import { setFloatingElemPosition } from '../../utils/setFloatingElemPosition';
 import getEditorPortal from '../../utils/getEditorPortal';
+import { INSERT_INLINE_COMMAND } from '../CommentPlugin';
 
 function TextFormatFloatingToolbar({
   editor,
@@ -65,11 +65,12 @@ function TextFormatFloatingToolbar({
     }
   }, [editor, isLink, setIsLinkEditMode]);
 
+  const insertComment = () => {
+    editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined);
+  };
+
   function mouseMoveListener(e: MouseEvent) {
-    if (
-      popupCharStylesEditorRef?.current &&
-      (e.buttons === 1 || e.buttons === 3)
-    ) {
+    if (popupCharStylesEditorRef?.current && (e.buttons === 1 || e.buttons === 3)) {
       if (popupCharStylesEditorRef.current.style.pointerEvents !== 'none') {
         const x = e.clientX;
         const y = e.clientY;
@@ -122,12 +123,7 @@ function TextFormatFloatingToolbar({
     ) {
       const rangeRect = getDOMRangeRect(nativeSelection, rootElement);
 
-      setFloatingElemPosition(
-        rangeRect,
-        popupCharStylesEditorElem,
-        anchorElem,
-        isLink,
-      );
+      setFloatingElemPosition(rangeRect, popupCharStylesEditorElem, anchorElem, isLink);
     }
   }, [editor, anchorElem, isLink]);
 
@@ -158,7 +154,7 @@ function TextFormatFloatingToolbar({
       $updateTextFormatFloatingToolbar();
     });
     return mergeRegister(
-      editor.registerUpdateListener(({editorState}) => {
+      editor.registerUpdateListener(({ editorState }) => {
         editorState.read(() => {
           $updateTextFormatFloatingToolbar();
         });
@@ -253,6 +249,13 @@ function TextFormatFloatingToolbar({
           </button>
         </>
       )}
+      <button
+        type="button"
+        onClick={insertComment}
+        className={'popup-item spaced insert-comment'}
+        aria-label="Insert comment">
+        <i className="format add-comment" />
+      </button>
     </div>
   );
 }
@@ -284,9 +287,7 @@ function useFloatingTextFormatToolbar(
 
       if (
         nativeSelection !== null &&
-        (!$isRangeSelection(selection) ||
-          rootElement === null ||
-          !rootElement.contains(nativeSelection.anchorNode))
+        (!$isRangeSelection(selection) || rootElement === null || !rootElement.contains(nativeSelection.anchorNode))
       ) {
         setIsText(false);
         return;
@@ -315,10 +316,7 @@ function useFloatingTextFormatToolbar(
         setIsLink(false);
       }
 
-      if (
-        !$isCodeHighlightNode(selection.anchor.getNode()) &&
-        selection.getTextContent() !== ''
-      ) {
+      if (!$isCodeHighlightNode(selection.anchor.getNode()) && selection.getTextContent() !== '') {
         setIsText($isTextNode(node) || $isParagraphNode(node));
       } else {
         setIsText(false);

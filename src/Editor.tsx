@@ -63,6 +63,7 @@ import { EditorState, SerializedEditorState } from 'lexical';
 import { $generateHtmlFromNodes } from '@lexical/html';
 import { debounce, set } from 'lodash-es';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import CommentPlugin from './plugins/CommentPlugin';
 
 const skipCollaborationInit =
   // @ts-expect-error
@@ -226,6 +227,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel }: Edito
         {shouldUseLexicalContextMenu && <ContextMenuPlugin />}
         {/* 官方插件有问题，暂时注释掉 */}
         {/* <ActionsPlugin isRichText={isRichText} /> */}
+        <CommentPlugin />
       </div>
     </>
   );

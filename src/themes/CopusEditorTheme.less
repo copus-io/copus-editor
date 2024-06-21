@@ -482,25 +482,29 @@
 }
 
 .CopusEditorTheme__mark {
-  background: rgba(255, 212, 0, 0.14);
-  border-bottom: 2px solid rgba(255, 212, 0, 0.3);
+  // background: rgba(33, 145, 251, 0.14);
+  // border-bottom: 2px solid rgba(33, 145, 251, 0.3);
+  background: transparent;
   padding-bottom: 2px;
-  // text-decoration: wavy red underline;
+  text-decoration: wavy underline rgba(33, 145, 251, 0.3);
 }
 
 .CopusEditorTheme__markOverlap {
-  background: rgba(255, 212, 0, 0.3);
-  border-bottom: 2px solid rgba(255, 212, 0, 0.7);
+  background: rgba(33, 145, 251, 0.3);
+  // border-bottom: 2px solid rgba(33, 145, 251, 0.7);
+  text-decoration: wavy underline rgba(33, 145, 251, 0.7);
 }
 
 .CopusEditorTheme__mark.selected {
-  background: rgba(255, 212, 0, 0.5);
-  border-bottom: 2px solid rgba(255, 212, 0, 1);
+  background: rgba(33, 145, 251, 0.1);
+  // border-bottom: 2px solid rgba(33, 145, 251, 1);
+  text-decoration: wavy underline rgba(33, 145, 251, 1);
 }
 
 .CopusEditorTheme__markOverlap.selected {
-  background: rgba(255, 212, 0, 0.7);
-  border-bottom: 2px solid rgba(255, 212, 0, 0.7);
+  background: rgba(33, 145, 251, 0.5);
+  // border-bottom: 2px solid rgba(33, 145, 251, 0.7);
+  text-decoration: wavy underline rgba(33, 145, 251, 0.7);
 }
 
 .CopusEditorTheme__embedBlock {
@@ -524,4 +528,14 @@
 
 .CopusEditorTheme__autocomplete {
   color: #ccc;
+}
+
+@keyframes waveFlow {
+  from {
+    background-position-x: -10px, 0;
+  }
+
+  to {
+    background-position-x: -30px, -20px;
+  }
 }

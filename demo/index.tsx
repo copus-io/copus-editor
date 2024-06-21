@@ -37,10 +37,12 @@ window.addEventListener('unhandledrejection', ({reason}) =>
 const data =
   '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"哈哈哈哈😄","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
 
+const data2 = '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"等等吧阿","type":"text","version":1},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"萨德发","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"mark","version":1,"ids":["womgv"]},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"生 sdfgth","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"mark","version":1,"ids":["xkcgh","womgv"]},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"rh 儿童","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"mark","version":1,"ids":["womgv"]}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":" ","type":"text","version":1}],"direction":null,"format":"","indent":0,"type":"mark","version":1,"ids":["womgv"]},{"detail":0,"format":0,"mode":"normal","style":"","text":"dddddd","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"qw 人 wr 我让问","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}'
+
 function DemoApp() {
   return (
     <App
-      // initialValue={data}
+      initialValue={data2}
       onChange={(status, html) => {
         console.log(status, html);
       }}

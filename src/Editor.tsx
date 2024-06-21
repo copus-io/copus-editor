@@ -36,7 +36,7 @@ import ContextMenuPlugin from './plugins/ContextMenuPlugin';
 import DragDropPaste from './plugins/DragDropPastePlugin';
 import DraggableBlockPlugin from './plugins/DraggableBlockPlugin';
 import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin';
-import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbarPlugin';
+import FloatingCopusToolbarPlugin from './plugins/FloatingCopusToolbarPlugin';
 import ImagesPlugin from './plugins/ImagesPlugin';
 import InlineImagePlugin from './plugins/InlineImagePlugin';
 import AudioPlugin from './plugins/AudioPlugin';
@@ -201,10 +201,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel }: Edito
                   setIsLinkEditMode={setIsLinkEditMode}
                 />
                 <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} cellMerge={true} />
-                <FloatingTextFormatToolbarPlugin
-                  anchorElem={floatingAnchorElem}
-                  setIsLinkEditMode={setIsLinkEditMode}
-                />
+                <FloatingCopusToolbarPlugin anchorElem={floatingAnchorElem} />
               </>
             )}
             <OnChangePlugin onChange={onChangeDebounce} ignoreSelectionChange />

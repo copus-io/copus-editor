@@ -1,67 +1,19 @@
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- *
- */
-
-.CommentPlugin_AddCommentBox {
-  display: block;
-  position: fixed;
-  border-radius: 20px;
-  background-color: white;
-  width: 40px;
-  height: 60px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-}
-
-.CommentPlugin_AddCommentBox_button {
-  border-radius: 20px;
-  border: 0;
-  background: none;
-  width: 40px;
-  height: 60px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  cursor: pointer;
-}
-
-.CommentPlugin_AddCommentBox_button:hover {
-  background-color: #f6f6f6;
-}
-
-i.add-comment {
-  background-size: contain;
-  display: inline-block;
-  height: 20px;
-  width: 20px;
-  vertical-align: -10px;
-  background-image: url(../../images/icons/chat-left-text.svg);
-}
-
-@media (max-width: 1024px) {
-  .CommentPlugin_AddCommentBox {
-    display: none;
-  }
+i.add-source {
+  background-image: url(../../images/icons/copus-source.svg);
 }
 
 .CommentPlugin_CommentInputBox {
   display: block;
   position: absolute;
-  width: 250px;
-  min-height: 80px;
-  background-color: #fff;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  background-color: #f4faff;
+  box-shadow: 0 0 5px 0 rgba(118, 118, 118, 0.5);
+  border-radius: 15px;
+  border: 1px solid #2191fb;
   z-index: 24;
   animation: show-input-box 0.4s ease;
 }
 
-.CommentPlugin_CommentInputBox::before {
+/* .CommentPlugin_CommentInputBox::before {
   content: '';
   position: absolute;
   width: 0;
@@ -71,12 +23,12 @@ i.add-comment {
   top: 0;
   left: calc(50% + 0.25em);
   box-sizing: border-box;
-  border: 0.5em solid black;
+  border: 0.5em solid #f4faff;
   border-color: transparent transparent #fff #fff;
   transform-origin: 0 0;
   transform: rotate(135deg);
   box-shadow: -3px 3px 3px 0 rgba(0, 0, 0, 0.05);
-}
+} */
 
 @keyframes show-input-box {
   0% {
@@ -162,12 +114,6 @@ i.comments {
   background-image: url(../../images/icons/comments.svg);
   opacity: 0.5;
   transition: opacity 0.2s linear;
-}
-
-@media (max-width: 1024px) {
-  .CommentPlugin_ShowCommentsButton {
-    display: none;
-  }
 }
 
 .CommentPlugin_ShowCommentsButton:hover i.comments {
@@ -258,8 +204,7 @@ i.send {
 
 .CommentPlugin_CommentsPanel_SendButton:hover i.send {
   opacity: 1;
-  filter: invert(45%) sepia(98%) saturate(2299%) hue-rotate(201deg)
-    brightness(100%) contrast(92%);
+  filter: invert(45%) sepia(98%) saturate(2299%) hue-rotate(201deg) brightness(100%) contrast(92%);
 }
 
 .CommentPlugin_CommentsPanel_SendButton[disabled] i.send {
@@ -302,8 +247,7 @@ i.send {
   transition: all 0.2s linear;
 }
 
-.CommentPlugin_CommentsPanel_List_Thread.active
-  .CommentPlugin_CommentsPanel_List_Comment:hover {
+.CommentPlugin_CommentsPanel_List_Thread.active .CommentPlugin_CommentsPanel_List_Comment:hover {
   background-color: inherit;
 }
 
@@ -338,8 +282,7 @@ i.send {
 }
 
 .CommentPlugin_CommentsPanel_List_Thread:first-child,
-.CommentPlugin_CommentsPanel_List_Thread
-  + .CommentPlugin_CommentsPanel_List_Thread {
+.CommentPlugin_CommentsPanel_List_Thread + .CommentPlugin_CommentsPanel_List_Thread {
   border-top: none;
 }
 
@@ -381,8 +324,7 @@ i.send {
   list-style-type: none;
 }
 
-.CommentPlugin_CommentsPanel_List_Thread_Comments
-  .CommentPlugin_CommentsPanel_List_Comment:first-child {
+.CommentPlugin_CommentsPanel_List_Thread_Comments .CommentPlugin_CommentsPanel_List_Comment:first-child {
   border: none;
   margin-left: 0;
   padding-left: 5px;
@@ -393,8 +335,7 @@ i.send {
   padding-bottom: 5px;
 }
 
-.CommentPlugin_CommentsPanel_List_Thread_Comments
-  .CommentPlugin_CommentsPanel_List_Comment {
+.CommentPlugin_CommentsPanel_List_Thread_Comments .CommentPlugin_CommentsPanel_List_Comment {
   padding-left: 10px;
   border-left: 5px solid #eee;
   margin-left: 5px;
@@ -416,18 +357,15 @@ i.send {
 }
 
 .CommentPlugin_CommentsPanel_DeletedComment,
-.CommentPlugin_CommentsPanel_List_Comment:hover
-  .CommentPlugin_CommentsPanel_List_DeleteButton,
-.CommentPlugin_CommentsPanel_List_Thread_QuoteBox:hover
-  .CommentPlugin_CommentsPanel_List_DeleteButton {
+.CommentPlugin_CommentsPanel_List_Comment:hover .CommentPlugin_CommentsPanel_List_DeleteButton,
+.CommentPlugin_CommentsPanel_List_Thread_QuoteBox:hover .CommentPlugin_CommentsPanel_List_DeleteButton {
   opacity: 0.5;
 }
 
 .CommentPlugin_CommentsPanel_List_DeleteButton:hover {
   background-color: transparent;
   opacity: 1;
-  filter: invert(45%) sepia(98%) saturate(2299%) hue-rotate(201deg)
-    brightness(100%) contrast(92%);
+  filter: invert(45%) sepia(98%) saturate(2299%) hue-rotate(201deg) brightness(100%) contrast(92%);
 }
 
 .CommentPlugin_CommentsPanel_List_DeleteButton i.delete {
@@ -440,4 +378,118 @@ i.send {
   vertical-align: -10px;
   background-image: url(../../images/icons/trash3.svg);
   transition: opacity 0.2s linear;
+}
+
+.CommentPlugin_CommentInputBox {
+  padding: 15px;
+
+  .link-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #484848;
+  }
+
+  .link-main {
+    margin-top: 5px;
+    display: flex;
+    gap: 5px;
+  }
+
+  .button.active {
+    background-color: rgb(223, 232, 250);
+  }
+
+  .link-input {
+    display: block;
+    width: 300px;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border-radius: 15px;
+    /* background-color: #eee; */
+    font-size: 15px;
+    color: rgb(5, 5, 5);
+    border: solid 1px #a9a9a9;
+    outline: 0;
+    position: relative;
+    font-family: inherit;
+  }
+
+  .link-view {
+    display: block;
+    width: calc(100% - 24px);
+    margin: 8px 12px;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 15px;
+    color: rgb(5, 5, 5);
+    border: 0;
+    outline: 0;
+    position: relative;
+    font-family: inherit;
+  }
+
+  .link-view a {
+    display: block;
+    word-break: break-word;
+    width: calc(100% - 33px);
+  }
+
+  div.link-edit {
+    background-image: url(../../images/icons/pencil-fill.svg);
+    background-size: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 20px;
+    vertical-align: -0.25em;
+    position: absolute;
+    right: 30px;
+    top: 0;
+    bottom: 0;
+    cursor: pointer;
+  }
+
+  div.link-trash {
+    background-image: url(../../images/icons/trash.svg);
+    background-size: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 20px;
+    vertical-align: -0.25em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    cursor: pointer;
+  }
+
+  div.link-cancel {
+    background-image: url(../../images/icons/close.svg);
+    background-size: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 20px;
+    cursor: pointer;
+  }
+
+  div.link-confirm {
+    background-image: url(../../images/icons/success-alt.svg);
+    background-size: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 20px;
+    cursor: pointer;
+  }
+
+  .link-input a {
+    color: rgb(33, 111, 219);
+    text-decoration: underline;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-right: 30px;
+    text-overflow: ellipsis;
+  }
+
+  .link-input a:hover {
+    text-decoration: underline;
+  }
 }

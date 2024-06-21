@@ -32,38 +32,12 @@ function TextFormatFloatingToolbar({
   editor,
   anchorElem,
   isLink,
-  isBold,
-  isItalic,
-  isUnderline,
-  isCode,
-  isStrikethrough,
-  isSubscript,
-  isSuperscript,
-  setIsLinkEditMode,
 }: {
   editor: LexicalEditor;
   anchorElem: HTMLElement;
-  isBold: boolean;
-  isCode: boolean;
-  isItalic: boolean;
   isLink: boolean;
-  isStrikethrough: boolean;
-  isSubscript: boolean;
-  isSuperscript: boolean;
-  isUnderline: boolean;
-  setIsLinkEditMode: Dispatch<boolean>;
 }): JSX.Element {
   const popupCharStylesEditorRef = useRef<HTMLDivElement | null>(null);
-
-  const insertLink = useCallback(() => {
-    if (!isLink) {
-      setIsLinkEditMode(true);
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://');
-    } else {
-      setIsLinkEditMode(false);
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
-    }
-  }, [editor, isLink, setIsLinkEditMode]);
 
   const insertComment = () => {
     editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined);
@@ -172,99 +146,24 @@ function TextFormatFloatingToolbar({
   }, [editor, $updateTextFormatFloatingToolbar]);
 
   return (
-    <div ref={popupCharStylesEditorRef} className="floating-text-format-popup">
+    <div ref={popupCharStylesEditorRef} className="floating-toolbar-popup">
       {editor.isEditable() && (
         <>
           <button
             type="button"
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
-            }}
-            className={'popup-item spaced ' + (isBold ? 'active' : '')}
-            aria-label="Format text as bold">
-            <i className="format bold" />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
-            }}
-            className={'popup-item spaced ' + (isItalic ? 'active' : '')}
-            aria-label="Format text as italics">
-            <i className="format italic" />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
-            }}
-            className={'popup-item spaced ' + (isUnderline ? 'active' : '')}
-            aria-label="Format text to underlined">
-            <i className="format underline" />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
-            }}
-            className={'popup-item spaced ' + (isStrikethrough ? 'active' : '')}
-            aria-label="Format text with a strikethrough">
-            <i className="format strikethrough" />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'subscript');
-            }}
-            className={'popup-item spaced ' + (isSubscript ? 'active' : '')}
-            title="Subscript"
-            aria-label="Format Subscript">
-            <i className="format subscript" />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'superscript');
-            }}
-            className={'popup-item spaced ' + (isSuperscript ? 'active' : '')}
-            title="Superscript"
-            aria-label="Format Superscript">
-            <i className="format superscript" />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
-            }}
-            className={'popup-item spaced ' + (isCode ? 'active' : '')}
-            aria-label="Insert code block">
-            <i className="format code" />
-          </button>
-          <button
-            type="button"
-            onClick={insertLink}
-            className={'popup-item spaced ' + (isLink ? 'active' : '')}
-            aria-label="Insert link">
-            <i className="format link" />
+            onClick={insertComment}
+            className={'popup-item spaced insert-comment'}
+            aria-label="Insert Copus Source">
+            <i className="format add-source" />
+            Add Source
           </button>
         </>
       )}
-      <button
-        type="button"
-        onClick={insertComment}
-        className={'popup-item spaced insert-comment'}
-        aria-label="Insert comment">
-        <i className="format add-comment" />
-      </button>
     </div>
   );
 }
 
-function useFloatingTextFormatToolbar(
-  editor: LexicalEditor,
-  anchorElem: HTMLElement,
-  setIsLinkEditMode: Dispatch<boolean>,
-): JSX.Element | null {
+function useFloatingTextFormatToolbar(editor: LexicalEditor, anchorElem: HTMLElement): JSX.Element | null {
   const [isText, setIsText] = useState(false);
   const [isLink, setIsLink] = useState(false);
   const [isBold, setIsBold] = useState(false);
@@ -355,30 +254,16 @@ function useFloatingTextFormatToolbar(
   }
 
   return createPortal(
-    <TextFormatFloatingToolbar
-      editor={editor}
-      anchorElem={anchorElem}
-      isLink={isLink}
-      isBold={isBold}
-      isItalic={isItalic}
-      isStrikethrough={isStrikethrough}
-      isSubscript={isSubscript}
-      isSuperscript={isSuperscript}
-      isUnderline={isUnderline}
-      isCode={isCode}
-      setIsLinkEditMode={setIsLinkEditMode}
-    />,
+    <TextFormatFloatingToolbar editor={editor} anchorElem={anchorElem} isLink={isLink} />,
     anchorElem,
   );
 }
 
-export default function FloatingTextFormatToolbarPlugin({
+export default function FloatingCopusToolbarPlugin({
   anchorElem = getEditorPortal(),
-  setIsLinkEditMode,
 }: {
   anchorElem?: HTMLElement;
-  setIsLinkEditMode: Dispatch<boolean>;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  return useFloatingTextFormatToolbar(editor, anchorElem, setIsLinkEditMode);
+  return useFloatingTextFormatToolbar(editor, anchorElem);
 }

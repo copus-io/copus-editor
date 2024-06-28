@@ -149,7 +149,7 @@ function getMouseInfo(event: MouseEvent): {
 
   if (target && target instanceof HTMLElement) {
     const codeDOMNode = target.closest<HTMLElement>(
-      'code.CopusEditorTheme__code',
+      'code.CET__code',
     );
     const isOutside = !(
       codeDOMNode ||

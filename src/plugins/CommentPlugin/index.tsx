@@ -411,7 +411,7 @@ export default function CommentPlugin({}): JSX.Element {
     editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined);
   };
 
-  console.log('comments', activeIDs, comments, markNodeMap);
+  // console.log('comments', activeIDs, comments, markNodeMap);
 
   return (
     <>

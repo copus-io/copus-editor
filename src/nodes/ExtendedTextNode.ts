@@ -6,6 +6,7 @@ import {
   LexicalNode,
   EditorConfig,
   $applyNodeReplacement,
+  $getNodeByKey,
 } from 'lexical';
 import { createUID } from '../utils/copus';
 
@@ -42,6 +43,19 @@ export class ExtendedTextNode extends TextNode {
 
   getId() {
     return this.__id;
+  }
+
+  static getNodeById(id: string): ExtendedTextNode | null {
+    let node = null;
+    for (const key of keyIdMap.keys()) {
+      if (keyIdMap.get(key) === id) {
+        const _node = $getNodeByKey(key) as ExtendedTextNode;
+        if (_node) {
+          node = _node;
+        }
+      }
+    }
+    return node;
   }
 
   static getType(): string {
@@ -90,6 +104,7 @@ export class ExtendedTextNode extends TextNode {
     return {
       ...super.exportJSON(),
       id: this.__id,
+      type: 'text-x',
       version: 1,
     };
   }

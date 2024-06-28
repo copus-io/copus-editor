@@ -10,6 +10,8 @@ import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
 import {
+  $createRangeSelection,
+  $createRangeSelectionFromDom,
   $getSelection,
   $isParagraphNode,
   $isRangeSelection,
@@ -27,6 +29,9 @@ import { getSelectedNode } from '../../utils/getSelectedNode';
 import { setFloatingElemPosition } from '../../utils/setFloatingElemPosition';
 import getEditorPortal from '../../utils/getEditorPortal';
 import { INSERT_INLINE_COMMAND } from '../CommentPlugin';
+import { createDOMRange } from '@lexical/selection';
+import { ExtendedTextNode } from '../../nodes/ExtendedTextNode';
+import { $wrapSelectionInMarkNode } from '@lexical/mark';
 
 function TextFormatFloatingToolbar({
   editor,
@@ -145,10 +150,32 @@ function TextFormatFloatingToolbar({
     );
   }, [editor, $updateTextFormatFloatingToolbar]);
 
+  const copyComment = () => {
+    editor.getEditorState().read(() => {
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        const startEndPoints = selection.getStartEndPoints();
+        if (startEndPoints) {
+          let [start, end] = startEndPoints;
+          if (selection.isBackward()) [start, end] = [end, start];
+          console.log('Selected:', start.getNode().__id, start.offset, end.getNode().__id, end.offset);
+        }
+      }
+    });
+  };
+
   return (
     <div ref={popupCharStylesEditorRef} className="floating-toolbar-popup">
       {editor.isEditable() && (
         <>
+          <button
+            type="button"
+            onClick={copyComment}
+            className={'popup-item spaced insert-comment'}
+            aria-label="Copy Copus Source">
+            <i className="format add-source" />
+            Copy
+          </button>
           <button
             type="button"
             onClick={insertComment}

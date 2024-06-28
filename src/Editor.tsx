@@ -59,11 +59,13 @@ import YouTubePlugin from './plugins/YouTubePlugin';
 import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
-import { EditorState, SerializedEditorState } from 'lexical';
+import { $createRangeSelection, EditorState, SerializedEditorState } from 'lexical';
 import { $generateHtmlFromNodes } from '@lexical/html';
 import { debounce, set } from 'lodash-es';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import CommentPlugin from './plugins/CommentPlugin';
+import { ExtendedTextNode } from './nodes/ExtendedTextNode';
+import { $wrapSelectionInMarkNode } from '@lexical/mark';
 
 const skipCollaborationInit =
   // @ts-expect-error
@@ -119,6 +121,19 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel }: Edito
     if (!readOnly) {
       editor.setEditable(true);
     }
+  }, [editor]);
+
+  // demo
+  const markContent = useCallback(() => {
+    editor.update(() => {
+      const anchor = ExtendedTextNode.getNodeById('e7dk7');
+      const focus = ExtendedTextNode.getNodeById('e7q5l');
+      if (anchor && focus) {
+        const rangeSelection = $createRangeSelection();
+        rangeSelection.setTextNodeRange(anchor, 382, focus, 5);
+        $wrapSelectionInMarkNode(rangeSelection, false, '123');
+      }
+    });
   }, [editor]);
 
   if (readOnly) {
@@ -225,6 +240,9 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel }: Edito
         {/* 官方插件有问题，暂时注释掉 */}
         {/* <ActionsPlugin isRichText={isRichText} /> */}
         <CommentPlugin />
+      </div>
+      <div>
+        <button onClick={markContent}>选择内容</button>
       </div>
     </>
   );

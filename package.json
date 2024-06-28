@@ -57,8 +57,8 @@
     "prettier-plugin-organize-attributes": "^1.0.0",
     "prettier-plugin-tailwindcss": "^0.6.4",
     "rollup-plugin-copy": "^3.5.0",
-    "typescript": "^5.4.5",
-    "vite": "^5.3.0"
+    "typescript": "^5.5.2",
+    "vite": "^5.3.2"
   },
   "sideEffects": false
 }

@@ -6,19 +6,20 @@
  *
  */
 
-import {LexicalComposer} from '@lexical/react/LexicalComposer';
-import {SharedAutocompleteContext} from './context/SharedAutocompleteContext';
-import {SharedHistoryContext} from './context/SharedHistoryContext';
-import {FlashMessageContext} from './context/FlashMessageContext';
+import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { SharedAutocompleteContext } from './context/SharedAutocompleteContext';
+import { SharedHistoryContext } from './context/SharedHistoryContext';
+import { FlashMessageContext } from './context/FlashMessageContext';
 import Editor from './Editor';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
-import {TableContext} from './plugins/TablePlugin';
+import { TableContext } from './plugins/TablePlugin';
 import CopusEditorTheme from './themes/CopusEditorTheme';
 import styles from './style.module.less';
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import getEditorPortal from './utils/getEditorPortal';
-import {EditorState, SerializedEditorState} from 'lexical';
-import {ToolbarConfig} from './plugins/ToolbarPlugin';
+import { EditorState, SerializedEditorState, TextNode } from 'lexical';
+import { ToolbarConfig } from './plugins/ToolbarPlugin';
+import { ExtendedTextNode } from './nodes/ExtendedTextNode';
 
 export interface EditorProps {
   readOnly?: boolean;
@@ -32,7 +33,16 @@ function App(props: EditorProps): JSX.Element {
   const initialConfig = {
     editorState: props.initialValue ?? null,
     namespace: 'CopusEditor',
-    nodes: [...PlaygroundNodes],
+    nodes: [
+      ...PlaygroundNodes,
+      ExtendedTextNode,
+      {
+        replace: TextNode,
+        with: (node: TextNode) => {
+          return new ExtendedTextNode(node.__text);
+        },
+      },
+    ],
     onError: (error: Error) => {
       throw error;
     },

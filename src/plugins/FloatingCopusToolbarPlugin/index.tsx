@@ -30,7 +30,7 @@ import { setFloatingElemPosition } from '../../utils/setFloatingElemPosition';
 import getEditorPortal from '../../utils/getEditorPortal';
 import { INSERT_INLINE_COMMAND } from '../CommentPlugin';
 import { createDOMRange } from '@lexical/selection';
-import { ExtendedTextNode } from '../../nodes/ExtendedTextNode';
+import { TextNodeX } from '../../nodes/TextNodeX';
 import { $wrapSelectionInMarkNode } from '@lexical/mark';
 
 function TextFormatFloatingToolbar({
@@ -158,10 +158,15 @@ function TextFormatFloatingToolbar({
         if (startEndPoints) {
           let [start, end] = startEndPoints;
           if (selection.isBackward()) [start, end] = [end, start];
-          console.log('Selected:', start.getNode().__id, start.offset, end.getNode().__id, end.offset);
+          const startNode = start.getNode() as TextNodeX;
+          const endNode = end.getNode() as TextNodeX;
+          console.log('Selected:', startNode.__id, start.offset, endNode.__id, end.offset);
         }
       }
     });
+
+    const domSelection = window.getSelection();
+    domSelection?.removeAllRanges();
   };
 
   return (
@@ -193,13 +198,6 @@ function TextFormatFloatingToolbar({
 function useFloatingTextFormatToolbar(editor: LexicalEditor, anchorElem: HTMLElement): JSX.Element | null {
   const [isText, setIsText] = useState(false);
   const [isLink, setIsLink] = useState(false);
-  const [isBold, setIsBold] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
-  const [isStrikethrough, setIsStrikethrough] = useState(false);
-  const [isSubscript, setIsSubscript] = useState(false);
-  const [isSuperscript, setIsSuperscript] = useState(false);
-  const [isCode, setIsCode] = useState(false);
 
   const updatePopup = useCallback(() => {
     editor.getEditorState().read(() => {
@@ -224,15 +222,6 @@ function useFloatingTextFormatToolbar(editor: LexicalEditor, anchorElem: HTMLEle
       }
 
       const node = getSelectedNode(selection);
-
-      // Update text format
-      setIsBold(selection.hasFormat('bold'));
-      setIsItalic(selection.hasFormat('italic'));
-      setIsUnderline(selection.hasFormat('underline'));
-      setIsStrikethrough(selection.hasFormat('strikethrough'));
-      setIsSubscript(selection.hasFormat('subscript'));
-      setIsSuperscript(selection.hasFormat('superscript'));
-      setIsCode(selection.hasFormat('code'));
 
       // Update links
       const parent = node.getParent();

@@ -64,7 +64,7 @@ import { $generateHtmlFromNodes } from '@lexical/html';
 import { debounce, set } from 'lodash-es';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import CommentPlugin from './plugins/CommentPlugin';
-import { ExtendedTextNode } from './nodes/ExtendedTextNode';
+import { TextNodeX } from './nodes/TextNodeX';
 import { $wrapSelectionInMarkNode } from '@lexical/mark';
 
 const skipCollaborationInit =
@@ -124,17 +124,20 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel }: Edito
   }, [editor]);
 
   // demo
+  const [markData, setMarkData] = useState('');
   const markContent = useCallback(() => {
+    if (!markData) return;
     editor.update(() => {
-      const anchor = ExtendedTextNode.getNodeById('e7dk7');
-      const focus = ExtendedTextNode.getNodeById('e7q5l');
+      const markDataArr = markData.split(' ');
+      const anchor = TextNodeX.getNodeById(markDataArr[0]);
+      const focus = TextNodeX.getNodeById(markDataArr[2]);
       if (anchor && focus) {
         const rangeSelection = $createRangeSelection();
-        rangeSelection.setTextNodeRange(anchor, 382, focus, 5);
+        rangeSelection.setTextNodeRange(anchor, Number(markDataArr[1]), focus, Number(markDataArr[3]));
         $wrapSelectionInMarkNode(rangeSelection, false, '123');
       }
     });
-  }, [editor]);
+  }, [editor, markData]);
 
   if (readOnly) {
     return (
@@ -242,6 +245,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel }: Edito
         <CommentPlugin />
       </div>
       <div>
+        <input value={markData} onChange={(e) => setMarkData(e.target.value)} />
         <button onClick={markContent}>选择内容</button>
       </div>
     </>

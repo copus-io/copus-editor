@@ -19,7 +19,7 @@ import { useEffect } from 'react';
 import getEditorPortal from './utils/getEditorPortal';
 import { EditorState, SerializedEditorState, TextNode } from 'lexical';
 import { ToolbarConfig } from './plugins/ToolbarPlugin';
-import { ExtendedTextNode } from './nodes/ExtendedTextNode';
+import { TextNodeX } from './nodes/TextNodeX';
 
 export interface EditorProps {
   readOnly?: boolean;
@@ -35,11 +35,11 @@ function App(props: EditorProps): JSX.Element {
     namespace: 'CopusEditor',
     nodes: [
       ...PlaygroundNodes,
-      ExtendedTextNode,
+      TextNodeX,
       {
         replace: TextNode,
         with: (node: TextNode) => {
-          return new ExtendedTextNode(node.__text);
+          return new TextNodeX(node.__text);
         },
       },
     ],

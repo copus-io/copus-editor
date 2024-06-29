@@ -10,12 +10,12 @@ import {
 } from 'lexical';
 import { createUID } from '../utils/copus';
 
-type SerializedExtendedTextNode = SerializedTextNode & { id: string };
+type SerializedTextNodeX = SerializedTextNode & { id: string };
 
 const keyIdMap = new Map<NodeKey, string>();
 const idList = new Set<string>();
 
-export class ExtendedTextNode extends TextNode {
+export class TextNodeX extends TextNode {
   __id: string = '';
   constructor(text: string, key?: NodeKey) {
     super(text, key);
@@ -24,12 +24,12 @@ export class ExtendedTextNode extends TextNode {
       if (id) {
         this.__id = id;
       } else {
-        this.__id = ExtendedTextNode.generateUID();
+        this.__id = TextNodeX.generateUID();
         idList.add(this.__id);
         keyIdMap.set(key, this.__id);
       }
     } else {
-      this.__id = ExtendedTextNode.generateUID();
+      this.__id = TextNodeX.generateUID();
       idList.add(this.__id);
     }
   }
@@ -45,11 +45,11 @@ export class ExtendedTextNode extends TextNode {
     return this.__id;
   }
 
-  static getNodeById(id: string): ExtendedTextNode | null {
+  static getNodeById(id: string): TextNodeX | null {
     let node = null;
     for (const key of keyIdMap.keys()) {
       if (keyIdMap.get(key) === id) {
-        const _node = $getNodeByKey(key) as ExtendedTextNode;
+        const _node = $getNodeByKey(key) as TextNodeX;
         if (_node) {
           node = _node;
         }
@@ -62,8 +62,8 @@ export class ExtendedTextNode extends TextNode {
     return 'text-x';
   }
 
-  static clone(node: ExtendedTextNode): ExtendedTextNode {
-    return new ExtendedTextNode(node.__text, node.__key);
+  static clone(node: TextNodeX): TextNodeX {
+    return new TextNodeX(node.__text, node.__key);
   }
 
   createDOM(config: EditorConfig) {
@@ -72,7 +72,7 @@ export class ExtendedTextNode extends TextNode {
     return dom;
   }
 
-  updateDOM(prevNode: ExtendedTextNode, dom: HTMLElement, config: EditorConfig) {
+  updateDOM(prevNode: TextNodeX, dom: HTMLElement, config: EditorConfig) {
     const updated = super.updateDOM(prevNode, dom, config);
     if (this.__id !== prevNode.__id) {
       dom.setAttribute('data-id', this.__id);
@@ -84,8 +84,8 @@ export class ExtendedTextNode extends TextNode {
     return TextNode.importDOM();
   }
 
-  static importJSON(serializedNode: SerializedExtendedTextNode): ExtendedTextNode {
-    const node = new ExtendedTextNode(serializedNode.text);
+  static importJSON(serializedNode: SerializedTextNodeX): TextNodeX {
+    const node = new TextNodeX(serializedNode.text);
     let id = serializedNode.id;
     if (idList.has(id)) {
       id = this.generateUID();
@@ -100,7 +100,7 @@ export class ExtendedTextNode extends TextNode {
     return (this.__type === 'text' || this.__type === 'text-x') && this.__mode === 0;
   }
 
-  exportJSON(): SerializedExtendedTextNode {
+  exportJSON(): SerializedTextNodeX {
     return {
       ...super.exportJSON(),
       id: this.__id,
@@ -110,10 +110,10 @@ export class ExtendedTextNode extends TextNode {
   }
 }
 
-export function $createExtendedTextNode(text: string): ExtendedTextNode {
-  return new ExtendedTextNode(text);
+export function $createTextNodeX(text: string): TextNodeX {
+  return new TextNodeX(text);
 }
 
-export function $isExtendedTextNode(node: LexicalNode | null | undefined): node is ExtendedTextNode {
-  return node instanceof ExtendedTextNode;
+export function $isTextNodeX(node: LexicalNode | null | undefined): node is TextNodeX {
+  return node instanceof TextNodeX;
 }

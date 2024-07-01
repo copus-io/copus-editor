@@ -63,6 +63,7 @@ import {EditorState, SerializedEditorState} from 'lexical';
 import {$generateHtmlFromNodes} from '@lexical/html';
 import {debounce, set} from 'lodash-es';
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
+import FilePlugin from './plugins/FilePlugin';
 
 const skipCollaborationInit =
   // @ts-expect-error
@@ -208,6 +209,7 @@ export default function Editor({
             <ImagesPlugin />
             <AudioPlugin />
             <VideoPlugin />
+            <FilePlugin />
             {/* <InlineImagePlugin /> */}
             <LinkPlugin />
             {/* <PollPlugin /> */}

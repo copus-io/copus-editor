@@ -32,6 +32,7 @@ import {PageBreakNode} from './PageBreakNode';
 import {TweetNode} from './TweetNode';
 import {YouTubeNode} from './YouTubeNode';
 import { EmojiNode } from './EmojiNode';
+import { FileNode } from './FileNode';
 
 const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   HeadingNode,
@@ -52,6 +53,7 @@ const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   ImageNode,
   AudioNode,
   VideoNode,
+  FileNode,
   // InlineImageNode,
   // MentionNode,
   EmojiNode,

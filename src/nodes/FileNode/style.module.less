@@ -1,0 +1,50 @@
+.file-block {
+    padding: 8px;
+    border: 1px solid rgb(222, 224, 227);
+    border-radius: 4px;
+    background-color: rgb(249, 249, 249);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 300px;
+
+    &:hover {
+        border-color: rgb(194, 212, 255);
+    }
+
+    :global {
+        .file-icon {
+            width: 18px;
+            height: 18px;
+            background-size: contain;
+            background-color: #333;
+            mask-image: url(../../images/icons/file-earmark-text.svg);
+            mask-repeat: no-repeat;
+            mask-size: contain;
+        }
+
+        .file-download {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            background-size: contain;
+            background-color: #333;
+            mask-image: url(../../images/icons/download.svg);
+            mask-repeat: no-repeat;
+            mask-size: contain;
+
+            &:hover {
+                background-color: rgb(91, 140, 255);
+            }
+        }
+
+        .file-name {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}

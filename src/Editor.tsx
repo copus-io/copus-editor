@@ -66,6 +66,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import CommentPlugin from './plugins/CommentPlugin';
 import { TextNodeX } from './nodes/TextNodeX';
 import { $wrapSelectionInMarkNode } from '@lexical/mark';
+import FilePlugin from './plugins/FilePlugin';
 
 const skipCollaborationInit =
   // @ts-expect-error
@@ -195,6 +196,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel }: Edito
             <ImagesPlugin />
             <AudioPlugin />
             <VideoPlugin />
+            <FilePlugin />
             {/* <InlineImagePlugin /> */}
             <LinkPlugin />
             {/* <PollPlugin /> */}

@@ -34,4 +34,8 @@ export const mineTypeMap = {
     limitSize: 2e7,
     limitMessage: 'Video file size should be less than 20 MB',
   },
+  file: {
+    limitSize: 1e7,
+    limitMessage: 'File size should be less than 10 MB',
+  },
 };

@@ -24,21 +24,24 @@ import {
   KEY_ENTER_COMMAND,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
-import {Suspense, useCallback, useEffect, useRef} from 'react';
+import {Suspense, useCallback, useEffect, useRef, useState} from 'react';
 
 import {$isFileNode} from './index';
 import styles from './style.module.less';
+import {error} from 'console';
 
 export default function FileComponent({
   src,
   name = 'file',
   nodeKey,
   uploading,
+  isAsync = false,
 }: {
   nodeKey: NodeKey;
   name: string;
   src: string;
   uploading: boolean;
+  isAsync?: boolean;
 }): JSX.Element {
   const divRef = useRef<null | HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -157,12 +160,43 @@ export default function FileComponent({
     setSelected,
   ]);
 
-  const handleDownLoad = useCallback(() => {
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const downloadFile = useCallback((_url: string, _name: string) => {
     const a = document.createElement('a');
-    a.href = src;
-    a.download = name;
+    a.href = _url;
+    a.target = '_blank';
+    a.download = _name;
+    // a.style.display = 'none';
+    // document.body.appendChild(a);
     a.click();
-  }, [src, name]);
+    // document.body.removeChild(a);
+  }, []);
+
+  const handleDownLoad = useCallback(() => {
+    if (isDownloading) {
+      return;
+    }
+    if (isAsync) {
+      setIsDownloading(true);
+      fetch(src)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const url = window.URL.createObjectURL(blob);
+          downloadFile(url, name);
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          setIsDownloading(false);
+        });
+
+      return;
+    }
+    downloadFile(src, name);
+  }, [src, name, isAsync, isDownloading]);
 
   return (
     <Suspense fallback={null}>

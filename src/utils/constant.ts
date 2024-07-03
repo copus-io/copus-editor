@@ -1,25 +1,8 @@
-export const ACCEPTABLE_IMAGE_TYPES = [
-  'image/',
-  'image/heic',
-  'image/heif',
-  'image/gif',
-  'image/webp',
-];
+export const ACCEPTABLE_IMAGE_TYPES = ['image/', 'image/heic', 'image/heif', 'image/gif', 'image/webp'];
 
-export const ACCEPTABLE_AUDIO_TYPES = [
-  'audio/',
-  'audio/mpeg',
-  'audio/m4a',
-  'audio/mp3',
-  'audio/x-mpeg',
-];
+export const ACCEPTABLE_AUDIO_TYPES = ['audio/', 'audio/mpeg', 'audio/m4a', 'audio/mp3', 'audio/x-mpeg'];
 
-export const ACCEPTABLE_VIDEO_TYPES = [
-  'video/',
-  'video/mp4',
-  'video/webm',
-  'video/ogg',
-];
+export const ACCEPTABLE_VIDEO_TYPES = ['video/', 'video/mp4', 'video/webm', 'video/ogg'];
 
 export const mineTypeMap = {
   image: {

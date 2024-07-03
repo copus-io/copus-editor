@@ -6,87 +6,37 @@
  *
  */
 
-import type { EditorState, LexicalCommand, LexicalEditor, NodeKey, RangeSelection } from 'lexical';
+import type { LexicalCommand, LexicalEditor, NodeKey, RangeSelection } from 'lexical';
 
 import './index.css';
 
-import {
-  $createMarkNode,
-  $getMarkIDs,
-  $isMarkNode,
-  $unwrapMarkNode,
-  $wrapSelectionInMarkNode,
-  MarkNode,
-} from '@lexical/mark';
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
-import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
-import { useCollaborationContext } from '@lexical/react/LexicalCollaborationContext';
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { $createMarkNode, $getMarkIDs, $isMarkNode, MarkNode } from '@lexical/mark';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { EditorRefPlugin } from '@lexical/react/LexicalEditorRefPlugin';
-import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
-import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
-import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
 import { createDOMRange, createRectsFromDOMRange } from '@lexical/selection';
-import { $isRootTextContentEmpty, $rootTextContent } from '@lexical/text';
 import { mergeRegister, registerNestedElementResolver } from '@lexical/utils';
 import {
   $getNodeByKey,
   $getSelection,
   $isRangeSelection,
   $isTextNode,
-  CLEAR_EDITOR_COMMAND,
   COMMAND_PRIORITY_EDITOR,
   createCommand,
-  KEY_ESCAPE_COMMAND,
 } from 'lexical';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import useLayoutEffect from '../../shared/useLayoutEffect';
 
-import {
-  Comment,
-  Comments,
-  CommentStore,
-  createComment,
-  createThread,
-  Thread,
-  useCommentStore,
-} from '../../commenting';
-
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand('INSERT_INLINE_COMMAND');
 
-function EscapeHandlerPlugin({ onEscape }: { onEscape: (e: KeyboardEvent) => boolean }): null {
-  const [editor] = useLexicalComposerContext();
-
-  useEffect(() => {
-    return editor.registerCommand(
-      KEY_ESCAPE_COMMAND,
-      (event: KeyboardEvent) => {
-        return onEscape(event);
-      },
-      2,
-    );
-  }, [editor, onEscape]);
-
-  return null;
-}
-
-function CommentInputBox({
+function SourceInputBox({
   editor,
-  cancelAddComment,
-  submitAddComment,
+  cancelAddSource,
+  submitAddSource,
 }: {
-  cancelAddComment: () => void;
+  cancelAddSource: () => void;
   editor: LexicalEditor;
-  submitAddComment: (
-    commentOrThread: Comment | Thread,
-    isInlineComment: boolean,
-    thread?: Thread,
-    selection?: RangeSelection | null,
-  ) => void;
+  submitAddSource: (sourceLink: string, selection?: RangeSelection | null) => void;
 }) {
   const [content, setContent] = useState('');
   const [canSubmit, setCanSubmit] = useState(false);
@@ -170,22 +120,9 @@ function CommentInputBox({
     };
   }, [updateLocation]);
 
-  const onEscape = (event: KeyboardEvent): boolean => {
-    event.preventDefault();
-    cancelAddComment();
-    return true;
-  };
-
-  const submitComment = () => {
+  const submitSource = () => {
     if (canSubmit) {
-      let quote = editor.getEditorState().read(() => {
-        const selection = selectionRef.current;
-        return selection ? selection.getTextContent() : '';
-      });
-      if (quote.length > 100) {
-        quote = quote.slice(0, 99) + '…';
-      }
-      submitAddComment(createThread(quote, [createComment(content, '')]), true, undefined, selectionRef.current);
+      submitAddSource(content, selectionRef.current);
       selectionRef.current = null;
     }
   };
@@ -197,8 +134,17 @@ function CommentInputBox({
     }
   }, []);
 
+  const monitorInputInteraction = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      cancelAddSource();
+    }
+  };
+
   return (
-    <div className="CommentPlugin_CommentInputBox" ref={boxRef}>
+    <div className="CopusPlugin_SourceInputBox" ref={boxRef}>
       <div className="link-title">Add Sources</div>
       <div className="link-main">
         <input
@@ -209,9 +155,9 @@ function CommentInputBox({
             setContent(event.target.value);
             setCanSubmit(event.target.value.length > 0);
           }}
-          // onKeyDown={(event) => {
-          //   monitorInputInteraction(event);
-          // }}
+          onKeyDown={(event) => {
+            monitorInputInteraction(event);
+          }}
         />
         <div
           className="link-cancel"
@@ -219,7 +165,7 @@ function CommentInputBox({
           tabIndex={0}
           onMouseDown={(event) => event.preventDefault()}
           onClick={() => {
-            cancelAddComment();
+            cancelAddSource();
           }}
         />
         <div
@@ -227,83 +173,72 @@ function CommentInputBox({
           role="button"
           tabIndex={0}
           onMouseDown={(event) => event.preventDefault()}
-          onClick={submitComment}
+          onClick={submitSource}
         />
       </div>
     </div>
   );
 }
 
-export default function CommentPlugin({}): JSX.Element {
+export default function CopusPlugin({}): JSX.Element {
   const [editor] = useLexicalComposerContext();
-  const commentStore = useMemo(() => new CommentStore(editor), [editor]);
-  const comments = useCommentStore(commentStore);
   const markNodeMap = useMemo<Map<string, Set<NodeKey>>>(() => {
     return new Map();
   }, []);
   const [activeAnchorKey, setActiveAnchorKey] = useState<NodeKey | null>();
   const [activeIDs, setActiveIDs] = useState<Array<string>>([]);
-  const [showCommentInput, setShowCommentInput] = useState(false);
-  const [showComments, setShowComments] = useState(false);
+  const [showSourceInput, setShowSourceInput] = useState(false);
+  // const [showComments, setShowComments] = useState(false);
 
-  const cancelAddComment = useCallback(() => {
+  const cancelAddSource = useCallback(() => {
     editor.update(() => {
       const selection = $getSelection();
-      // Restore selection
       if (selection !== null) {
         selection.dirty = true;
       }
     });
-    setShowCommentInput(false);
+    setShowSourceInput(false);
   }, [editor]);
 
-  const submitAddComment = useCallback(
-    (
-      commentOrThread: Comment | Thread,
-      isInlineComment: boolean,
-      thread?: Thread,
-      selection?: RangeSelection | null,
-    ) => {
-      commentStore.addComment(commentOrThread, thread);
-      if (isInlineComment) {
-        editor.update(() => {
-          if ($isRangeSelection(selection)) {
-            const isBackward = selection.isBackward();
-            const id = commentOrThread.id;
+  const submitAddSource = useCallback(
+    (sourceLink: string, selection?: RangeSelection | null) => {
+      editor.update(() => {
+        if ($isRangeSelection(selection)) {
+          const isBackward = selection.isBackward();
+          // const id = commentOrThread.id;
 
-            // Wrap content in a MarkNode
-            $wrapSelectionInMarkNode(selection, isBackward, id);
-          }
-        });
-        setShowCommentInput(false);
-      }
+          // Wrap content in a MarkNode
+          // $wrapSelectionInMarkNode(selection, isBackward, id);
+        }
+      });
+      setShowSourceInput(false);
     },
-    [commentStore, editor],
+    [editor],
   );
 
-  useEffect(() => {
-    const changedElems: Array<HTMLElement> = [];
-    for (let i = 0; i < activeIDs.length; i++) {
-      const id = activeIDs[i];
-      const keys = markNodeMap.get(id);
-      if (keys !== undefined) {
-        for (const key of keys) {
-          const elem = editor.getElementByKey(key);
-          if (elem !== null) {
-            elem.classList.add('selected');
-            changedElems.push(elem);
-            setShowComments(true);
-          }
-        }
-      }
-    }
-    return () => {
-      for (let i = 0; i < changedElems.length; i++) {
-        const changedElem = changedElems[i];
-        changedElem.classList.remove('selected');
-      }
-    };
-  }, [activeIDs, editor, markNodeMap]);
+  // useEffect(() => {
+  //   const changedElems: Array<HTMLElement> = [];
+  //   for (let i = 0; i < activeIDs.length; i++) {
+  //     const id = activeIDs[i];
+  //     const keys = markNodeMap.get(id);
+  //     if (keys !== undefined) {
+  //       for (const key of keys) {
+  //         const elem = editor.getElementByKey(key);
+  //         if (elem !== null) {
+  //           elem.classList.add('selected');
+  //           changedElems.push(elem);
+  //           setShowComments(true);
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return () => {
+  //     for (let i = 0; i < changedElems.length; i++) {
+  //       const changedElem = changedElems[i];
+  //       changedElem.classList.remove('selected');
+  //     }
+  //   };
+  // }, [activeIDs, editor, markNodeMap]);
 
   useEffect(() => {
     const markNodeKeysToIDs: Map<NodeKey, Array<string>> = new Map();
@@ -370,9 +305,9 @@ export default function CommentPlugin({}): JSX.Element {
             const anchorNode = selection.anchor.getNode();
 
             if ($isTextNode(anchorNode)) {
-              const commentIDs = $getMarkIDs(anchorNode, selection.anchor.offset);
-              if (commentIDs !== null) {
-                setActiveIDs(commentIDs);
+              const ids = $getMarkIDs(anchorNode, selection.anchor.offset);
+              if (ids !== null) {
+                setActiveIDs(ids);
                 hasActiveIds = true;
               }
               if (!selection.isCollapsed()) {
@@ -388,7 +323,7 @@ export default function CommentPlugin({}): JSX.Element {
             setActiveAnchorKey(null);
           }
           if (!tags.has('collaboration') && $isRangeSelection(selection)) {
-            setShowCommentInput(false);
+            setShowSourceInput(false);
           }
         });
       }),
@@ -399,7 +334,7 @@ export default function CommentPlugin({}): JSX.Element {
           if (domSelection !== null) {
             domSelection.removeAllRanges();
           }
-          setShowCommentInput(true);
+          setShowSourceInput(true);
           return true;
         },
         COMMAND_PRIORITY_EDITOR,
@@ -407,39 +342,13 @@ export default function CommentPlugin({}): JSX.Element {
     );
   }, [editor, markNodeMap]);
 
-  const onAddComment = () => {
-    editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined);
-  };
-
-  // console.log('comments', activeIDs, comments, markNodeMap);
-
   return (
     <>
-      {showCommentInput &&
+      {showSourceInput &&
         createPortal(
-          <CommentInputBox editor={editor} cancelAddComment={cancelAddComment} submitAddComment={submitAddComment} />,
+          <SourceInputBox editor={editor} cancelAddSource={cancelAddSource} submitAddSource={submitAddSource} />,
           document.body,
         )}
-      {/* {createPortal(
-        <Button
-          className={`CommentPlugin_ShowCommentsButton ${showComments ? 'active' : ''}`}
-          onClick={() => setShowComments(!showComments)}
-          title={showComments ? 'Hide Comments' : 'Show Comments'}>
-          <i className="comments" />
-        </Button>,
-        document.body,
-      )}
-      {showComments &&
-        createPortal(
-          <CommentsPanel
-            comments={comments}
-            submitAddComment={submitAddComment}
-            deleteCommentOrThread={deleteCommentOrThread}
-            activeIDs={activeIDs}
-            markNodeMap={markNodeMap}
-          />,
-          document.body,
-        )} */}
     </>
   );
 }

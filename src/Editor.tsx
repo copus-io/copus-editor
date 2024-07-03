@@ -63,14 +63,10 @@ import { $createRangeSelection, EditorState, SerializedEditorState } from 'lexic
 import { $generateHtmlFromNodes } from '@lexical/html';
 import { debounce, set } from 'lodash-es';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import CommentPlugin from './plugins/CommentPlugin';
+import CopusPlugin from './plugins/CopusPlugin';
 import { TextNodeX } from './nodes/TextNodeX';
 import { $wrapSelectionInMarkNode } from '@lexical/mark';
 import FilePlugin from './plugins/FilePlugin';
-
-const skipCollaborationInit =
-  // @ts-expect-error
-  window.parent != null && window.parent.frames.right === window;
 
 export interface EditorProps {
   readOnly?: boolean;
@@ -144,10 +140,15 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel }: Edito
     return (
       <div className="editor-container plain-text">
         <PlainTextPlugin
-          contentEditable={<ContentEditable />}
+          contentEditable={
+            <div ref={onRef}>
+              <ContentEditable />
+            </div>
+          }
           placeholder={placeholder}
           ErrorBoundary={LexicalErrorBoundary}
         />
+        {floatingAnchorElem && <FloatingCopusToolbarPlugin anchorElem={floatingAnchorElem} />}
       </div>
     );
   }
@@ -242,9 +243,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel }: Edito
         {/* {isAutocomplete && <AutocompletePlugin />} */}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
         {shouldUseLexicalContextMenu && <ContextMenuPlugin />}
-        {/* 官方插件有问题，暂时注释掉 */}
-        {/* <ActionsPlugin isRichText={isRichText} /> */}
-        <CommentPlugin />
+        <CopusPlugin />
       </div>
       <div>
         <input value={markData} onChange={(e) => setMarkData(e.target.value)} />

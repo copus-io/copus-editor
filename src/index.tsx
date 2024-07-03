@@ -27,6 +27,8 @@ export interface EditorProps {
   initialValue?: string;
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
+  markList?: string[];
+  copusCopy?: () => void;
 }
 
 function App(props: EditorProps): JSX.Element {

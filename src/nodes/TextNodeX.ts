@@ -17,21 +17,16 @@ const idList = new Set<string>();
 
 export class TextNodeX extends TextNode {
   __id: string = '';
-  constructor(text: string, key?: NodeKey) {
+  constructor(text: string, key?: NodeKey, id?: string) {
     super(text, key);
-    if (key) {
-      const id = keyIdMap.get(key);
-      if (id) {
-        this.__id = id;
-      } else {
-        this.__id = TextNodeX.generateUID();
-        idList.add(this.__id);
-        keyIdMap.set(key, this.__id);
-      }
+    id = id ?? keyIdMap.get(this.__key);
+    if (id) {
+      this.__id = id;
     } else {
       this.__id = TextNodeX.generateUID();
-      idList.add(this.__id);
     }
+    idList.add(this.__id);
+    keyIdMap.set(this.__key, this.__id);
   }
   static generateUID(): string {
     const uid = createUID();
@@ -85,14 +80,7 @@ export class TextNodeX extends TextNode {
   }
 
   static importJSON(serializedNode: SerializedTextNodeX): TextNodeX {
-    const node = new TextNodeX(serializedNode.text);
-    let id = serializedNode.id;
-    if (idList.has(id)) {
-      id = this.generateUID();
-    }
-    idList.add(id);
-    keyIdMap.set(node.__key, serializedNode.id);
-
+    const node = new TextNodeX(serializedNode.text, undefined, serializedNode.id);
     return node;
   }
 

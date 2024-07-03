@@ -28,7 +28,7 @@ import { getDOMRangeRect } from '../../utils/getDOMRangeRect';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import { setFloatingElemPosition } from '../../utils/setFloatingElemPosition';
 import getEditorPortal from '../../utils/getEditorPortal';
-import { INSERT_INLINE_COMMAND } from '../CommentPlugin';
+import { INSERT_INLINE_COMMAND } from '../CopusPlugin';
 import { createDOMRange } from '@lexical/selection';
 import { TextNodeX } from '../../nodes/TextNodeX';
 import { $wrapSelectionInMarkNode } from '@lexical/mark';
@@ -44,7 +44,7 @@ function TextFormatFloatingToolbar({
 }): JSX.Element {
   const popupCharStylesEditorRef = useRef<HTMLDivElement | null>(null);
 
-  const insertComment = () => {
+  const insertSource = () => {
     editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined);
   };
 
@@ -150,7 +150,7 @@ function TextFormatFloatingToolbar({
     );
   }, [editor, $updateTextFormatFloatingToolbar]);
 
-  const copyComment = () => {
+  const copySource = () => {
     editor.getEditorState().read(() => {
       const selection = $getSelection();
       if ($isRangeSelection(selection)) {
@@ -171,25 +171,24 @@ function TextFormatFloatingToolbar({
 
   return (
     <div ref={popupCharStylesEditorRef} className="floating-toolbar-popup">
-      {editor.isEditable() && (
-        <>
-          <button
-            type="button"
-            onClick={copyComment}
-            className={'popup-item spaced insert-comment'}
-            aria-label="Copy Copus Source">
-            <i className="format add-source" />
-            Copy
-          </button>
-          <button
-            type="button"
-            onClick={insertComment}
-            className={'popup-item spaced insert-comment'}
-            aria-label="Insert Copus Source">
-            <i className="format add-source" />
-            Add Source
-          </button>
-        </>
+      {editor.isEditable() ? (
+        <button
+          type="button"
+          onClick={insertSource}
+          className={'popup-item spaced insert-source'}
+          aria-label="Insert Copus Source">
+          <i className="format add-source" />
+          Add Source
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={copySource}
+          className={'popup-item spaced insert-source'}
+          aria-label="Copy Copus Source">
+          <i className="format add-source" />
+          Copy
+        </button>
       )}
     </div>
   );

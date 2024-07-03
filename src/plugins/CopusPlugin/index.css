@@ -1,0 +1,206 @@
+i.add-source {
+  background-image: url(../../images/icons/copus-source.svg);
+}
+
+.CopusPlugin_SourceInputBox {
+  display: block;
+  position: absolute;
+  background-color: #f4faff;
+  box-shadow: 0 0 5px 0 rgba(118, 118, 118, 0.5);
+  border-radius: 15px;
+  border: 1px solid #2191fb;
+  z-index: 24;
+  animation: show-input-box 0.4s ease;
+}
+
+@keyframes show-input-box {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.CopusPlugin_SourceInputBox_Buttons {
+  display: flex;
+  flex-direction: row;
+  padding: 0 10px 10px 10px;
+  gap: 10px;
+}
+
+.CopusPlugin_SourceInputBox_Button {
+  flex: 1;
+}
+
+.CopusPlugin_SourceInputBox_Button.primary {
+  background-color: rgb(66, 135, 245);
+  font-weight: bold;
+  color: #fff;
+}
+
+.CopusPlugin_SourceInputBox_Button.primary:hover {
+  background-color: rgb(53, 114, 211);
+}
+
+.CopusPlugin_SourceInputBox_Button[disabled] {
+  background-color: #eee;
+  opacity: 0.5;
+  cursor: not-allowed;
+  font-weight: normal;
+  color: #444;
+}
+
+.CopusPlugin_SourceInputBox_Button[disabled]:hover {
+  opacity: 0.5;
+  background-color: #eee;
+}
+
+.CopusPlugin_SourceInputBox_EditorContainer {
+  position: relative;
+  margin: 10px;
+  border-radius: 5px;
+}
+
+.CopusPlugin_SourceInputBox_Editor {
+  position: relative;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 5px;
+  font-size: 15px;
+  caret-color: rgb(5, 5, 5);
+  display: block;
+  padding: 9px 10px 10px 9px;
+  min-height: 80px;
+}
+
+.CopusPlugin_SourceInputBox_Editor:focus {
+  outline: 1px solid rgb(66, 135, 245);
+}
+
+@keyframes show-comments {
+  0% {
+    opacity: 0;
+    transform: translateX(300px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.CopusPlugin_SourceInputBox {
+  padding: 15px;
+
+  .link-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #484848;
+  }
+
+  .link-main {
+    margin-top: 5px;
+    display: flex;
+    gap: 5px;
+  }
+
+  .button.active {
+    background-color: rgb(223, 232, 250);
+  }
+
+  .link-input {
+    display: block;
+    width: 300px;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border-radius: 15px;
+    /* background-color: #eee; */
+    font-size: 15px;
+    color: rgb(5, 5, 5);
+    border: solid 1px #a9a9a9;
+    outline: 0;
+    position: relative;
+    font-family: inherit;
+  }
+
+  .link-view {
+    display: block;
+    width: calc(100% - 24px);
+    margin: 8px 12px;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 15px;
+    color: rgb(5, 5, 5);
+    border: 0;
+    outline: 0;
+    position: relative;
+    font-family: inherit;
+  }
+
+  .link-view a {
+    display: block;
+    word-break: break-word;
+    width: calc(100% - 33px);
+  }
+
+  div.link-edit {
+    background-image: url(../../images/icons/pencil-fill.svg);
+    background-size: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 20px;
+    vertical-align: -0.25em;
+    position: absolute;
+    right: 30px;
+    top: 0;
+    bottom: 0;
+    cursor: pointer;
+  }
+
+  div.link-trash {
+    background-image: url(../../images/icons/trash.svg);
+    background-size: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 20px;
+    vertical-align: -0.25em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    cursor: pointer;
+  }
+
+  div.link-cancel {
+    background-image: url(../../images/icons/close.svg);
+    background-size: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 20px;
+    cursor: pointer;
+  }
+
+  div.link-confirm {
+    background-image: url(../../images/icons/success-alt.svg);
+    background-size: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 20px;
+    cursor: pointer;
+  }
+
+  .link-input a {
+    color: rgb(33, 111, 219);
+    text-decoration: underline;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-right: 30px;
+    text-overflow: ellipsis;
+  }
+
+  .link-input a:hover {
+    text-decoration: underline;
+  }
+}

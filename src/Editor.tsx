@@ -67,15 +67,17 @@ import CopusPlugin from './plugins/CopusPlugin';
 import { TextNodeX } from './nodes/TextNodeX';
 import { $wrapSelectionInMarkNode } from '@lexical/mark';
 import FilePlugin from './plugins/FilePlugin';
+import { MarkXType } from './nodes/MarkNodeX';
 
 export interface EditorProps {
   readOnly?: boolean;
   onChange?: (editorState: EditorState, html: string) => void;
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
+  markList?: MarkXType[];
 }
 
-export default function Editor({ onChange, readOnly, toolbar, showLabel }: EditorProps): JSX.Element {
+export default function Editor({ onChange, readOnly, toolbar, showLabel, markList }: EditorProps): JSX.Element {
   const { historyState } = useSharedHistoryContext();
   const [editor] = useLexicalComposerContext();
   const {
@@ -120,21 +122,22 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel }: Edito
     }
   }, [editor]);
 
-  // demo
-  const [markData, setMarkData] = useState('');
-  const markContent = useCallback(() => {
-    if (!markData) return;
+  // 附加 Mark
+  useEffect(() => {
     editor.update(() => {
-      const markDataArr = markData.split(' ');
-      const anchor = TextNodeX.getNodeById(markDataArr[0]);
-      const focus = TextNodeX.getNodeById(markDataArr[2]);
-      if (anchor && focus) {
-        const rangeSelection = $createRangeSelection();
-        rangeSelection.setTextNodeRange(anchor, Number(markDataArr[1]), focus, Number(markDataArr[3]));
-        $wrapSelectionInMarkNode(rangeSelection, false, '123');
-      }
+      markList?.forEach((mark) => {
+        if (mark) {
+          const anchor = TextNodeX.getNodeById(mark.startNodeId);
+          const focus = TextNodeX.getNodeById(mark.endNodeId);
+          if (anchor && focus) {
+            const rangeSelection = $createRangeSelection();
+            rangeSelection.setTextNodeRange(anchor, mark.startNodeAt, focus, mark.endNodeAt);
+            $wrapSelectionInMarkNode(rangeSelection, false, '123');
+          }
+        }
+      });
     });
-  }, [editor, markData]);
+  }, []);
 
   if (readOnly) {
     return (
@@ -244,10 +247,6 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel }: Edito
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
         {shouldUseLexicalContextMenu && <ContextMenuPlugin />}
         <CopusPlugin />
-      </div>
-      <div>
-        <input value={markData} onChange={(e) => setMarkData(e.target.value)} />
-        <button onClick={markContent}>选择内容</button>
       </div>
     </>
   );

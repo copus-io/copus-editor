@@ -20,6 +20,8 @@ import getEditorPortal from './utils/getEditorPortal';
 import { EditorState, SerializedEditorState, TextNode } from 'lexical';
 import { ToolbarConfig } from './plugins/ToolbarPlugin';
 import { TextNodeX } from './nodes/TextNodeX';
+import { MarkNodeX, MarkXType } from './nodes/MarkNodeX';
+import { MarkNode } from '@lexical/mark';
 
 export interface EditorProps {
   readOnly?: boolean;
@@ -27,7 +29,7 @@ export interface EditorProps {
   initialValue?: string;
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
-  markList?: string[];
+  markList?: MarkXType[];
   copusCopy?: () => void;
 }
 
@@ -42,6 +44,13 @@ function App(props: EditorProps): JSX.Element {
         replace: TextNode,
         with: (node: TextNode) => {
           return new TextNodeX(node.__text);
+        },
+      },
+      MarkNodeX,
+      {
+        replace: MarkNode,
+        with: (node: MarkNode) => {
+          return new MarkNodeX(node.__ids);
         },
       },
     ],
@@ -63,6 +72,7 @@ function App(props: EditorProps): JSX.Element {
                 readOnly={props.readOnly}
                 toolbar={props.toolbar}
                 showLabel={props.showLabel}
+                markList={props.markList}
               />
             </div>
           </SharedAutocompleteContext>

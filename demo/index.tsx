@@ -35,14 +35,24 @@ window.addEventListener('unhandledrejection', ({ reason }) => showErrorOverlay(r
 const data =
   '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Since the TextNode is foundational to all Lexical packages, including the plain text use case. Handling any rich text logic is undesirable. This creates the need to override the TextNode to handle serialization and deserialization of HTML/CSS styling properties to achieve full fidelity between JSON <-> HTML. Since this is a very popular use case, below we are proving a recipe to handle the","type":"text-x","version":1,"id":"e7dk7"}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"哈哈哈","type":"text-x","version":1,"id":"59i2"}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"most common use cases.","type":"text-x","version":1,"id":"8jh8"}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"阿斯顿法斯蒂芬","type":"text-x","version":1,"id":"e7q5l"}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
 
+const markList = [
+  {
+    startNodeId: 'e7dk7',
+    startNodeAt: 140,
+    endNodeId: 'e7dk7',
+    endNodeAt: 309,
+  },
+];
+
 function DemoApp() {
   return (
     <>
-      <App key="view" initialValue={data} readOnly />
+      <App key="view" initialValue={data} markList={markList} readOnly />
       <div>&nbsp;</div>
       <App
         key="edit"
         initialValue={data}
+        markList={markList}
         onChange={(status, html) => {
           console.log(status, html);
         }}

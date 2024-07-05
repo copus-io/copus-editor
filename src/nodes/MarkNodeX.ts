@@ -1,5 +1,4 @@
 import { NodeKey, LexicalNode, EditorConfig, $applyNodeReplacement, $getNodeByKey } from 'lexical';
-import { createUID } from '../utils/copus';
 import { MarkNode, SerializedMarkNode } from '@lexical/mark';
 
 export type MarkXType = {
@@ -7,13 +6,32 @@ export type MarkXType = {
   startNodeAt: number;
   endNodeId: string;
   endNodeAt: number;
+  downstreamCount?: number;
+  sourceCount?: number;
 };
 
 type SerializedMarkNodeX = SerializedMarkNode & {};
 
 export class MarkNodeX extends MarkNode {
-  constructor(ids: Array<string>, key?: NodeKey) {
+  private __hasSource: boolean;
+  private __hasBranch: boolean;
+  constructor({
+    ids,
+    key,
+    source,
+    branch,
+  }: {
+    ids: Array<string>;
+    key?: NodeKey;
+    source?: boolean;
+    branch?: boolean;
+    sourceIds?: string[];
+    branchIds?: string[];
+  }) {
     super(ids, key);
+
+    this.__hasSource = source ?? false;
+    this.__hasBranch = branch ?? false;
   }
 
   static getType(): string {
@@ -21,12 +39,17 @@ export class MarkNodeX extends MarkNode {
   }
 
   static clone(node: MarkNodeX): MarkNodeX {
-    return new MarkNodeX(node.__ids, node.__key);
+    return new MarkNodeX({ ids: node.__ids, key: node.__key });
   }
 
   createDOM(config: EditorConfig) {
     const dom = super.createDOM(config);
-    // dom.dataset.id = this.__id;
+    if (this.__hasSource) {
+      dom.dataset.source = '1';
+    }
+    if (this.__hasBranch) {
+      dom.dataset.branch = '1';
+    }
     return dom;
   }
 
@@ -39,7 +62,7 @@ export class MarkNodeX extends MarkNode {
   }
 
   static importJSON(serializedNode: SerializedMarkNodeX): MarkNodeX {
-    const node = new MarkNodeX(serializedNode.ids, undefined);
+    const node = new MarkNodeX({ ids: serializedNode.ids });
     return node;
   }
 
@@ -53,7 +76,7 @@ export class MarkNodeX extends MarkNode {
 }
 
 export function $createMarkNodeX(ids: string[]): MarkNodeX {
-  return new MarkNodeX(ids);
+  return new MarkNodeX({ ids });
 }
 
 export function $isMarkNodeX(node: LexicalNode | null | undefined): node is MarkNodeX {

@@ -67,7 +67,8 @@ import CopusPlugin from './plugins/CopusPlugin';
 import { TextNodeX } from './nodes/TextNodeX';
 import { $wrapSelectionInMarkNode } from '@lexical/mark';
 import FilePlugin from './plugins/FilePlugin';
-import { MarkXType } from './nodes/MarkNodeX';
+import { MarkNodeX, MarkXType } from './nodes/MarkNodeX';
+import { createUID } from './utils/copus';
 
 export interface EditorProps {
   readOnly?: boolean;
@@ -75,9 +76,17 @@ export interface EditorProps {
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
   markList?: MarkXType[];
+  copusCopy?: (params: MarkXType) => void;
 }
 
-export default function Editor({ onChange, readOnly, toolbar, showLabel, markList }: EditorProps): JSX.Element {
+export default function Editor({
+  onChange,
+  readOnly,
+  toolbar,
+  showLabel,
+  markList,
+  copusCopy,
+}: EditorProps): JSX.Element {
   const { historyState } = useSharedHistoryContext();
   const [editor] = useLexicalComposerContext();
   const {
@@ -132,7 +141,9 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, markLis
           if (anchor && focus) {
             const rangeSelection = $createRangeSelection();
             rangeSelection.setTextNodeRange(anchor, mark.startNodeAt, focus, mark.endNodeAt);
-            $wrapSelectionInMarkNode(rangeSelection, false, '123');
+            $wrapSelectionInMarkNode(rangeSelection, false, createUID(), (ids) => {
+              return new MarkNodeX({ ids, source: Boolean(mark.sourceCount), branch: Boolean(mark.downstreamCount) });
+            });
           }
         }
       });
@@ -151,7 +162,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, markLis
           placeholder={placeholder}
           ErrorBoundary={LexicalErrorBoundary}
         />
-        {floatingAnchorElem && <FloatingCopusToolbarPlugin anchorElem={floatingAnchorElem} />}
+        {floatingAnchorElem && <FloatingCopusToolbarPlugin copusCopy={copusCopy} anchorElem={floatingAnchorElem} />}
       </div>
     );
   }

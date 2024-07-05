@@ -31,16 +31,19 @@ import getEditorPortal from '../../utils/getEditorPortal';
 import { INSERT_INLINE_COMMAND } from '../CopusPlugin';
 import { createDOMRange } from '@lexical/selection';
 import { TextNodeX } from '../../nodes/TextNodeX';
+import { MarkXType } from '../../nodes/MarkNodeX';
 import { $wrapSelectionInMarkNode } from '@lexical/mark';
 
 function TextFormatFloatingToolbar({
   editor,
   anchorElem,
   isLink,
+  copusCopy,
 }: {
   editor: LexicalEditor;
   anchorElem: HTMLElement;
   isLink: boolean;
+  copusCopy?: (params: MarkXType) => void;
 }): JSX.Element {
   const popupCharStylesEditorRef = useRef<HTMLDivElement | null>(null);
 
@@ -150,7 +153,7 @@ function TextFormatFloatingToolbar({
     );
   }, [editor, $updateTextFormatFloatingToolbar]);
 
-  const copySource = () => {
+  const handleCopySource = () => {
     editor.getEditorState().read(() => {
       const selection = $getSelection();
       if ($isRangeSelection(selection)) {
@@ -160,7 +163,12 @@ function TextFormatFloatingToolbar({
           if (selection.isBackward()) [start, end] = [end, start];
           const startNode = start.getNode() as TextNodeX;
           const endNode = end.getNode() as TextNodeX;
-          console.log('Selected:', startNode.__id, start.offset, endNode.__id, end.offset);
+          copusCopy?.({
+            startNodeId: startNode.__id,
+            startNodeAt: start.offset,
+            endNodeId: endNode.__id,
+            endNodeAt: end.offset,
+          });
         }
       }
     });
@@ -183,7 +191,7 @@ function TextFormatFloatingToolbar({
       ) : (
         <button
           type="button"
-          onClick={copySource}
+          onClick={handleCopySource}
           className={'popup-item spaced insert-source'}
           aria-label="Copy Copus Source">
           <i className="format add-source" />
@@ -194,7 +202,11 @@ function TextFormatFloatingToolbar({
   );
 }
 
-function useFloatingTextFormatToolbar(editor: LexicalEditor, anchorElem: HTMLElement): JSX.Element | null {
+function useFloatingTextFormatToolbar(
+  editor: LexicalEditor,
+  anchorElem: HTMLElement,
+  copusCopy?: (params: MarkXType) => void,
+): JSX.Element | null {
   const [isText, setIsText] = useState(false);
   const [isLink, setIsLink] = useState(false);
 
@@ -269,16 +281,18 @@ function useFloatingTextFormatToolbar(editor: LexicalEditor, anchorElem: HTMLEle
   }
 
   return createPortal(
-    <TextFormatFloatingToolbar editor={editor} anchorElem={anchorElem} isLink={isLink} />,
+    <TextFormatFloatingToolbar editor={editor} copusCopy={copusCopy} anchorElem={anchorElem} isLink={isLink} />,
     anchorElem,
   );
 }
 
 export default function FloatingCopusToolbarPlugin({
   anchorElem = getEditorPortal(),
+  copusCopy,
 }: {
   anchorElem?: HTMLElement;
+  copusCopy?: (params: MarkXType) => void;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  return useFloatingTextFormatToolbar(editor, anchorElem);
+  return useFloatingTextFormatToolbar(editor, anchorElem, copusCopy);
 }

@@ -488,23 +488,36 @@
     // border-bottom: 2px solid rgba(33, 145, 251, 0.3);
     background: transparent;
     padding-bottom: 2px;
-    text-decoration: wavy underline rgba(33, 145, 251, 0.7);
+
+    &[data-source] {
+      text-decoration: wavy underline rgba(33, 145, 251, 0.5);
+    }
+
+    &[data-branch] {
+      text-decoration: wavy underline rgba(242, 58, 0, 0.5);
+    }
   }
 
   &__markOverlap {
-    background: rgba(33, 145, 251, 0.3);
+    // background: rgba(33, 145, 251, 0.3);
     // border-bottom: 2px solid rgba(33, 145, 251, 0.7);
     text-decoration: wavy underline rgba(33, 145, 251, 0.7);
   }
 
   &__mark.selected {
-    background: rgba(33, 145, 251, 0.1);
-    // border-bottom: 2px solid rgba(33, 145, 251, 1);
-    text-decoration: wavy underline rgba(33, 145, 251, 1);
+    // background: rgba(33, 145, 251, 0.1);
+
+    &[data-source] {
+      text-decoration: wavy underline rgba(33, 145, 251, 1);
+    }
+
+    &[data-branch] {
+      text-decoration: wavy underline rgba(242, 58, 0, 1);
+    }
   }
 
   &__markOverlap.selected {
-    background: rgba(33, 145, 251, 0.5);
+    // background: rgba(33, 145, 251, 0.5);
     // border-bottom: 2px solid rgba(33, 145, 251, 0.7);
     text-decoration: wavy underline rgba(33, 145, 251, 0.7);
   }

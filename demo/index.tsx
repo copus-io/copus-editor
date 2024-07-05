@@ -15,6 +15,8 @@ import { createRoot } from 'react-dom/client';
 
 import App from '../src';
 import './index.css';
+import { useCallback, useEffect } from 'react';
+import { addMark, getMarkList } from './api';
 
 // Handle runtime errors
 const showErrorOverlay = (err: Event) => {
@@ -41,13 +43,31 @@ const markList = [
     startNodeAt: 140,
     endNodeId: 'e7dk7',
     endNodeAt: 309,
+    downstreamCount: 1,
+  },
+  {
+    startNodeId: '59i2',
+    startNodeAt: 2,
+    endNodeId: '8jh8',
+    endNodeAt: 11,
+    sourceCount: 1,
   },
 ];
 
 function DemoApp() {
+  useEffect(() => {
+    getMarkList('8fedcf8a368657d198da212300f15c967756e31f').then((res) => {
+      console.log(res);
+    });
+  }, []);
+
+  const handleCopusCopy = useCallback(async (params) => {
+    const res = await addMark({ ...params, opusUuid: '8fedcf8a368657d198da212300f15c967756e31f' });
+  }, []);
+
   return (
     <>
-      <App key="view" initialValue={data} markList={markList} readOnly />
+      <App key="view" initialValue={data} markList={markList} copusCopy={handleCopusCopy} readOnly />
       <div>&nbsp;</div>
       <App
         key="edit"

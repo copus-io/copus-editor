@@ -30,7 +30,7 @@ export interface EditorProps {
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
   markList?: MarkXType[];
-  copusCopy?: () => void;
+  copusCopy?: (params: MarkXType) => void;
 }
 
 function App(props: EditorProps): JSX.Element {
@@ -50,7 +50,7 @@ function App(props: EditorProps): JSX.Element {
       {
         replace: MarkNode,
         with: (node: MarkNode) => {
-          return new MarkNodeX(node.__ids);
+          return new MarkNodeX({ ids: node.__ids });
         },
       },
     ],
@@ -73,6 +73,7 @@ function App(props: EditorProps): JSX.Element {
                 toolbar={props.toolbar}
                 showLabel={props.showLabel}
                 markList={props.markList}
+                copusCopy={props.copusCopy}
               />
             </div>
           </SharedAutocompleteContext>

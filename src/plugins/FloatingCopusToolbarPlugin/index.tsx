@@ -177,9 +177,11 @@ function TextFormatFloatingToolbar({
     domSelection?.removeAllRanges();
   };
 
+  const isEditable = editor.isEditable();
+
   return (
-    <div ref={popupCharStylesEditorRef} className="floating-toolbar-popup">
-      {editor.isEditable() ? (
+    <div ref={popupCharStylesEditorRef} className={`floating-toolbar-popup ${isEditable ? '' : 'view-popup'}`}>
+      {isEditable ? (
         <button
           type="button"
           onClick={insertSource}

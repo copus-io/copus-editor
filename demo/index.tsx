@@ -15,7 +15,7 @@ import { createRoot } from 'react-dom/client';
 
 import App from '../src';
 import './index.css';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { addMark, getMarkList } from './api';
 
 // Handle runtime errors
@@ -55,15 +55,20 @@ const markList = [
 ];
 
 function DemoApp() {
+  // const [markList, setMarkList] = useState();
   useEffect(() => {
     getMarkList('8fedcf8a368657d198da212300f15c967756e31f').then((res) => {
-      console.log(res);
+      // setMarkList(res);
     });
   }, []);
 
   const handleCopusCopy = useCallback(async (params) => {
     const res = await addMark({ ...params, opusUuid: '8fedcf8a368657d198da212300f15c967756e31f' });
   }, []);
+
+  if (!markList) {
+    return null;
+  }
 
   return (
     <>

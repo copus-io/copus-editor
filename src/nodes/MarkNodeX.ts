@@ -8,6 +8,7 @@ export type MarkXType = {
   endNodeAt: number;
   downstreamCount?: number;
   sourceCount?: number;
+  textContent?: string;
 };
 
 type SerializedMarkNodeX = SerializedMarkNode & {};

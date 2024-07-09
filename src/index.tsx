@@ -6,7 +6,7 @@
  *
  */
 
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { InitialConfigType, LexicalComposer } from '@lexical/react/LexicalComposer';
 import { SharedAutocompleteContext } from './context/SharedAutocompleteContext';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { FlashMessageContext } from './context/FlashMessageContext';
@@ -15,18 +15,53 @@ import PlaygroundNodes from './nodes/PlaygroundNodes';
 import { TableContext } from './plugins/TablePlugin';
 import CopusEditorTheme from './themes/CopusEditorTheme';
 import styles from './style.module.less';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import getEditorPortal from './utils/getEditorPortal';
-import { EditorState, SerializedEditorState, TextNode } from 'lexical';
+import {
+  $createParagraphNode,
+  $createRangeSelection,
+  $createRangeSelectionFromDom,
+  $getRoot,
+  $getSelection,
+  $isRangeSelection,
+  EditorState,
+  LexicalEditor,
+  SerializedEditorState,
+  TextNode,
+} from 'lexical';
 import { ToolbarConfig } from './plugins/ToolbarPlugin';
-import { TextNodeX } from './nodes/TextNodeX';
+import { $createTextNodeX, TextNodeX } from './nodes/TextNodeX';
 import { MarkNodeX, MarkXType } from './nodes/MarkNodeX';
-import { MarkNode } from '@lexical/mark';
+import { $wrapSelectionInMarkNode, MarkNode } from '@lexical/mark';
+
+function handleCopusSource(initialCopusSource: string) {
+  return (editor: LexicalEditor) => {
+    const root = $getRoot();
+    initialCopusSource.split('\n').forEach((line) => {
+      const paragraph = $createParagraphNode();
+      paragraph.append($createTextNodeX(line));
+      root.append(paragraph);
+    });
+
+    const allTextNodes = root.getAllTextNodes();
+    const anchor = allTextNodes[0];
+    const focus = allTextNodes.length > 1 ? allTextNodes[allTextNodes.length - 1] : anchor;
+    const rangeSelection = $createRangeSelection();
+    rangeSelection.setTextNodeRange(anchor, 0, focus, focus.getTextContentSize());
+    if (!$isRangeSelection(rangeSelection)) {
+      return;
+    }
+    $wrapSelectionInMarkNode(rangeSelection, false, '345', (ids) => {
+      return new MarkNodeX({ ids, source: true });
+    });
+  };
+}
 
 export interface EditorProps {
   readOnly?: boolean;
   onChange?: (editorState: EditorState, html: string) => void;
-  initialValue?: string;
+  initialValue?: InitialConfigType['editorState'];
+  initialCopusSource?: string;
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
   markList?: MarkXType[];
@@ -35,7 +70,7 @@ export interface EditorProps {
 
 function App(props: EditorProps): JSX.Element {
   const initialConfig = {
-    editorState: props.initialValue ?? null,
+    editorState: props.initialValue ?? (props.initialCopusSource ? handleCopusSource(props.initialCopusSource) : null),
     namespace: 'CopusEditor',
     nodes: [
       ...PlaygroundNodes,

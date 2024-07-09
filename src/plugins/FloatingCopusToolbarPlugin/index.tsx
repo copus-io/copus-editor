@@ -163,11 +163,13 @@ function TextFormatFloatingToolbar({
           if (selection.isBackward()) [start, end] = [end, start];
           const startNode = start.getNode() as TextNodeX;
           const endNode = end.getNode() as TextNodeX;
+
           copusCopy?.({
             startNodeId: startNode.__id,
             startNodeAt: start.offset,
             endNodeId: endNode.__id,
             endNodeAt: end.offset,
+            textContent: selection.getTextContent(),
           });
         }
       }

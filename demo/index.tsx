@@ -54,6 +54,15 @@ const markList = [
   },
 ];
 
+const copyMark = {
+  startNodeId: '1jku',
+  startNodeAt: 137,
+  endNodeId: '8jh8',
+  endNodeAt: 11,
+  textContent:
+    'fidelity between JSON <-> HTML. Since this is a very popular use case, below we are proving a recipe to handle the\n哈哈哈\nmost common',
+};
+
 function DemoApp() {
   // const [markList, setMarkList] = useState();
   useEffect(() => {
@@ -63,8 +72,11 @@ function DemoApp() {
   }, []);
 
   const handleCopusCopy = useCallback(async (params) => {
-    const res = await addMark({ ...params, opusUuid: '8fedcf8a368657d198da212300f15c967756e31f' });
+    console.log('params', params);
+    // const res = await addMark({ ...params, opusUuid: '8fedcf8a368657d198da212300f15c967756e31f' });
   }, []);
+
+  const initialValue = useCallback(() => {}, []);
 
   if (!markList) {
     return null;
@@ -76,8 +88,9 @@ function DemoApp() {
       <div>&nbsp;</div>
       <App
         key="edit"
-        initialValue={data}
-        markList={markList}
+        // initialValue={data}
+        initialCopusSource={copyMark.textContent}
+        // markList={markList}
         onChange={(status, html) => {
           console.log(status, html);
         }}

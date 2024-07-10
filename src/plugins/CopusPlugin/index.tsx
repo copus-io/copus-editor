@@ -209,7 +209,7 @@ export default function CopusPlugin({}): JSX.Element {
           // const id = commentOrThread.id;
 
           // Wrap content in a MarkNodeX
-          $wrapSelectionInMarkNode(selection, isBackward, '123', (ids) => {
+          $wrapSelectionInMarkNode(selection, isBackward, Date.now().toString(), (ids) => {
             return new MarkNodeX({ ids, source: true });
           });
         }

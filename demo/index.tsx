@@ -39,6 +39,7 @@ const data =
 
 const markList = [
   {
+    id: '66881067080f1f6e19cf3a6c',
     startNodeId: 'e7dk7',
     startNodeAt: 140,
     endNodeId: 'e7dk7',
@@ -46,8 +47,9 @@ const markList = [
     downstreamCount: 1,
   },
   {
-    startNodeId: '59i2',
-    startNodeAt: 2,
+    id: '66881095080f1f6e19cf3a6d',
+    startNodeId: 'e7dk7',
+    startNodeAt: 200,
     endNodeId: '8jh8',
     endNodeAt: 11,
     sourceCount: 1,
@@ -88,9 +90,9 @@ function DemoApp() {
       <div>&nbsp;</div>
       <App
         key="edit"
-        // initialValue={data}
-        initialCopusSource={copyMark.textContent}
-        // markList={markList}
+        initialValue={data}
+        // initialCopusSource={copyMark.textContent}
+        markList={markList}
         onChange={(status, html) => {
           console.log(status, html);
         }}

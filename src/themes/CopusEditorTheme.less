@@ -487,39 +487,45 @@
     // background: rgba(33, 145, 251, 0.14);
     // border-bottom: 2px solid rgba(33, 145, 251, 0.3);
     background: transparent;
-    padding-bottom: 2px;
+    padding-bottom: 4px;
 
     &[data-source] {
-      text-decoration: wavy underline rgba(33, 145, 251, 0.5);
+      // text-decoration: wavy underline rgba(33, 145, 251, 0.5);
+      background: url(../images/icons/wavy-source.svg) 0 6px repeat-x;
+      background-size: 25px;
     }
 
     &[data-branch] {
-      text-decoration: wavy underline rgba(242, 58, 0, 0.5);
+      // text-decoration: wavy underline rgba(242, 58, 0, 0.5);
+      background: url(../images/icons/wavy-branch.svg) 2px 6px repeat-x;
+      background-size: 25px;
     }
   }
 
   &__markOverlap {
     // background: rgba(33, 145, 251, 0.3);
     // border-bottom: 2px solid rgba(33, 145, 251, 0.7);
-    text-decoration: wavy underline rgba(33, 145, 251, 0.7);
+
+    // text-decoration: wavy underline rgba(33, 145, 251, 0.7);
   }
 
   &__mark.selected {
     // background: rgba(33, 145, 251, 0.1);
 
-    &[data-source] {
-      text-decoration: wavy underline rgba(33, 145, 251, 1);
-    }
+    // &[data-source] {
+    //   text-decoration: wavy underline rgba(33, 145, 251, 1);
+    // }
 
-    &[data-branch] {
-      text-decoration: wavy underline rgba(242, 58, 0, 1);
-    }
+    // &[data-branch] {
+    //   text-decoration: wavy underline rgba(242, 58, 0, 1);
+    // }
   }
 
   &__markOverlap.selected {
     // background: rgba(33, 145, 251, 0.5);
     // border-bottom: 2px solid rgba(33, 145, 251, 0.7);
-    text-decoration: wavy underline rgba(33, 145, 251, 0.7);
+
+    // text-decoration: wavy underline rgba(33, 145, 251, 0.7);
   }
 
   &__embedBlock {

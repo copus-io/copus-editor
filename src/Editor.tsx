@@ -59,7 +59,7 @@ import YouTubePlugin from './plugins/YouTubePlugin';
 import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
-import { $createRangeSelection, EditorState, SerializedEditorState } from 'lexical';
+import { $createRangeSelection, $getRoot, EditorState, SerializedEditorState } from 'lexical';
 import { $generateHtmlFromNodes } from '@lexical/html';
 import { debounce, set } from 'lodash-es';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -133,15 +133,41 @@ export default function Editor({
 
   // 附加 Mark
   useEffect(() => {
-    editor.update(() => {
-      markList?.forEach((mark) => {
-        if (mark) {
-          const anchor = TextNodeX.getNodeById(mark.startNodeId);
-          const focus = TextNodeX.getNodeById(mark.endNodeId);
+    markList?.forEach((mark) => {
+      editor.update(() => {
+        if (mark.id) {
+          const root = $getRoot();
+          const allTextNodes = root.getAllTextNodes() as TextNodeX[];
+          let anchor = TextNodeX.getNodeById(mark.startNodeId);
+          let focus = TextNodeX.getNodeById(mark.endNodeId);
           if (anchor && focus) {
+            const anchorIndex = allTextNodes.indexOf(anchor);
+            let anchorOffset = mark.startNodeAt;
+            for (let i = anchorIndex; i < allTextNodes.length; i++) {
+              const textSize = allTextNodes[i].getTextContentSize();
+              if (textSize >= anchorOffset) {
+                anchor = allTextNodes[i];
+                break;
+              } else {
+                anchorOffset -= textSize;
+              }
+            }
+
+            const focusIndex = allTextNodes.indexOf(focus);
+            let focusOffset = mark.endNodeAt;
+            for (let i = focusIndex; i < allTextNodes.length; i++) {
+              const textSize = allTextNodes[i].getTextContentSize();
+              if (textSize >= focusOffset) {
+                focus = allTextNodes[i];
+                break;
+              } else {
+                focusOffset -= textSize;
+              }
+            }
+
             const rangeSelection = $createRangeSelection();
-            rangeSelection.setTextNodeRange(anchor, mark.startNodeAt, focus, mark.endNodeAt);
-            $wrapSelectionInMarkNode(rangeSelection, false, createUID(), (ids) => {
+            rangeSelection.setTextNodeRange(anchor, anchorOffset, focus, focusOffset);
+            $wrapSelectionInMarkNode(rangeSelection, false, mark.id, (ids) => {
               return new MarkNodeX({ ids, source: Boolean(mark.sourceCount), branch: Boolean(mark.downstreamCount) });
             });
           }

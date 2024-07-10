@@ -2,6 +2,7 @@ import { NodeKey, LexicalNode, EditorConfig, $applyNodeReplacement, $getNodeByKe
 import { MarkNode, SerializedMarkNode } from '@lexical/mark';
 
 export type MarkXType = {
+  id?: string;
   startNodeId: string;
   startNodeAt: number;
   endNodeId: string;
@@ -51,6 +52,7 @@ export class MarkNodeX extends MarkNode {
     if (this.__hasBranch) {
       dom.dataset.branch = '1';
     }
+    dom.dataset.ids = this.__ids.join(',');
     return dom;
   }
 

@@ -500,6 +500,11 @@
       background: url(../images/icons/wavy-branch.svg) 2px 6px repeat-x;
       background-size: 25px;
     }
+
+    &[data-source]+&[data-branch] {
+      background: url(../images/icons/wavy-overlap.svg) 2px 6px repeat-x;
+      background-size: 25px;
+    }
   }
 
   &__markOverlap {
@@ -507,6 +512,7 @@
     // border-bottom: 2px solid rgba(33, 145, 251, 0.7);
 
     // text-decoration: wavy underline rgba(33, 145, 251, 0.7);
+
   }
 
   &__mark.selected {

@@ -1,7 +1,7 @@
 const API_HOST = 'https://api.test.copus.io/copus-client';
 
 const token =
-  'Bearer eyJhbGciOiJIUzI1NiJ9.eyJsYXN0TG9naW5UaW1lIjoxNzIwMDU3ODA1NzA2LCJzdWIiOiJoYW92ZWlAZ21haWwuY29tIiwiTGFzdFBhc3N3b3JkUmVzZXREYXRlIjoxNzE1NTgzNDg4MDI0LCJjcmVhdGVkIjoxNzIwMDU3ODA1NzE5LCJleHAiOjE3MjA2NjI2MDUsInVzZXJJZCI6NDE2fQ.xWI2LT18ZS8AfEfZEYKmRZxF5Q2lTg2Qbpm9HwxZb-w';
+  'Bearer eyJhbGciOiJIUzI1NiJ9.eyJsYXN0TG9naW5UaW1lIjoxNzIwNzA4MDk1MzIzLCJzdWIiOiJoYW92ZWlAZ21haWwuY29tIiwiTGFzdFBhc3N3b3JkUmVzZXREYXRlIjoxNzE1NTgzNDg4MDI0LCJjcmVhdGVkIjoxNzIwNzA4MDk1MzQyLCJleHAiOjE3MjEzMTI4OTUsInVzZXJJZCI6NDE2fQ._aidTbs0qzTpVyn1v8TgH079V58aMw855q2-NNF0zOw';
 
 // 获取 markList
 export const getMarkList = async (opusUuid) => {
@@ -20,6 +20,6 @@ export const addMark = async (params) => {
     },
     body: JSON.stringify(params),
   });
-  const data = await res.json();
-  console.log(data);
+  const jsonRes = await res.json();
+  return jsonRes;
 };

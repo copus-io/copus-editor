@@ -75,18 +75,15 @@ export interface EditorProps {
   onChange?: (editorState: EditorState, html: string) => void;
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
-  markList?: MarkXType[];
-  copusCopy?: (params: MarkXType) => void;
+  copus?: {
+    markList?: MarkXType[];
+    copusCopy?: (params: MarkXType) => void;
+    createMark?: (params: MarkXType) => Promise<MarkXType>;
+  };
 }
 
-export default function Editor({
-  onChange,
-  readOnly,
-  toolbar,
-  showLabel,
-  markList,
-  copusCopy,
-}: EditorProps): JSX.Element {
+export default function Editor({ onChange, readOnly, toolbar, showLabel, copus = {} }: EditorProps): JSX.Element {
+  const { markList, copusCopy } = copus;
   const { historyState } = useSharedHistoryContext();
   const [editor] = useLexicalComposerContext();
   const {
@@ -189,6 +186,7 @@ export default function Editor({
           ErrorBoundary={LexicalErrorBoundary}
         />
         {floatingAnchorElem && <FloatingCopusToolbarPlugin copusCopy={copusCopy} anchorElem={floatingAnchorElem} />}
+        <CopusPlugin />
       </div>
     );
   }

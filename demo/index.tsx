@@ -65,20 +65,27 @@ const copyMark = {
     'fidelity between JSON <-> HTML. Since this is a very popular use case, below we are proving a recipe to handle the\n哈哈哈\nmost common',
 };
 
+const uuid1 = '8fedcf8a368657d198da212300f15c967756e31f';
+
 function DemoApp() {
   // const [markList, setMarkList] = useState();
   useEffect(() => {
-    getMarkList('8fedcf8a368657d198da212300f15c967756e31f').then((res) => {
+    getMarkList(uuid1).then((res) => {
       // setMarkList(res);
     });
   }, []);
 
   const handleCopusCopy = useCallback(async (params) => {
     console.log('params', params);
-    // const res = await addMark({ ...params, opusUuid: '8fedcf8a368657d198da212300f15c967756e31f' });
+    // const res = await addMark({ ...params, opusUuid: uuid1 });
   }, []);
 
-  const initialValue = useCallback(() => {}, []);
+  const createMark = useCallback(async (params) => {
+    console.log('createMark', params);
+    const res = await addMark({ ...params });
+    console.log('res', res);
+    return { ...params, id: res.data };
+  }, []);
 
   if (!markList) {
     return null;
@@ -86,13 +93,13 @@ function DemoApp() {
 
   return (
     <>
-      <App key="view" initialValue={data} markList={markList} copusCopy={handleCopusCopy} readOnly />
+      {/* <App key="view" initialValue={data} copus={{ markList, copusCopy: handleCopusCopy }} readOnly /> */}
       <div>&nbsp;</div>
       <App
         key="edit"
         initialValue={data}
-        // initialCopusSource={copyMark.textContent}
-        markList={markList}
+        copus={{ markList }}
+        // copus={{ markList, initialSource: copyMark.textContent, createMark }}
         onChange={(status, html) => {
           console.log(status, html);
         }}

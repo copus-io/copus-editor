@@ -2,6 +2,7 @@ import { NodeKey, LexicalNode, EditorConfig, $applyNodeReplacement, $getNodeByKe
 import { MarkNode, SerializedMarkNode } from '@lexical/mark';
 
 export type MarkXType = {
+  opusUuid?: string;
   id?: string;
   startNodeId: string;
   startNodeAt: number;
@@ -17,12 +18,7 @@ type SerializedMarkNodeX = SerializedMarkNode & {};
 export class MarkNodeX extends MarkNode {
   private __hasSource: boolean;
   private __hasBranch: boolean;
-  constructor({
-    ids,
-    key,
-    source,
-    branch,
-  }: {
+  constructor(props: {
     ids: Array<string>;
     key?: NodeKey;
     source?: boolean;
@@ -30,8 +26,8 @@ export class MarkNodeX extends MarkNode {
     sourceIds?: string[];
     branchIds?: string[];
   }) {
+    const { ids, key, source, branch } = props;
     super(ids, key);
-
     this.__hasSource = source ?? false;
     this.__hasBranch = branch ?? false;
   }

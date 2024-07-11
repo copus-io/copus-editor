@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 export function compressNumber(num: number): string {
   var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   var result = '';
@@ -8,7 +10,29 @@ export function compressNumber(num: number): string {
   return result;
 }
 
-export function createUID(): string {
-  const randomStr = compressNumber(Math.round(Math.random() * 1e10)).substring(0, 4);
+export function createUID(length = 4): string {
+  const randomStr = compressNumber(Math.round(Math.random() * 1e16)).substring(0, length);
   return randomStr;
+}
+
+export function createUniqueID(): string {
+  let idStr = compressNumber(Date.now());
+  idStr += createUID(8);
+
+  const hash = crypto.createHash('md5');
+  hash.update(idStr);
+  return hash.digest('hex');
+}
+
+export function createUUID() {
+  var d = new Date().getTime();
+  if (window.performance && typeof window.performance.now === 'function') {
+    d += performance.now();
+  }
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (d + Math.random() * 16) % 16 | 0;
+    d = Math.floor(d / 16);
+    return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16);
+  });
+  return uuid;
 }

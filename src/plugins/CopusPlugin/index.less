@@ -18,6 +18,7 @@ i.add-source {
     opacity: 0;
     transform: translateY(50px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -85,6 +86,7 @@ i.add-source {
     opacity: 0;
     transform: translateX(300px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(0);
@@ -202,5 +204,96 @@ i.add-source {
 
   .link-input a:hover {
     text-decoration: underline;
+  }
+}
+
+.CopusPlugin_CopusList {
+  display: block;
+  position: absolute;
+  z-index: 24;
+  background: #fff;
+  width: 360px;
+  box-shadow: 0 1px 5px 0 rgba(118, 118, 118, 0.5);
+  border-radius: 15px;
+  --source-border-color: rgb(33, 145, 251);
+  --branch-border-color: rgb(242, 58, 0);
+  --source-background-color: rgba(33, 145, 251, 0.1);
+  --branch-background-color: rgba(242, 58, 0, 0.05);
+
+  // --border-color: var(--source-border-color);
+  // --background-color: var(--source-background-color);
+
+  .tab-wrap {
+    display: flex;
+    height: 35px;
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 35px;
+      cursor: pointer;
+    }
+
+    .tab-source {
+      border-top-left-radius: 15px;
+      background-color: var(--source-background-color);
+      border: 1px solid var(--source-border-color);
+    }
+
+    .tab-branch {
+      border-top-right-radius: 15px;
+      background-color: var(--branch-background-color);
+      border: 1px solid var(--branch-border-color);
+    }
+  }
+
+  .list-main {
+    padding: 10px 20px;
+    border-left: solid 1px var(--border-color);
+    border-right: solid 1px var(--border-color);
+    border-bottom: solid 1px var(--border-color);
+    background-color: var(--background-color);
+    border-radius: 0 0 15px 15px;
+
+    .title {
+      font-size: 22px;
+      font-weight: 500;
+    }
+
+    .description {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #696969;
+    }
+  }
+
+  &.Copus_Source {
+    --border-color: var(--source-border-color);
+    --background-color: var(--source-background-color);
+
+    .tab-source {
+      border-bottom: 0;
+    }
+
+    .tab-branch {
+      border-left: 0;
+      border-bottom-color: var(--source-border-color);
+    }
+  }
+
+  &.Copus_Branch {
+    --border-color: var(--branch-border-color);
+    --background-color: var(--branch-background-color);
+
+    .tab-source {
+      border-right: 0;
+      border-bottom-color: var(--branch-border-color);
+    }
+
+    .tab-branch {
+      border-bottom: 0;
+    }
   }
 }

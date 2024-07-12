@@ -54,7 +54,7 @@ function handleCopusSource(initialCopusSource: string, createMark?: (params: Mar
     }
 
     createMark?.({
-      opusUuid: createUUID(),
+      // opusUuid: createUUID(),
       startNodeId: anchor.getId(),
       startNodeAt: 0,
       endNodeId: focus.getId(),

@@ -93,9 +93,9 @@ function DemoApp() {
 
   return (
     <>
-      {/* <App key="view" initialValue={data} copus={{ markList, copusCopy: handleCopusCopy }} readOnly /> */}
+      <App key="view" initialValue={data} copus={{ markList, copusCopy: handleCopusCopy }} readOnly />
       <div>&nbsp;</div>
-      <App
+      {/* <App
         key="edit"
         initialValue={data}
         copus={{ markList }}
@@ -115,7 +115,7 @@ function DemoApp() {
         //   'insert-more',
         // ]}
         // showLabel
-      />
+      /> */}
     </>
   );
 }

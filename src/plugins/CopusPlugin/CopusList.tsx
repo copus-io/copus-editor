@@ -2,17 +2,15 @@ import { createDOMRange, createRectsFromDOMRange } from '@lexical/selection';
 import { $getSelection, $isRangeSelection, LexicalEditor, RangeSelection } from 'lexical';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
-export function SourceInputBox({
+export function CopusList({
   editor,
-  cancelAddSource,
-  submitAddSource,
+  selectCopusList,
+  getMarkInfo,
 }: {
-  cancelAddSource: () => void;
   editor: LexicalEditor;
-  submitAddSource: (sourceLink: string, selection?: RangeSelection | null) => void;
+  selectCopusList?: string[];
+  getMarkInfo?: (ids: string[]) => Promise<any[]>;
 }) {
-  const [content, setContent] = useState('');
-  const [canSubmit, setCanSubmit] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
   const selectionState = useMemo(
     () => ({
@@ -93,13 +91,6 @@ export function SourceInputBox({
     };
   }, [updateLocation]);
 
-  const submitSource = () => {
-    if (canSubmit) {
-      submitAddSource(content, selectionRef.current);
-      selectionRef.current = null;
-    }
-  };
-
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (inputRef.current) {
@@ -107,47 +98,32 @@ export function SourceInputBox({
     }
   }, []);
 
-  const monitorInputInteraction = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-    } else if (event.key === 'Escape') {
-      event.preventDefault();
-      cancelAddSource();
-    }
-  };
+  const [currentTab, setCurrentTab] = useState('Source');
 
   return (
-    <div className="CopusPlugin_SourceInputBox" ref={boxRef}>
-      <div className="link-title">Add Sources</div>
-      <div className="link-main">
-        <input
-          ref={inputRef}
-          className="link-input"
-          // value={editedLinkUrl}
-          onChange={(event) => {
-            setContent(event.target.value);
-            setCanSubmit(event.target.value.length > 0);
-          }}
-          onKeyDown={(event) => {
-            monitorInputInteraction(event);
-          }}
-        />
+    <div className={`CopusPlugin_CopusList Copus_${currentTab}`} ref={boxRef}>
+      <div className="tab-wrap">
         <div
-          className="link-cancel"
-          role="button"
-          tabIndex={0}
-          onMouseDown={(event) => event.preventDefault()}
+          className="tab tab-source"
           onClick={() => {
-            cancelAddSource();
-          }}
-        />
+            setCurrentTab('Source');
+          }}>
+          Sources
+        </div>
         <div
-          className="link-confirm"
-          role="button"
-          tabIndex={0}
-          onMouseDown={(event) => event.preventDefault()}
-          onClick={submitSource}
-        />
+          className="tab tab-branch"
+          onClick={() => {
+            setCurrentTab('Branch');
+          }}>
+          Branches
+        </div>
+      </div>
+      <div className="list-main">
+        <div className="title">Inspired by Fractopus</div>
+        <div className="description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. lacus, ut interdum tellus elit sed risus. Maecenas
+          eget condimentum
+        </div>
       </div>
     </div>
   );

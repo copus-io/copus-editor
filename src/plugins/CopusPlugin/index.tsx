@@ -9,24 +9,28 @@
 import type { LexicalCommand, NodeKey, RangeSelection } from 'lexical';
 import { $getMarkIDs, $wrapSelectionInMarkNode } from '@lexical/mark';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { mergeRegister, registerNestedElementResolver } from '@lexical/utils';
+import { $findMatchingParent, mergeRegister, registerNestedElementResolver } from '@lexical/utils';
 import {
   $getNodeByKey,
   $getSelection,
   $isRangeSelection,
   $isTextNode,
+  CLICK_COMMAND,
   COMMAND_PRIORITY_EDITOR,
+  COMMAND_PRIORITY_LOW,
   createCommand,
 } from 'lexical';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { $createMarkNodeX, $isMarkNodeX, MarkNodeX } from '../../nodes/MarkNodeX';
 import { SourceInputBox } from './SourceInputBox';
-import './index.css';
+import { CopusList } from './CopusList';
+import { getSelectedNode } from '../../utils/getSelectedNode';
+import './index.less';
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand('INSERT_INLINE_COMMAND');
 
-export default function CopusPlugin({}): JSX.Element {
+export default function CopusPlugin({ getMarkInfo }: { getMarkInfo?: (ids: string[]) => Promise<any[]> }): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const markNodeXMap = useMemo<Map<string, Set<NodeKey>>>(() => {
     return new Map();
@@ -34,7 +38,7 @@ export default function CopusPlugin({}): JSX.Element {
   const [activeAnchorKey, setActiveAnchorKey] = useState<NodeKey | null>();
   const [activeIDs, setActiveIDs] = useState<Array<string>>([]);
   const [showSourceInput, setShowSourceInput] = useState(false);
-  // const [showComments, setShowComments] = useState(false);
+  const [selectCopusList, setSelectCopusList] = useState<Array<string>>();
 
   const cancelAddSource = useCallback(() => {
     editor.update(() => {
@@ -66,7 +70,6 @@ export default function CopusPlugin({}): JSX.Element {
 
   useEffect(() => {
     const changedElems: Array<HTMLElement> = [];
-    console.log('activeIDs', activeIDs, markNodeXMap);
     for (let i = 0; i < activeIDs.length; i++) {
       const id = activeIDs[i];
       const keys = markNodeXMap.get(id);
@@ -76,7 +79,6 @@ export default function CopusPlugin({}): JSX.Element {
           if (elem !== null) {
             elem.classList.add('selected');
             changedElems.push(elem);
-            // setShowSourceInput(true);
           }
         }
       }
@@ -171,9 +173,6 @@ export default function CopusPlugin({}): JSX.Element {
           if (!hasAnchorKey) {
             setActiveAnchorKey(null);
           }
-          if (!tags.has('collaboration') && $isRangeSelection(selection)) {
-            setShowSourceInput(false);
-          }
         });
       }),
       editor.registerCommand(
@@ -188,6 +187,23 @@ export default function CopusPlugin({}): JSX.Element {
         },
         COMMAND_PRIORITY_EDITOR,
       ),
+      editor.registerCommand<MouseEvent>(
+        CLICK_COMMAND,
+        (payload) => {
+          const selection = $getSelection();
+          if ($isRangeSelection(selection)) {
+            const node = getSelectedNode(selection);
+            const markNodeX = $findMatchingParent(node, $isMarkNodeX);
+            if ($isMarkNodeX(markNodeX)) {
+              setSelectCopusList(markNodeX.getIDs());
+            } else {
+              setSelectCopusList(undefined);
+            }
+          }
+          return false;
+        },
+        COMMAND_PRIORITY_LOW,
+      ),
     );
   }, [editor, markNodeXMap]);
 
@@ -196,6 +212,11 @@ export default function CopusPlugin({}): JSX.Element {
       {showSourceInput &&
         createPortal(
           <SourceInputBox editor={editor} cancelAddSource={cancelAddSource} submitAddSource={submitAddSource} />,
+          document.body,
+        )}
+      {selectCopusList &&
+        createPortal(
+          <CopusList editor={editor} getMarkInfo={getMarkInfo} selectCopusList={selectCopusList} />,
           document.body,
         )}
     </>

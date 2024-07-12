@@ -59,7 +59,7 @@ import YouTubePlugin from './plugins/YouTubePlugin';
 import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
-import { $createRangeSelection, $getRoot, EditorState, SerializedEditorState } from 'lexical';
+import { $createRangeSelection, $getRoot, $getSelection, EditorState, SerializedEditorState } from 'lexical';
 import { $generateHtmlFromNodes } from '@lexical/html';
 import { debounce, set } from 'lodash-es';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -79,11 +79,12 @@ export interface EditorProps {
     markList?: MarkXType[];
     copusCopy?: (params: MarkXType) => void;
     createMark?: (params: MarkXType) => Promise<MarkXType>;
+    getMarkInfo?: (ids: string[]) => Promise<any[]>;
   };
 }
 
 export default function Editor({ onChange, readOnly, toolbar, showLabel, copus = {} }: EditorProps): JSX.Element {
-  const { markList, copusCopy } = copus;
+  const { markList, copusCopy, getMarkInfo } = copus;
   const { historyState } = useSharedHistoryContext();
   const [editor] = useLexicalComposerContext();
   const {
@@ -281,7 +282,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
         {/* {isAutocomplete && <AutocompletePlugin />} */}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
         {shouldUseLexicalContextMenu && <ContextMenuPlugin />}
-        <CopusPlugin />
+        <CopusPlugin getMarkInfo={getMarkInfo} />
       </div>
     </>
   );

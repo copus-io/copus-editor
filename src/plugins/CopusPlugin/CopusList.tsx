@@ -9,7 +9,7 @@ export function CopusList({
 }: {
   editor: LexicalEditor;
   selectCopusList?: string[];
-  getMarkInfo?: (ids: string[]) => Promise<any[]>;
+  getMarkInfo?: (ids: string[]) => Promise<any>;
 }) {
   const boxRef = useRef<HTMLDivElement>(null);
   const selectionState = useMemo(
@@ -141,17 +141,17 @@ export function CopusList({
           </div>
           {currentTab === 'Source' && (
             <div className="list-main">
-              {markInfo.sourceList?.map((branch) => (
+              {markInfo.sourceList?.map((source: any) => (
                 <div className="item">
-                  <div className="title">{branch.title}</div>
-                  <div className="description">{branch.subTitle}</div>
+                  <div className="title">{source.title}</div>
+                  <div className="description">{source.subTitle}</div>
                 </div>
               ))}
             </div>
           )}
           {currentTab === 'Branch' && (
             <div className="list-main">
-              {markInfo.branchList?.map((branch) => (
+              {markInfo.branchList?.map((branch: any) => (
                 <div className="item">
                   <div className="title">{branch.title}</div>
                   <div className="description">{branch.subTitle}</div>

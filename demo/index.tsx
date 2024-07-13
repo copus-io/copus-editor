@@ -97,8 +97,7 @@ function DemoApp() {
 
   const getMarkInfo = useCallback(async (ids) => {
     const res = await getDownstreamList(ids);
-    console.log('res.data', res.data);
-    return res.data;
+    return res;
   }, []);
 
   return (

@@ -32,8 +32,8 @@ export const getDownstreamList = async (markIds: string[]) => {
       'Content-Type': 'application/json',
       Authorization: token,
     },
-    body: JSON.stringify({ markIds }),
+    body: JSON.stringify(markIds),
   });
   const json = await res.json();
-  return json.data ?? [];
+  return json.data ?? {};
 };

@@ -98,10 +98,9 @@ export function CopusList({
     if (selectCopusList) {
       setIsLoading(true);
       getMarkInfo?.(selectCopusList)
-        .then((data) => {
-          if (data) {
-            const info = data ?? {};
-            if (info.branchList) {
+        .then((info = {}) => {
+          if (info.branchList.length > 0 || info.sourceList.length > 0) {
+            if (info.branchList.length) {
               setCurrentTab('Branch');
             } else {
               setCurrentTab('Source');
@@ -120,7 +119,7 @@ export function CopusList({
   return (
     <div className={`CopusPlugin_CopusList Copus_${currentTab}`} ref={boxRef} onClick={(e) => e.stopPropagation()}>
       {isLoading && <div className="loading">Loading...</div>}
-      {!isLoading && !markInfo && <div className="loading">Nothing</div>}
+      {!isLoading && !markInfo && <div className="nothing">Nothing</div>}
       {!isLoading && markInfo && (
         <>
           <div className="tab-wrap">

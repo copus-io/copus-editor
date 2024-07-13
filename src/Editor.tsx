@@ -76,7 +76,6 @@ export interface EditorProps {
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
   copus?: {
-    markList?: MarkXType[];
     copusCopy?: (params: MarkXType) => void;
     createMark?: (params: MarkXType) => Promise<MarkXType>;
     getMarkInfo?: (ids: string[]) => Promise<any[]>;
@@ -84,7 +83,7 @@ export interface EditorProps {
 }
 
 export default function Editor({ onChange, readOnly, toolbar, showLabel, copus = {} }: EditorProps): JSX.Element {
-  const { markList, copusCopy, getMarkInfo } = copus;
+  const { copusCopy, getMarkInfo } = copus;
   const { historyState } = useSharedHistoryContext();
   const [editor] = useLexicalComposerContext();
   const {
@@ -128,51 +127,6 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
       editor.setEditable(true);
     }
   }, [editor]);
-
-  // 附加 Mark
-  useEffect(() => {
-    markList?.forEach((mark) => {
-      editor.update(() => {
-        if (mark.id) {
-          const root = $getRoot();
-          const allTextNodes = root.getAllTextNodes() as TextNodeX[];
-          let anchor = TextNodeX.getNodeById(mark.startNodeId);
-          let focus = TextNodeX.getNodeById(mark.endNodeId);
-          if (anchor && focus) {
-            const anchorIndex = allTextNodes.indexOf(anchor);
-            let anchorOffset = mark.startNodeAt;
-            for (let i = anchorIndex; i < allTextNodes.length; i++) {
-              const textSize = allTextNodes[i].getTextContentSize();
-              if (textSize >= anchorOffset) {
-                anchor = allTextNodes[i];
-                break;
-              } else {
-                anchorOffset -= textSize;
-              }
-            }
-
-            const focusIndex = allTextNodes.indexOf(focus);
-            let focusOffset = mark.endNodeAt;
-            for (let i = focusIndex; i < allTextNodes.length; i++) {
-              const textSize = allTextNodes[i].getTextContentSize();
-              if (textSize >= focusOffset) {
-                focus = allTextNodes[i];
-                break;
-              } else {
-                focusOffset -= textSize;
-              }
-            }
-
-            const rangeSelection = $createRangeSelection();
-            rangeSelection.setTextNodeRange(anchor, anchorOffset, focus, focusOffset);
-            $wrapSelectionInMarkNode(rangeSelection, false, mark.id, (ids) => {
-              return new MarkNodeX({ ids, source: Boolean(mark.sourceCount), branch: Boolean(mark.downstreamCount) });
-            });
-          }
-        }
-      });
-    });
-  }, []);
 
   if (readOnly) {
     return (

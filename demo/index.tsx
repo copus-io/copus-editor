@@ -15,8 +15,9 @@ import { createRoot } from 'react-dom/client';
 
 import App from '../src';
 import './index.css';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { addMark, getMarkList } from './api';
+import { EditorShellRef } from '../src/EditorShell';
 
 // Handle runtime errors
 const showErrorOverlay = (err: Event) => {
@@ -68,10 +69,13 @@ const copyMark = {
 const uuid1 = '8fedcf8a368657d198da212300f15c967756e31f';
 
 function DemoApp() {
+  const ref1 = useRef<EditorShellRef>(null);
+  const ref2 = useRef<EditorShellRef>(null);
+
   // const [markList, setMarkList] = useState();
   useEffect(() => {
     getMarkList(uuid1).then((res) => {
-      // setMarkList(res);
+      ref1.current?.attachMarkList(markList);
     });
   }, []);
 
@@ -87,22 +91,21 @@ function DemoApp() {
     return { ...params, id: res.data };
   }, []);
 
-  if (!markList) {
-    return null;
-  }
+  useEffect(() => {
+    ref2.current?.attachCopySource(copyMark.textContent, createMark);
+  }, []);
 
   return (
     <>
-      <App key="view" initialValue={data} copus={{ markList, copusCopy: handleCopusCopy }} readOnly />
+      <App key="view" initialValue={data} copus={{ copusCopy: handleCopusCopy }} ref={ref1} readOnly />
       <div>&nbsp;</div>
-      {/* <App
+      <App
         key="edit"
         initialValue={data}
-        copus={{ markList }}
-        // copus={{ markList, initialSource: copyMark.textContent, createMark }}
         onChange={(status, html) => {
           console.log(status, html);
         }}
+        ref={ref2}
         // toolbar={[
         //   'history',
         //   'block-format',
@@ -115,7 +118,7 @@ function DemoApp() {
         //   'insert-more',
         // ]}
         // showLabel
-      /> */}
+      />
     </>
   );
 }

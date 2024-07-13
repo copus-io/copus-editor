@@ -195,9 +195,11 @@ export default function CopusPlugin({ getMarkInfo }: { getMarkInfo?: (ids: strin
             const node = getSelectedNode(selection);
             const markNodeX = $findMatchingParent(node, $isMarkNodeX);
             if ($isMarkNodeX(markNodeX)) {
-              setSelectCopusList(markNodeX.getIDs());
-            } else {
-              setSelectCopusList(undefined);
+              setTimeout(() => {
+                editor.getEditorState().read(() => {
+                  setSelectCopusList(markNodeX.getIDs());
+                });
+              });
             }
           }
           return false;
@@ -206,6 +208,18 @@ export default function CopusPlugin({ getMarkInfo }: { getMarkInfo?: (ids: strin
       ),
     );
   }, [editor, markNodeXMap]);
+
+  useEffect(() => {
+    const handleClick = () => {
+      setSelectCopusList(undefined);
+    };
+
+    window.addEventListener('click', handleClick);
+
+    return () => {
+      window.removeEventListener('click', handleClick);
+    };
+  }, []);
 
   return (
     <>

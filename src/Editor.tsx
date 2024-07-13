@@ -140,8 +140,12 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
           placeholder={placeholder}
           ErrorBoundary={LexicalErrorBoundary}
         />
-        {floatingAnchorElem && <FloatingCopusToolbarPlugin copusCopy={copusCopy} anchorElem={floatingAnchorElem} />}
-        <CopusPlugin />
+        {floatingAnchorElem && (
+          <>
+            <FloatingCopusToolbarPlugin copusCopy={copusCopy} anchorElem={floatingAnchorElem} />
+            <CopusPlugin getMarkInfo={getMarkInfo} />
+          </>
+        )}
       </div>
     );
   }
@@ -236,7 +240,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
         {/* {isAutocomplete && <AutocompletePlugin />} */}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
         {shouldUseLexicalContextMenu && <ContextMenuPlugin />}
-        <CopusPlugin getMarkInfo={getMarkInfo} />
+        {/* <CopusPlugin getMarkInfo={getMarkInfo} /> */}
       </div>
     </>
   );

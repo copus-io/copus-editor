@@ -91,40 +91,76 @@ export function CopusList({
     };
   }, [updateLocation]);
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [markInfo, setMarkInfo] = useState<any>(null);
   const [currentTab, setCurrentTab] = useState('Source');
+  useEffect(() => {
+    if (selectCopusList) {
+      setIsLoading(true);
+      getMarkInfo?.(selectCopusList)
+        .then((data) => {
+          if (data) {
+            const info = data ?? {};
+            if (info.branchList) {
+              setCurrentTab('Branch');
+            } else {
+              setCurrentTab('Source');
+            }
+            setMarkInfo(info);
+          } else {
+            setMarkInfo(null);
+          }
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [selectCopusList]);
 
   return (
-    <div className={`CopusPlugin_CopusList Copus_${currentTab}`} ref={boxRef}>
-      <div className="tab-wrap">
-        <div
-          className="tab tab-source"
-          onClick={() => {
-            setCurrentTab('Source');
-          }}>
-          Sources
-        </div>
-        <div
-          className="tab tab-branch"
-          onClick={() => {
-            setCurrentTab('Branch');
-          }}>
-          Branches
-        </div>
-      </div>
-      <div className="list-main">
-        <div className="title">Inspired by Fractopus</div>
-        <div className="description">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. lacus, ut interdum tellus elit sed risus. Maecenas
-          eget condimentum
-        </div>
-      </div>
+    <div className={`CopusPlugin_CopusList Copus_${currentTab}`} ref={boxRef} onClick={(e) => e.stopPropagation()}>
+      {isLoading && <div className="loading">Loading...</div>}
+      {!isLoading && !markInfo && <div className="loading">Nothing</div>}
+      {!isLoading && markInfo && (
+        <>
+          <div className="tab-wrap">
+            <div
+              className="tab tab-source"
+              onClick={() => {
+                setCurrentTab('Source');
+              }}>
+              Sources
+            </div>
+            <div
+              className="tab tab-branch"
+              onClick={() => {
+                setCurrentTab('Branch');
+              }}>
+              Branches
+            </div>
+          </div>
+          {currentTab === 'Source' && (
+            <div className="list-main">
+              {markInfo.sourceList?.map((branch) => (
+                <div className="item">
+                  <div className="title">{branch.title}</div>
+                  <div className="description">{branch.subTitle}</div>
+                </div>
+              ))}
+            </div>
+          )}
+          {currentTab === 'Branch' && (
+            <div className="list-main">
+              {markInfo.branchList?.map((branch) => (
+                <div className="item">
+                  <div className="title">{branch.title}</div>
+                  <div className="description">{branch.subTitle}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

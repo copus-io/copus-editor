@@ -16,7 +16,7 @@ import { createRoot } from 'react-dom/client';
 import App from '../src';
 import './index.css';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { addMark, getMarkList } from './api';
+import { addMark, getDownstreamList, getMarkList } from './api';
 import { EditorShellRef } from '../src/EditorShell';
 
 // Handle runtime errors
@@ -95,11 +95,17 @@ function DemoApp() {
     ref2.current?.attachCopySource(copyMark.textContent, createMark);
   }, []);
 
+  const getMarkInfo = useCallback(async (ids) => {
+    const res = await getDownstreamList(ids);
+    console.log('res.data', res.data);
+    return res.data;
+  }, []);
+
   return (
     <>
-      <App key="view" initialValue={data} copus={{ copusCopy: handleCopusCopy }} ref={ref1} readOnly />
+      <App key="view" initialValue={data} copus={{ copusCopy: handleCopusCopy, getMarkInfo }} ref={ref1} readOnly />
       <div>&nbsp;</div>
-      <App
+      {/* <App
         key="edit"
         initialValue={data}
         onChange={(status, html) => {
@@ -118,7 +124,7 @@ function DemoApp() {
         //   'insert-more',
         // ]}
         // showLabel
-      />
+      /> */}
     </>
   );
 }

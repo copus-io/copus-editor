@@ -24,4 +24,16 @@ export const addMark = async (params) => {
   return jsonRes;
 };
 
-// 获取
+// 根据markId获取上下游列表
+export const getDownstreamList = async (markIds: string[]) => {
+  const res = await fetch(`${API_HOST}/client/common/opus/streamListByLinkMarkId`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+    body: JSON.stringify({ markIds }),
+  });
+  const json = await res.json();
+  return json.data ?? [];
+};

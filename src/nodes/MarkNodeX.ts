@@ -13,19 +13,15 @@ export type MarkXType = {
   textContent?: string;
 };
 
-type SerializedMarkNodeX = SerializedMarkNode & {};
+type SerializedMarkNodeX = SerializedMarkNode & {
+  source: boolean;
+  branch: boolean;
+};
 
 export class MarkNodeX extends MarkNode {
   private __hasSource: boolean;
   private __hasBranch: boolean;
-  constructor(props: {
-    ids: Array<string>;
-    key?: NodeKey;
-    source?: boolean;
-    branch?: boolean;
-    sourceIds?: string[];
-    branchIds?: string[];
-  }) {
+  constructor(props: { ids: Array<string>; key?: NodeKey; source?: boolean; branch?: boolean }) {
     const { ids, key, source, branch } = props;
     super(ids, key);
     this.__hasSource = source ?? false;
@@ -61,7 +57,11 @@ export class MarkNodeX extends MarkNode {
   }
 
   static importJSON(serializedNode: SerializedMarkNodeX): MarkNodeX {
-    const node = new MarkNodeX({ ids: serializedNode.ids });
+    const node = new MarkNodeX({
+      ids: serializedNode.ids,
+      branch: serializedNode.branch,
+      source: serializedNode.source,
+    });
     return node;
   }
 
@@ -69,6 +69,8 @@ export class MarkNodeX extends MarkNode {
     return {
       ...super.exportJSON(),
       type: 'mark-x',
+      source: this.__hasSource,
+      branch: this.__hasBranch,
       version: 1,
     };
   }

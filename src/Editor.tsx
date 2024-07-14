@@ -68,18 +68,14 @@ import { TextNodeX } from './nodes/TextNodeX';
 import { $wrapSelectionInMarkNode } from '@lexical/mark';
 import FilePlugin from './plugins/FilePlugin';
 import { MarkNodeX, MarkXType } from './nodes/MarkNodeX';
-import { createUID } from './utils/copus';
+import { EditorShellProps } from './EditorShell';
 
 export interface EditorProps {
   readOnly?: boolean;
   onChange?: (editorState: EditorState, html: string) => void;
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
-  copus?: {
-    copusCopy?: (params: MarkXType) => void;
-    createMark?: (params: MarkXType) => Promise<MarkXType>;
-    getMarkInfo?: (ids: string[]) => Promise<any[]>;
-  };
+  copus?: EditorShellProps['copus'];
 }
 
 export default function Editor({ onChange, readOnly, toolbar, showLabel, copus = {} }: EditorProps): JSX.Element {

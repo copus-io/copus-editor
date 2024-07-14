@@ -19,7 +19,10 @@ import { TextNode } from 'lexical';
 import { TextNodeX } from './nodes/TextNodeX';
 import { MarkNodeX } from './nodes/MarkNodeX';
 import { MarkNode } from '@lexical/mark';
-import EditorShell, { EditorShellProps, EditorShellRef } from './EditorShell';
+import EditorShell from './EditorShell';
+import type { EditorShellProps, EditorShellRef } from './EditorShell';
+
+export { EditorShellRef, EditorShellProps };
 
 export default forwardRef(function App(props: EditorShellProps, ref: Ref<EditorShellRef>): JSX.Element {
   const initialConfig = {

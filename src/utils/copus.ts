@@ -1,5 +1,3 @@
-import crypto from 'crypto';
-
 export function compressNumber(num: number): string {
   var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   var result = '';
@@ -13,15 +11,6 @@ export function compressNumber(num: number): string {
 export function createUID(length = 4): string {
   const randomStr = compressNumber(Math.round(Math.random() * 1e16)).substring(0, length);
   return randomStr;
-}
-
-export function createUniqueID(): string {
-  let idStr = compressNumber(Date.now());
-  idStr += createUID(8);
-
-  const hash = crypto.createHash('md5');
-  hash.update(idStr);
-  return hash.digest('hex');
 }
 
 export function createUUID() {

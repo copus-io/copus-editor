@@ -4,21 +4,23 @@ export const ACCEPTABLE_AUDIO_TYPES = ['audio/', 'audio/mpeg', 'audio/m4a', 'aud
 
 export const ACCEPTABLE_VIDEO_TYPES = ['video/', 'video/mp4', 'video/webm', 'video/ogg'];
 
+const mb = 1024 * 1024;
+
 export const mineTypeMap = {
   image: {
-    limitSize: 5e6,
+    limitSize: 5 * mb,
     limitMessage: 'Image file size should be less than 5 MB',
   },
   audio: {
-    limitSize: 1e7,
+    limitSize: 10 * mb,
     limitMessage: 'Audio file size should be less than 10 MB',
   },
   video: {
-    limitSize: 5e7,
+    limitSize: 50 * mb,
     limitMessage: 'Video file size should be less than 50 MB',
   },
   file: {
-    limitSize: 1e7,
+    limitSize: 10 * mb,
     limitMessage: 'File size should be less than 10 MB',
   },
 };

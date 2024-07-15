@@ -22,15 +22,23 @@ import {
 } from 'lexical';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { $createMarkNodeX, $isMarkNodeX, MarkNodeX } from '../../nodes/MarkNodeX';
+import { $createMarkNodeX, $isMarkNodeX, MarkNodeX, MarkXType } from '../../nodes/MarkNodeX';
 import { SourceInputBox } from './SourceInputBox';
 import { CopusList } from './CopusList';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import './index.less';
+import { EditorShellProps } from '../../EditorShell';
+import { TextNodeX } from '../..//nodes/TextNodeX';
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand('INSERT_INLINE_COMMAND');
 
-export default function CopusPlugin({ getMarkInfo }: { getMarkInfo?: (ids: string[]) => Promise<any[]> }): JSX.Element {
+export default function CopusPlugin({
+  getMarkInfo,
+  createMark,
+}: {
+  createMark?: (params: MarkXType) => Promise<MarkXType>;
+  getMarkInfo?: (ids: string[]) => Promise<any[]>;
+}): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const markNodeXMap = useMemo<Map<string, Set<NodeKey>>>(() => {
     return new Map();
@@ -55,11 +63,23 @@ export default function CopusPlugin({ getMarkInfo }: { getMarkInfo?: (ids: strin
       editor.update(() => {
         if ($isRangeSelection(selection)) {
           const isBackward = selection.isBackward();
-          // const id = commentOrThread.id;
+          const anchor = selection.anchor.getNode() as TextNodeX;
+          const focus = selection.focus.getNode() as TextNodeX;
 
-          // Wrap content in a MarkNodeX
-          $wrapSelectionInMarkNode(selection, isBackward, Date.now().toString(), (ids) => {
-            return new MarkNodeX({ ids, source: true });
+          createMark?.({
+            startNodeId: anchor.getId(),
+            startNodeAt: selection.anchor.offset,
+            endNodeId: focus.getId(),
+            endNodeAt: selection.focus.offset,
+            sourceLink,
+          }).then((mark) => {
+            editor.update(() => {
+              if (mark?.id) {
+                $wrapSelectionInMarkNode(selection, isBackward, mark.id, (ids) => {
+                  return new MarkNodeX({ ids, source: true });
+                });
+              }
+            });
           });
         }
       });
@@ -192,6 +212,9 @@ export default function CopusPlugin({ getMarkInfo }: { getMarkInfo?: (ids: strin
         (payload) => {
           const selection = $getSelection();
           if ($isRangeSelection(selection)) {
+            if (selection.getTextContent().length > 0) {
+              return false;
+            }
             const node = getSelectedNode(selection);
             const markNodeX = $findMatchingParent(node, $isMarkNodeX);
             if ($isMarkNodeX(markNodeX)) {

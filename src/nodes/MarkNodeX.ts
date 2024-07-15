@@ -11,6 +11,7 @@ export type MarkXType = {
   downstreamCount?: number;
   sourceCount?: number;
   textContent?: string;
+  sourceLink?: string;
 };
 
 type SerializedMarkNodeX = SerializedMarkNode & {

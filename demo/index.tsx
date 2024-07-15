@@ -91,9 +91,9 @@ function DemoApp() {
     return { ...params, id: res.data };
   }, []);
 
-  useEffect(() => {
-    ref2.current?.attachCopySource(copyMark.textContent, createMark);
-  }, []);
+  // useEffect(() => {
+  //   ref2.current?.attachCopySource(copyMark.textContent, createMark);
+  // }, []);
 
   const getMarkInfo = useCallback(async (ids) => {
     const res = await getDownstreamList(ids);
@@ -104,12 +104,13 @@ function DemoApp() {
     <>
       <App key="view" initialValue={data} copus={{ copusCopy: handleCopusCopy, getMarkInfo }} ref={ref1} readOnly />
       <div>&nbsp;</div>
-      {/* <App
+      <App
         key="edit"
         initialValue={data}
         onChange={(status, html) => {
           console.log(status, html);
         }}
+        copus={{ getMarkInfo, createMark }}
         ref={ref2}
         // toolbar={[
         //   'history',
@@ -123,7 +124,7 @@ function DemoApp() {
         //   'insert-more',
         // ]}
         // showLabel
-      /> */}
+      />
     </>
   );
 }

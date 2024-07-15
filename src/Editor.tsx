@@ -79,7 +79,7 @@ export interface EditorProps {
 }
 
 export default function Editor({ onChange, readOnly, toolbar, showLabel, copus = {} }: EditorProps): JSX.Element {
-  const { copusCopy, getMarkInfo } = copus;
+  const { copusCopy, getMarkInfo, createMark } = copus;
   const { historyState } = useSharedHistoryContext();
   const [editor] = useLexicalComposerContext();
   const {
@@ -216,6 +216,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
                 />
                 <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} cellMerge={true} />
                 <FloatingCopusToolbarPlugin anchorElem={floatingAnchorElem} />
+                <CopusPlugin getMarkInfo={getMarkInfo} createMark={createMark} />
               </>
             )}
             <OnChangePlugin onChange={onChangeDebounce} ignoreSelectionChange />
@@ -236,7 +237,6 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
         {/* {isAutocomplete && <AutocompletePlugin />} */}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
         {shouldUseLexicalContextMenu && <ContextMenuPlugin />}
-        {/* <CopusPlugin getMarkInfo={getMarkInfo} /> */}
       </div>
     </>
   );

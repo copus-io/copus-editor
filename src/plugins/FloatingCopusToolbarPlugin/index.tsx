@@ -29,10 +29,9 @@ import { getSelectedNode } from '../../utils/getSelectedNode';
 import { setFloatingElemPosition } from '../../utils/setFloatingElemPosition';
 import getEditorPortal from '../../utils/getEditorPortal';
 import { INSERT_INLINE_COMMAND } from '../CopusPlugin';
-import { createDOMRange } from '@lexical/selection';
-import { TextNodeX } from '../../nodes/TextNodeX';
 import { MarkXType } from '../../nodes/MarkNodeX';
 import { $wrapSelectionInMarkNode } from '@lexical/mark';
+import { ParagraphNodeX } from '../../nodes/ParagraphNodeX';
 
 function TextFormatFloatingToolbar({
   editor,
@@ -161,14 +160,29 @@ function TextFormatFloatingToolbar({
         if (startEndPoints) {
           let [start, end] = startEndPoints;
           if (selection.isBackward()) [start, end] = [end, start];
-          const startNode = start.getNode() as TextNodeX;
-          const endNode = end.getNode() as TextNodeX;
+          const startNode = start.getNode();
+          const endNode = end.getNode();
+          const startTopNode = startNode.getTopLevelElement() as ParagraphNodeX;
+          const endTopNode = endNode.getTopLevelElement() as ParagraphNodeX;
+          
+          let startOffset = start.offset;
+          startTopNode.getAllTextNodes().find((textNode) => {
+            if (textNode === startNode) return true;
+            startOffset += textNode.getTextContentSize();
+            return false;
+          });
+          let endOffset = end.offset;
+          endTopNode.getAllTextNodes().find((textNode) => {
+            if (textNode === endNode) return true;
+            endOffset += textNode.getTextContentSize();
+            return false;
+          });
 
           copusCopy?.({
-            startNodeId: startNode.__id,
-            startNodeAt: start.offset,
-            endNodeId: endNode.__id,
-            endNodeAt: end.offset,
+            startNodeId: startTopNode.getId(),
+            startNodeAt: startOffset,
+            endNodeId: endTopNode.getId(),
+            endNodeAt: endOffset,
             textContent: selection.getTextContent(),
           });
         }

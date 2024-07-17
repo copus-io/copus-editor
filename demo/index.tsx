@@ -36,22 +36,22 @@ window.addEventListener('error', showErrorOverlay);
 window.addEventListener('unhandledrejection', ({ reason }) => showErrorOverlay(reason));
 
 const data =
-  '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Since the TextNode is foundational to all Lexical packages, including the plain text use case. Handling any rich text logic is undesirable. This creates the need to override the TextNode to handle serialization and deserialization of HTML/CSS styling properties to achieve full fidelity between JSON <-> HTML. Since this is a very popular use case, below we are proving a recipe to handle the","type":"text-x","version":1,"id":"e7dk7"}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"哈哈哈","type":"text-x","version":1,"id":"59i2"}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"most common use cases.","type":"text-x","version":1,"id":"8jh8"}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"阿斯顿法斯蒂芬","type":"text-x","version":1,"id":"e7q5l"}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1,"textFormat":0}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
+  '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Since the TextNode is foundational to all Lexical packages, including the plain text use case. Handling any rich text logic is undesirable. This creates the need to override the TextNode to handle serialization and deserialization of HTML/CSS styling properties to achieve full fidelity between JSON <-> HTML. Since this is a very popular use case, below we are proving a recipe to handle the","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph-x","version":1,"textFormat":0,"id":"hyyE"},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"哈哈哈","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph-x","version":1,"textFormat":0,"id":"9w9R"},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"most common use cases.","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph-x","version":1,"textFormat":0,"id":"slkb"},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"阿斯顿法斯蒂芬","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph-x","version":1,"textFormat":0,"id":"EhT6"}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
 
 const markList = [
   {
     id: '66881067080f1f6e19cf3a6c',
-    startNodeId: 'e7dk7',
+    startNodeId: 'hyyE',
     startNodeAt: 140,
-    endNodeId: 'e7dk7',
-    endNodeAt: 309,
+    endNodeId: 'hyyE',
+    endNodeAt: 300,
     downstreamCount: 1,
   },
   {
     id: '66881095080f1f6e19cf3a6d',
-    startNodeId: 'e7dk7',
+    startNodeId: 'hyyE',
     startNodeAt: 200,
-    endNodeId: '8jh8',
+    endNodeId: 'slkb',
     endNodeAt: 11,
     sourceCount: 1,
   },
@@ -73,11 +73,11 @@ function DemoApp() {
   const ref2 = useRef<EditorShellRef>(null);
 
   // const [markList, setMarkList] = useState();
-  useEffect(() => {
-    getMarkList(uuid1).then((res) => {
-      ref1.current?.attachMarkList(markList);
-    });
-  }, []);
+  // useEffect(() => {
+  //   getMarkList(uuid1).then((res) => {
+  //     ref1.current?.attachMarkList(markList);
+  //   });
+  // }, []);
 
   const handleCopusCopy = useCallback(async (params) => {
     console.log('params', params);
@@ -86,14 +86,11 @@ function DemoApp() {
 
   const createMark = useCallback(async (params) => {
     console.log('createMark', params);
-    const res = await addMark({ ...params });
-    console.log('res', res);
-    return { ...params, id: res.data };
+    return { ...params, id: Date.now().toString(36) };
+    // const res = await addMark({ ...params });
+    // console.log('res', res);
+    // return { ...params, id: res.data };
   }, []);
-
-  // useEffect(() => {
-  //   ref2.current?.attachCopySource(copyMark.textContent, createMark);
-  // }, []);
 
   const getMarkInfo = useCallback(async (ids) => {
     const res = await getDownstreamList(ids);
@@ -103,7 +100,21 @@ function DemoApp() {
   return (
     <>
       <App key="view" initialValue={data} copus={{ copusCopy: handleCopusCopy, getMarkInfo }} ref={ref1} readOnly />
-      <div>&nbsp;</div>
+      <div style={{ margin: '10px 0' }}>
+        <button
+          onClick={() => {
+            ref1.current?.attachMarkList(markList);
+          }}>
+          Attach MarkList
+        </button>
+        &nbsp;
+        <button
+          onClick={() => {
+            ref1.current?.clearMarkList();
+          }}>
+          Clear MarkList
+        </button>
+      </div>
       <App
         key="edit"
         initialValue={data}

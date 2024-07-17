@@ -64,7 +64,6 @@ import { $generateHtmlFromNodes } from '@lexical/html';
 import { debounce, set } from 'lodash-es';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import CopusPlugin from './plugins/CopusPlugin';
-import { TextNodeX } from './nodes/TextNodeX';
 import { $wrapSelectionInMarkNode } from '@lexical/mark';
 import FilePlugin from './plugins/FilePlugin';
 import { MarkNodeX, MarkXType } from './nodes/MarkNodeX';

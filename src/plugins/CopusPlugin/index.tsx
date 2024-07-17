@@ -27,8 +27,7 @@ import { SourceInputBox } from './SourceInputBox';
 import { CopusList } from './CopusList';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import './index.less';
-import { EditorShellProps } from '../../EditorShell';
-import { TextNodeX } from '../..//nodes/TextNodeX';
+import { ParagraphNodeX } from '../../nodes/ParagraphNodeX';
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand('INSERT_INLINE_COMMAND');
 
@@ -63,14 +62,32 @@ export default function CopusPlugin({
       editor.update(() => {
         if ($isRangeSelection(selection)) {
           const isBackward = selection.isBackward();
-          const anchor = selection.anchor.getNode() as TextNodeX;
-          const focus = selection.focus.getNode() as TextNodeX;
+          const [start, end] = isBackward ? [selection.focus, selection.anchor] : [selection.anchor, selection.focus];
+
+          const startNode = start.getNode();
+          const endNode = end.getNode();
+          const startTopNode = startNode.getTopLevelElement() as ParagraphNodeX;
+          const endTopNode = endNode.getTopLevelElement() as ParagraphNodeX;
+
+          let startOffset = start.offset;
+          startTopNode.getAllTextNodes().find((textNode) => {
+            if (textNode === startNode) return true;
+            startOffset += textNode.getTextContentSize();
+            return false;
+          });
+          let endOffset = end.offset;
+          endTopNode.getAllTextNodes().find((textNode) => {
+            if (textNode === endNode) return true;
+            endOffset += textNode.getTextContentSize();
+            return false;
+          });
 
           createMark?.({
-            startNodeId: anchor.getId(),
-            startNodeAt: selection.anchor.offset,
-            endNodeId: focus.getId(),
-            endNodeAt: selection.focus.offset,
+            startNodeId: startTopNode.getId(),
+            startNodeAt: startOffset,
+            endNodeId: endTopNode.getId(),
+            endNodeAt: endOffset,
+            textContent: selection.getTextContent(),
             sourceLink,
           }).then((mark) => {
             editor.update(() => {

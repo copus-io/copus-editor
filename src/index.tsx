@@ -15,12 +15,12 @@ import { TableContext } from './plugins/TablePlugin';
 import CopusEditorTheme from './themes/CopusEditorTheme';
 import { forwardRef, Ref, useEffect } from 'react';
 import getEditorPortal from './utils/getEditorPortal';
-import { TextNode } from 'lexical';
-import { TextNodeX } from './nodes/TextNodeX';
+import { ParagraphNode, TextNode } from 'lexical';
 import { MarkNodeX } from './nodes/MarkNodeX';
 import { MarkNode } from '@lexical/mark';
 import EditorShell from './EditorShell';
 import type { EditorShellProps, EditorShellRef } from './EditorShell';
+import { ParagraphNodeX } from './nodes/ParagraphNodeX';
 
 export { EditorShellRef, EditorShellProps };
 
@@ -30,11 +30,11 @@ export default forwardRef(function App(props: EditorShellProps, ref: Ref<EditorS
     namespace: 'CopusEditor',
     nodes: [
       ...PlaygroundNodes,
-      TextNodeX,
+      ParagraphNodeX,
       {
-        replace: TextNode,
-        with: (node: TextNode) => {
-          return new TextNodeX(node.__text);
+        replace: ParagraphNode,
+        with: (node: ParagraphNode) => {
+          return new ParagraphNodeX();
         },
       },
       MarkNodeX,

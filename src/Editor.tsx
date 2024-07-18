@@ -78,7 +78,7 @@ export interface EditorProps {
 }
 
 export default function Editor({ onChange, readOnly, toolbar, showLabel, copus = {} }: EditorProps): JSX.Element {
-  const { copusCopy, getMarkInfo, createMark } = copus;
+  const { getMarkInfo, createMark } = copus;
   const { historyState } = useSharedHistoryContext();
   const [editor] = useLexicalComposerContext();
   const {
@@ -137,7 +137,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
         />
         {floatingAnchorElem && (
           <>
-            <FloatingCopusToolbarPlugin copusCopy={copusCopy} anchorElem={floatingAnchorElem} />
+            <FloatingCopusToolbarPlugin createMark={createMark} anchorElem={floatingAnchorElem} />
             <CopusPlugin getMarkInfo={getMarkInfo} />
           </>
         )}

@@ -99,7 +99,7 @@ function DemoApp() {
 
   return (
     <>
-      <App key="view" initialValue={data} copus={{ copusCopy: handleCopusCopy, getMarkInfo }} ref={ref1} readOnly />
+      <App key="view" initialValue={data} copus={{ createMark, getMarkInfo }} ref={ref1} readOnly />
       <div style={{ margin: '10px 0' }}>
         <button
           onClick={() => {

@@ -17,8 +17,11 @@ import {
   $isTextNode,
   CLICK_COMMAND,
   COMMAND_PRIORITY_EDITOR,
+  COMMAND_PRIORITY_HIGH,
   COMMAND_PRIORITY_LOW,
+  COMMAND_PRIORITY_NORMAL,
   createCommand,
+  PASTE_COMMAND,
 } from 'lexical';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -245,6 +248,20 @@ export default function CopusPlugin({
           return false;
         },
         COMMAND_PRIORITY_LOW,
+      ),
+      editor.registerCommand(
+        PASTE_COMMAND,
+        (e: ClipboardEvent) => {
+          e.stopPropagation();
+          const { clipboardData } = e;
+          if (clipboardData && clipboardData.types) {
+            clipboardData.types.forEach((type) => {
+              console.log(type, clipboardData.getData(type));
+            });
+          }
+          return false;
+        },
+        COMMAND_PRIORITY_HIGH,
       ),
     );
   }, [editor, markNodeXMap]);

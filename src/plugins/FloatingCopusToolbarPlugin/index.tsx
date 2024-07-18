@@ -16,7 +16,10 @@ import {
   $isParagraphNode,
   $isRangeSelection,
   $isTextNode,
+  COMMAND_PRIORITY_EDITOR,
+  COMMAND_PRIORITY_HIGH,
   COMMAND_PRIORITY_LOW,
+  COPY_COMMAND,
   FORMAT_TEXT_COMMAND,
   LexicalEditor,
   SELECTION_CHANGE_COMMAND,
@@ -37,12 +40,12 @@ function TextFormatFloatingToolbar({
   editor,
   anchorElem,
   isLink,
-  copusCopy,
+  createMark,
 }: {
   editor: LexicalEditor;
   anchorElem: HTMLElement;
   isLink: boolean;
-  copusCopy?: (params: MarkXType) => void;
+  createMark?: (params: MarkXType) => Promise<MarkXType>;
 }): JSX.Element {
   const popupCharStylesEditorRef = useRef<HTMLDivElement | null>(null);
 
@@ -140,7 +143,6 @@ function TextFormatFloatingToolbar({
           $updateTextFormatFloatingToolbar();
         });
       }),
-
       editor.registerCommand(
         SELECTION_CHANGE_COMMAND,
         () => {
@@ -149,6 +151,19 @@ function TextFormatFloatingToolbar({
         },
         COMMAND_PRIORITY_LOW,
       ),
+      // editor.registerCommand(
+      //   COPY_COMMAND,
+      //   (e: ClipboardEvent) => {
+      //     console.log('COPY_COMMAND', e);
+
+      //     if (e?.clipboardData) {
+      //       e.clipboardData.setData('application/x-copus-copy', JSON.stringify({ abc: 123 }));
+      //     }
+
+      //     return false;
+      //   },
+      //   COMMAND_PRIORITY_LOW,
+      // ),
     );
   }, [editor, $updateTextFormatFloatingToolbar]);
 
@@ -164,7 +179,7 @@ function TextFormatFloatingToolbar({
           const endNode = end.getNode();
           const startTopNode = startNode.getTopLevelElement() as ParagraphNodeX;
           const endTopNode = endNode.getTopLevelElement() as ParagraphNodeX;
-          
+
           let startOffset = start.offset;
           startTopNode.getAllTextNodes().find((textNode) => {
             if (textNode === startNode) return true;
@@ -178,12 +193,26 @@ function TextFormatFloatingToolbar({
             return false;
           });
 
-          copusCopy?.({
+          const _mark = {
             startNodeId: startTopNode.getId(),
             startNodeAt: startOffset,
             endNodeId: endTopNode.getId(),
             endNodeAt: endOffset,
             textContent: selection.getTextContent(),
+          };
+
+          // const htmlString = $getHtmlContent(editor);
+
+          createMark?.(_mark).then((mark) => {
+            console.log('new mark', mark);
+            // editor.dispatchCommand(COPY_COMMAND, null);
+            // 复制 mark 到剪贴板
+            // console.log('_mark.textContent', _mark.textContent);
+            navigator.clipboard.write([
+              new ClipboardItem({
+                'text/plain': new Blob([_mark.textContent], { type: 'text/plain' }),
+              }),
+            ]);
           });
         }
       }
@@ -223,7 +252,7 @@ function TextFormatFloatingToolbar({
 function useFloatingTextFormatToolbar(
   editor: LexicalEditor,
   anchorElem: HTMLElement,
-  copusCopy?: (params: MarkXType) => void,
+  createMark?: (params: MarkXType) => Promise<MarkXType>,
 ): JSX.Element | null {
   const [isText, setIsText] = useState(false);
   const [isLink, setIsLink] = useState(false);
@@ -299,18 +328,18 @@ function useFloatingTextFormatToolbar(
   }
 
   return createPortal(
-    <TextFormatFloatingToolbar editor={editor} copusCopy={copusCopy} anchorElem={anchorElem} isLink={isLink} />,
+    <TextFormatFloatingToolbar editor={editor} createMark={createMark} anchorElem={anchorElem} isLink={isLink} />,
     anchorElem,
   );
 }
 
 export default function FloatingCopusToolbarPlugin({
   anchorElem = getEditorPortal(),
-  copusCopy,
+  createMark,
 }: {
   anchorElem?: HTMLElement;
-  copusCopy?: (params: MarkXType) => void;
+  createMark?: (params: MarkXType) => Promise<MarkXType>;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  return useFloatingTextFormatToolbar(editor, anchorElem, copusCopy);
+  return useFloatingTextFormatToolbar(editor, anchorElem, createMark);
 }

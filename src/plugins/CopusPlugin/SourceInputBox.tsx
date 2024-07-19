@@ -9,7 +9,7 @@ export function SourceInputBox({
 }: {
   cancelAddSource: () => void;
   editor: LexicalEditor;
-  submitAddSource: (sourceLink: string, selection?: RangeSelection | null) => void;
+  submitAddSource: (params: { sourceLink: string; selection?: RangeSelection | null }) => void;
 }) {
   const [content, setContent] = useState('');
   const [canSubmit, setCanSubmit] = useState(false);
@@ -95,7 +95,7 @@ export function SourceInputBox({
 
   const submitSource = () => {
     if (canSubmit) {
-      submitAddSource(content, selectionRef.current);
+      submitAddSource({ sourceLink: content, selection: selectionRef.current });
       selectionRef.current = null;
     }
   };

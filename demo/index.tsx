@@ -67,6 +67,7 @@ const copyMark = {
 };
 
 const uuid1 = '8fedcf8a368657d198da212300f15c967756e31f';
+const uuid2 = '9fedcf8a368657d198da212300f15c967756e31f';
 
 function DemoApp() {
   const ref1 = useRef<EditorShellRef>(null);
@@ -87,9 +88,9 @@ function DemoApp() {
   const createMark = useCallback(async (params) => {
     console.log('createMark', params);
     return { ...params, id: Date.now().toString(36) };
-    // const res = await addMark({ ...params });
-    // console.log('res', res);
-    // return { ...params, id: res.data };
+    const res = await addMark({ ...params, opusUuid: uuid1 });
+    console.log('res', res);
+    return { ...params, opusUuid: uuid1, id: res.data };
   }, []);
 
   const getMarkInfo = useCallback(async (ids) => {
@@ -99,7 +100,7 @@ function DemoApp() {
 
   return (
     <>
-      <App key="view" initialValue={data} copus={{ createMark, getMarkInfo }} ref={ref1} readOnly />
+      <App key="view" initialValue={data} copus={{ opusUuid: uuid1, createMark, getMarkInfo }} ref={ref1} readOnly />
       <div style={{ margin: '10px 0' }}>
         <button
           onClick={() => {
@@ -121,7 +122,7 @@ function DemoApp() {
         onChange={(status, html) => {
           console.log(status, html);
         }}
-        copus={{ getMarkInfo, createMark }}
+        copus={{ opusUuid: uuid2, getMarkInfo, createMark }}
         ref={ref2}
         // toolbar={[
         //   'history',

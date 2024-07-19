@@ -41,10 +41,12 @@ function TextFormatFloatingToolbar({
   anchorElem,
   isLink,
   createMark,
+  opusUuid,
 }: {
   editor: LexicalEditor;
   anchorElem: HTMLElement;
   isLink: boolean;
+  opusUuid?: string;
   createMark?: (params: MarkXType) => Promise<MarkXType>;
 }): JSX.Element {
   const popupCharStylesEditorRef = useRef<HTMLDivElement | null>(null);
@@ -133,41 +135,8 @@ function TextFormatFloatingToolbar({
     };
   }, [editor, $updateTextFormatFloatingToolbar, anchorElem]);
 
-  useEffect(() => {
-    editor.getEditorState().read(() => {
-      $updateTextFormatFloatingToolbar();
-    });
-    return mergeRegister(
-      editor.registerUpdateListener(({ editorState }) => {
-        editorState.read(() => {
-          $updateTextFormatFloatingToolbar();
-        });
-      }),
-      editor.registerCommand(
-        SELECTION_CHANGE_COMMAND,
-        () => {
-          $updateTextFormatFloatingToolbar();
-          return false;
-        },
-        COMMAND_PRIORITY_LOW,
-      ),
-      // editor.registerCommand(
-      //   COPY_COMMAND,
-      //   (e: ClipboardEvent) => {
-      //     console.log('COPY_COMMAND', e);
-
-      //     if (e?.clipboardData) {
-      //       e.clipboardData.setData('application/x-copus-copy', JSON.stringify({ abc: 123 }));
-      //     }
-
-      //     return false;
-      //   },
-      //   COMMAND_PRIORITY_LOW,
-      // ),
-    );
-  }, [editor, $updateTextFormatFloatingToolbar]);
-
-  const handleCopySource = () => {
+  const handleCopySource = useCallback(() => {
+    let willCopyMark: MarkXType | null = null;
     editor.getEditorState().read(() => {
       const selection = $getSelection();
       if ($isRangeSelection(selection)) {
@@ -194,57 +163,78 @@ function TextFormatFloatingToolbar({
           });
 
           const _mark = {
+            opusUuid,
             startNodeId: startTopNode.getId(),
             startNodeAt: startOffset,
             endNodeId: endTopNode.getId(),
             endNodeAt: endOffset,
             textContent: selection.getTextContent(),
           };
-
-          // const htmlString = $getHtmlContent(editor);
-
-          createMark?.(_mark).then((mark) => {
-            console.log('new mark', mark);
-            // editor.dispatchCommand(COPY_COMMAND, null);
-            // 复制 mark 到剪贴板
-            // console.log('_mark.textContent', _mark.textContent);
-            navigator.clipboard.write([
-              new ClipboardItem({
-                'text/plain': new Blob([_mark.textContent], { type: 'text/plain' }),
-              }),
-            ]);
-          });
+          willCopyMark = _mark;
         }
       }
     });
+    return willCopyMark;
+  }, [editor]);
 
-    const domSelection = window.getSelection();
-    domSelection?.removeAllRanges();
-  };
+  useEffect(() => {
+    editor.getEditorState().read(() => {
+      $updateTextFormatFloatingToolbar();
+    });
+    return mergeRegister(
+      editor.registerUpdateListener(({ editorState }) => {
+        editorState.read(() => {
+          $updateTextFormatFloatingToolbar();
+        });
+      }),
+      editor.registerCommand(
+        SELECTION_CHANGE_COMMAND,
+        () => {
+          $updateTextFormatFloatingToolbar();
+          return false;
+        },
+        COMMAND_PRIORITY_LOW,
+      ),
+      editor.registerCommand(
+        COPY_COMMAND,
+        (e: ClipboardEvent) => {
+          if (e?.clipboardData) {
+            const willCopyMark = handleCopySource();
+            e.clipboardData.setData('application/x-copus-copy', JSON.stringify(willCopyMark));
+          }
+          return false;
+        },
+        COMMAND_PRIORITY_LOW,
+      ),
+    );
+  }, [editor, $updateTextFormatFloatingToolbar, handleCopySource]);
 
   const isEditable = editor.isEditable();
 
+  if (!isEditable) return <div />;
+
   return (
     <div ref={popupCharStylesEditorRef} className={`floating-toolbar-popup ${isEditable ? '' : 'view-popup'}`}>
-      {isEditable ? (
-        <button
-          type="button"
-          onClick={insertSource}
-          className={'popup-item spaced insert-source'}
-          aria-label="Insert Copus Source">
-          <i className="format add-source" />
-          Add Source
-        </button>
-      ) : (
-        <button
-          type="button"
-          onClick={handleCopySource}
-          className={'popup-item spaced insert-source'}
-          aria-label="Copy Copus Source">
-          <i className="format add-source" />
-          Copy
-        </button>
-      )}
+      {
+        isEditable ? (
+          <button
+            type="button"
+            onClick={insertSource}
+            className={'popup-item spaced insert-source'}
+            aria-label="Insert Copus Source">
+            <i className="format add-source" />
+            Add Source
+          </button>
+        ) : null
+        // <button
+        //   type="button"
+        //   onClick={handleCopySource}
+        //   className={'popup-item spaced insert-source'}
+        //   aria-label="Copy Copus Source">
+        //   <i className="format add-source" />
+        //   Copy
+        // </button>
+      }
     </div>
   );
 }
@@ -252,6 +242,7 @@ function TextFormatFloatingToolbar({
 function useFloatingTextFormatToolbar(
   editor: LexicalEditor,
   anchorElem: HTMLElement,
+  opusUuid?: string,
   createMark?: (params: MarkXType) => Promise<MarkXType>,
 ): JSX.Element | null {
   const [isText, setIsText] = useState(false);
@@ -328,18 +319,26 @@ function useFloatingTextFormatToolbar(
   }
 
   return createPortal(
-    <TextFormatFloatingToolbar editor={editor} createMark={createMark} anchorElem={anchorElem} isLink={isLink} />,
+    <TextFormatFloatingToolbar
+      editor={editor}
+      opusUuid={opusUuid}
+      createMark={createMark}
+      anchorElem={anchorElem}
+      isLink={isLink}
+    />,
     anchorElem,
   );
 }
 
 export default function FloatingCopusToolbarPlugin({
   anchorElem = getEditorPortal(),
+  opusUuid,
   createMark,
 }: {
   anchorElem?: HTMLElement;
+  opusUuid?: string;
   createMark?: (params: MarkXType) => Promise<MarkXType>;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  return useFloatingTextFormatToolbar(editor, anchorElem, createMark);
+  return useFloatingTextFormatToolbar(editor, anchorElem, opusUuid, createMark);
 }

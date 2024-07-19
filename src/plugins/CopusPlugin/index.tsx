@@ -6,12 +6,14 @@
  *
  */
 
-import type { LexicalCommand, NodeKey, RangeSelection } from 'lexical';
+import type { LexicalCommand, NodeKey, RangeSelection, TextNode } from 'lexical';
 import { $getMarkIDs, $wrapSelectionInMarkNode } from '@lexical/mark';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister, registerNestedElementResolver } from '@lexical/utils';
 import {
+  $createRangeSelection,
   $getNodeByKey,
+  $getPreviousSelection,
   $getSelection,
   $isRangeSelection,
   $isTextNode,
@@ -31,16 +33,12 @@ import { CopusList } from './CopusList';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import './index.less';
 import { ParagraphNodeX } from '../../nodes/ParagraphNodeX';
+import { EditorShellProps } from '../../EditorShell';
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand('INSERT_INLINE_COMMAND');
 
-export default function CopusPlugin({
-  getMarkInfo,
-  createMark,
-}: {
-  createMark?: (params: MarkXType) => Promise<MarkXType>;
-  getMarkInfo?: (ids: string[]) => Promise<any[]>;
-}): JSX.Element {
+export default function CopusPlugin({ copus = {} }: { copus: EditorShellProps['copus'] }): JSX.Element {
+  const { getMarkInfo, createMark, opusUuid } = copus;
   const [editor] = useLexicalComposerContext();
   const markNodeXMap = useMemo<Map<string, Set<NodeKey>>>(() => {
     return new Map();
@@ -61,7 +59,7 @@ export default function CopusPlugin({
   }, [editor]);
 
   const submitAddSource = useCallback(
-    (sourceLink: string, selection?: RangeSelection | null) => {
+    ({ sourceLink, selection }: { sourceLink?: string; selection?: RangeSelection | null }) => {
       editor.update(() => {
         if ($isRangeSelection(selection)) {
           const isBackward = selection.isBackward();
@@ -86,6 +84,7 @@ export default function CopusPlugin({
           });
 
           createMark?.({
+            opusUuid,
             startNodeId: startTopNode.getId(),
             startNodeAt: startOffset,
             endNodeId: endTopNode.getId(),
@@ -105,7 +104,46 @@ export default function CopusPlugin({
       });
       setShowSourceInput(false);
     },
-    [editor],
+    [editor, opusUuid, createMark],
+  );
+
+  const handlCopyData = useCallback(
+    (data?: MarkXType) => {
+      if (data !== undefined) {
+        // record copy source information
+        createMark?.(data);
+
+        const previousSelection = $getPreviousSelection();
+        const currentSelection = $getSelection();
+        const selection = $createRangeSelection();
+
+        if (previousSelection === null || currentSelection === null) {
+          return;
+        }
+        const previousPoints = previousSelection.getStartEndPoints();
+        const currentPoints = currentSelection.getStartEndPoints();
+        if (previousPoints === null || currentPoints === null) {
+          return;
+        }
+
+        let [prevStart, prevEnd] = previousPoints;
+        if (previousSelection.isBackward()) [prevStart, prevEnd] = [prevEnd, prevStart];
+        let [currStart, currEnd] = currentPoints;
+        if (currentSelection.isBackward()) [currStart, currEnd] = [currEnd, currStart];
+
+        setTimeout(() => {
+          editor.update(() => {
+            const anchorNode = prevStart.getNode() as TextNode;
+            const anchorOffset = prevStart.offset;
+            const focusNode = currEnd.getNode() as TextNode;
+            const focusOffset = currEnd.offset;
+            selection.setTextNodeRange(anchorNode, anchorOffset, focusNode, focusOffset);
+            submitAddSource({ selection });
+          });
+        });
+      }
+    },
+    [submitAddSource, createMark, editor],
   );
 
   useEffect(() => {
@@ -254,14 +292,25 @@ export default function CopusPlugin({
         (e: ClipboardEvent) => {
           e.stopPropagation();
           const { clipboardData } = e;
+          let copyDate = null;
           if (clipboardData && clipboardData.types) {
             clipboardData.types.forEach((type) => {
-              console.log(type, clipboardData.getData(type));
+              if (type === 'application/x-copus-copy') {
+                copyDate = clipboardData.getData(type);
+              }
             });
           }
+
+          try {
+            if (copyDate) {
+              const jsonData = JSON.parse(copyDate);
+              handlCopyData(jsonData);
+            }
+          } catch (error) {}
+
           return false;
         },
-        COMMAND_PRIORITY_HIGH,
+        COMMAND_PRIORITY_LOW,
       ),
     );
   }, [editor, markNodeXMap]);

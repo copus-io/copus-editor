@@ -23,6 +23,7 @@ export interface EditorShellProps {
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
   copus?: {
+    opusUuid?: string;
     createMark?: (params: MarkXType) => Promise<MarkXType>;
     getMarkInfo?: (ids: string[]) => Promise<any[]>;
   };

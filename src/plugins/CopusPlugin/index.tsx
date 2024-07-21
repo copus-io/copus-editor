@@ -6,7 +6,7 @@
  *
  */
 
-import type { LexicalCommand, NodeKey, RangeSelection, TextNode } from 'lexical';
+import type { LexicalCommand, LexicalNode, NodeKey, RangeSelection, TextNode } from 'lexical';
 import { $getMarkIDs, $wrapSelectionInMarkNode } from '@lexical/mark';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister, registerNestedElementResolver } from '@lexical/utils';
@@ -15,6 +15,7 @@ import {
   $getNodeByKey,
   $getPreviousSelection,
   $getSelection,
+  $isParagraphNode,
   $isRangeSelection,
   $isTextNode,
   CLICK_COMMAND,
@@ -32,7 +33,7 @@ import { SourceInputBox } from './SourceInputBox';
 import { CopusList } from './CopusList';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import './index.less';
-import { ParagraphNodeX } from '../../nodes/ParagraphNodeX';
+import { $isParagraphNodeX, ParagraphNodeX } from '../../nodes/ParagraphNodeX';
 import { EditorShellProps } from '../../EditorShell';
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand('INSERT_INLINE_COMMAND');
@@ -114,31 +115,57 @@ export default function CopusPlugin({ copus = {} }: { copus: EditorShellProps['c
         // record copy source information
         createMark?.(data);
 
-        const previousSelection = $getPreviousSelection();
-        const currentSelection = $getSelection();
-        const selection = $createRangeSelection();
-
-        if (previousSelection === null || currentSelection === null) {
+        const previousSelection = $getSelection();
+        if (previousSelection === null) {
           return;
         }
         const previousPoints = previousSelection.getStartEndPoints();
-        const currentPoints = currentSelection.getStartEndPoints();
-        if (previousPoints === null || currentPoints === null) {
+        if (previousPoints === null) {
           return;
         }
-
         let [prevStart, prevEnd] = previousPoints;
         if (previousSelection.isBackward()) [prevStart, prevEnd] = [prevEnd, prevStart];
-        let [currStart, currEnd] = currentPoints;
-        if (currentSelection.isBackward()) [currStart, currEnd] = [currEnd, currStart];
+        const anchorNode = prevStart.getNode() as TextNode;
+        const anchorOffset = prevStart.offset;
 
+        // fix: when create new paragraph node, id will change bug
+
+        let previousNode: LexicalNode | null = null;
+        if ($isParagraphNode(anchorNode)) {
+          previousNode = anchorNode.getPreviousSibling();
+        }
+
+        // paste end
         setTimeout(() => {
           editor.update(() => {
-            const anchorNode = prevStart.getNode() as TextNode;
-            const anchorOffset = prevStart.offset;
+            const currentSelection = $getSelection();
+            if (currentSelection === null) {
+              return;
+            }
+            const currentPoints = currentSelection.getStartEndPoints();
+            if (currentPoints === null) {
+              return;
+            }
+            let [currStart, currEnd] = currentPoints;
+            if (currentSelection.isBackward()) [currStart, currEnd] = [currEnd, currStart];
+
             const focusNode = currEnd.getNode() as TextNode;
             const focusOffset = currEnd.offset;
-            selection.setTextNodeRange(anchorNode, anchorOffset, focusNode, focusOffset);
+
+            // ix: when create new paragraph node, id will change bug
+            let realAnchorNode: TextNode | null = null;
+            if (previousNode) {
+              const realP = previousNode.getNextSibling() as ParagraphNodeX;
+              realAnchorNode = realP.getFirstChild();
+            }
+
+            const selection = $createRangeSelection();
+            if (realAnchorNode) {
+              selection.setTextNodeRange(realAnchorNode, 0, focusNode, focusOffset);
+            } else {
+              selection.setTextNodeRange(anchorNode, anchorOffset, focusNode, focusOffset);
+            }
+
             submitAddSource({ selection });
           });
         });

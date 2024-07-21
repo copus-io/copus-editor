@@ -78,7 +78,6 @@ export interface EditorProps {
 }
 
 export default function Editor({ onChange, readOnly, toolbar, showLabel, copus = {} }: EditorProps): JSX.Element {
-  const { getMarkInfo, createMark, opusUuid } = copus;
   const { historyState } = useSharedHistoryContext();
   const [editor] = useLexicalComposerContext();
   const {
@@ -137,7 +136,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
         />
         {floatingAnchorElem && (
           <>
-            <FloatingCopusToolbarPlugin opusUuid={opusUuid} createMark={createMark} anchorElem={floatingAnchorElem} />
+            <FloatingCopusToolbarPlugin copus={copus} anchorElem={floatingAnchorElem} />
             <CopusPlugin copus={copus} />
           </>
         )}
@@ -214,7 +213,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
                   setIsLinkEditMode={setIsLinkEditMode}
                 />
                 <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} cellMerge={true} />
-                <FloatingCopusToolbarPlugin anchorElem={floatingAnchorElem} />
+                <FloatingCopusToolbarPlugin copus={copus} anchorElem={floatingAnchorElem} />
                 <CopusPlugin copus={copus} />
               </>
             )}

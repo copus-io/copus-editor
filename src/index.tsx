@@ -16,13 +16,13 @@ import CopusEditorTheme from './themes/CopusEditorTheme';
 import { forwardRef, Ref, useEffect } from 'react';
 import getEditorPortal from './utils/getEditorPortal';
 import { ParagraphNode, TextNode } from 'lexical';
-import { MarkNodeX } from './nodes/MarkNodeX';
+import { MarkNodeX, MarkXType } from './nodes/MarkNodeX';
 import { MarkNode } from '@lexical/mark';
 import EditorShell from './EditorShell';
 import type { EditorShellProps, EditorShellRef } from './EditorShell';
 import { ParagraphNodeX } from './nodes/ParagraphNodeX';
 
-export { EditorShellRef, EditorShellProps };
+export type { EditorShellRef, EditorShellProps, MarkXType };
 
 export default forwardRef(function App(props: EditorShellProps, ref: Ref<EditorShellRef>): JSX.Element {
   const initialConfig = {

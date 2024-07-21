@@ -100,7 +100,13 @@ function DemoApp() {
 
   return (
     <>
-      <App key="view" initialValue={data} copus={{ opusUuid: uuid1, createMark, getMarkInfo }} ref={ref1} readOnly />
+      <App
+        key="view"
+        initialValue={data}
+        copus={{ opusUuid: uuid1, opusId: 1, createMark, getMarkInfo }}
+        ref={ref1}
+        readOnly
+      />
       <div style={{ margin: '10px 0' }}>
         <button
           onClick={() => {
@@ -122,7 +128,7 @@ function DemoApp() {
         onChange={(status, html) => {
           console.log(status, html);
         }}
-        copus={{ opusUuid: uuid2, getMarkInfo, createMark }}
+        copus={{ opusUuid: uuid2, opusId: 2, getMarkInfo, createMark }}
         ref={ref2}
         // toolbar={[
         //   'history',

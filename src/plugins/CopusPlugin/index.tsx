@@ -38,7 +38,7 @@ import { EditorShellProps } from '../../EditorShell';
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand('INSERT_INLINE_COMMAND');
 
 export default function CopusPlugin({ copus = {} }: { copus: EditorShellProps['copus'] }): JSX.Element {
-  const { getMarkInfo, createMark, opusUuid } = copus;
+  const { getMarkInfo, createMark, opusUuid, opusId } = copus;
   const [editor] = useLexicalComposerContext();
   const markNodeXMap = useMemo<Map<string, Set<NodeKey>>>(() => {
     return new Map();
@@ -85,6 +85,7 @@ export default function CopusPlugin({ copus = {} }: { copus: EditorShellProps['c
 
           createMark?.({
             opusUuid,
+            opusId,
             startNodeId: startTopNode.getId(),
             startNodeAt: startOffset,
             endNodeId: endTopNode.getId(),

@@ -1,6 +1,6 @@
 {
   "name": "@copus/editor",
-  "version": "0.16.0-9.b6",
+  "version": "0.16.0-9.b7",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -10,6 +10,7 @@
     "build:demo": "vite build",
     "build:lib": "vite build -c vite.prod.js",
     "build": "npm run build:lib && tsc",
+    "publish:beta": "npm publish --access public --tag beta",
     "preview": "vite preview"
   },
   "main": "dist/lib/index.js",

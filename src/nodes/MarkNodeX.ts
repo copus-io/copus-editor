@@ -3,6 +3,7 @@ import { MarkNode, SerializedMarkNode } from '@lexical/mark';
 
 export type MarkXType = {
   opusUuid?: string;
+  opusId?: number;
   id?: string;
   startNodeId: string;
   startNodeAt: number;

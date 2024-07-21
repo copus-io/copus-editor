@@ -35,19 +35,18 @@ import { INSERT_INLINE_COMMAND } from '../CopusPlugin';
 import { MarkXType } from '../../nodes/MarkNodeX';
 import { $wrapSelectionInMarkNode } from '@lexical/mark';
 import { ParagraphNodeX } from '../../nodes/ParagraphNodeX';
+import { EditorShellProps } from '../../EditorShell';
 
 function TextFormatFloatingToolbar({
   editor,
   anchorElem,
   isLink,
-  createMark,
-  opusUuid,
+  copus,
 }: {
   editor: LexicalEditor;
   anchorElem: HTMLElement;
   isLink: boolean;
-  opusUuid?: string;
-  createMark?: (params: MarkXType) => Promise<MarkXType>;
+  copus: EditorShellProps['copus'];
 }): JSX.Element {
   const popupCharStylesEditorRef = useRef<HTMLDivElement | null>(null);
 
@@ -163,7 +162,8 @@ function TextFormatFloatingToolbar({
           });
 
           const _mark = {
-            opusUuid,
+            opusUuid: copus?.opusUuid,
+            opusId: copus?.opusId,
             startNodeId: startTopNode.getId(),
             startNodeAt: startOffset,
             endNodeId: endTopNode.getId(),
@@ -242,8 +242,7 @@ function TextFormatFloatingToolbar({
 function useFloatingTextFormatToolbar(
   editor: LexicalEditor,
   anchorElem: HTMLElement,
-  opusUuid?: string,
-  createMark?: (params: MarkXType) => Promise<MarkXType>,
+  copus: EditorShellProps['copus'],
 ): JSX.Element | null {
   const [isText, setIsText] = useState(false);
   const [isLink, setIsLink] = useState(false);
@@ -319,26 +318,18 @@ function useFloatingTextFormatToolbar(
   }
 
   return createPortal(
-    <TextFormatFloatingToolbar
-      editor={editor}
-      opusUuid={opusUuid}
-      createMark={createMark}
-      anchorElem={anchorElem}
-      isLink={isLink}
-    />,
+    <TextFormatFloatingToolbar editor={editor} copus={copus} anchorElem={anchorElem} isLink={isLink} />,
     anchorElem,
   );
 }
 
 export default function FloatingCopusToolbarPlugin({
   anchorElem = getEditorPortal(),
-  opusUuid,
-  createMark,
+  copus,
 }: {
   anchorElem?: HTMLElement;
-  opusUuid?: string;
-  createMark?: (params: MarkXType) => Promise<MarkXType>;
+  copus: EditorShellProps['copus'];
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  return useFloatingTextFormatToolbar(editor, anchorElem, opusUuid, createMark);
+  return useFloatingTextFormatToolbar(editor, anchorElem, copus);
 }

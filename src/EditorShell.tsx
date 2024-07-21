@@ -24,6 +24,7 @@ export interface EditorShellProps {
   showLabel?: boolean;
   copus?: {
     opusUuid?: string;
+    opusId?: number;
     createMark?: (params: MarkXType) => Promise<MarkXType>;
     getMarkInfo?: (ids: string[]) => Promise<any[]>;
   };

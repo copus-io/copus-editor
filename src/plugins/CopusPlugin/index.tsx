@@ -6,7 +6,7 @@
  *
  */
 
-import type { LexicalCommand, LexicalNode, NodeKey, RangeSelection, TextNode } from 'lexical';
+import type { ElementNode, LexicalCommand, LexicalNode, NodeKey, RangeSelection, TextNode } from 'lexical';
 import { $getMarkIDs, $wrapSelectionInMarkNode } from '@lexical/mark';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister, registerNestedElementResolver } from '@lexical/utils';
@@ -14,7 +14,9 @@ import {
   $createRangeSelection,
   $getNodeByKey,
   $getPreviousSelection,
+  $getRoot,
   $getSelection,
+  $isLeafNode,
   $isParagraphNode,
   $isRangeSelection,
   $isTextNode,
@@ -128,11 +130,14 @@ export default function CopusPlugin({ copus = {} }: { copus: EditorShellProps['c
         const anchorNode = prevStart.getNode() as TextNode;
         const anchorOffset = prevStart.offset;
 
-        // fix: when create new paragraph node, id will change bug
-
-        let previousNode: LexicalNode | null = null;
-        if ($isParagraphNode(anchorNode)) {
-          previousNode = anchorNode.getPreviousSibling();
+        // Fix: 当段落为空时，粘贴多段落，会自动替换原有节点，导致无法找到
+        let needFix = false;
+        let topNodeIndex = 0;
+        const anchorTopNode = anchorNode.getTopLevelElement();
+        if (anchorOffset === 0) {
+          needFix = true;
+          const root = $getRoot();
+          topNodeIndex = root.getChildren().indexOf(anchorTopNode!);
         }
 
         // paste end
@@ -152,13 +157,13 @@ export default function CopusPlugin({ copus = {} }: { copus: EditorShellProps['c
             const focusNode = currEnd.getNode() as TextNode;
             const focusOffset = currEnd.offset;
 
-            // ix: when create new paragraph node, id will change bug
+            // Fix: 自动替换的节点无法获取，找到真实节点
             let realAnchorNode: TextNode | null = null;
-            if (previousNode) {
-              const realP = previousNode.getNextSibling() as ParagraphNodeX;
-              realAnchorNode = realP.getFirstChild();
+            if (needFix) {
+              const root = $getRoot();
+              const topNode = root.getChildren()[topNodeIndex] as ParagraphNodeX;
+              realAnchorNode = topNode.getFirstChild();
             }
-
             const selection = $createRangeSelection();
             if (realAnchorNode) {
               selection.setTextNodeRange(realAnchorNode, 0, focusNode, focusOffset);

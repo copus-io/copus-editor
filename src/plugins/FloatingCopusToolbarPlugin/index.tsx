@@ -198,6 +198,9 @@ function TextFormatFloatingToolbar({
       editor.registerCommand(
         COPY_COMMAND,
         (e: ClipboardEvent) => {
+          if (editor.isEditable()) {
+            return false;
+          }
           if (e?.clipboardData) {
             const willCopyMark = handleCopySource();
             e.clipboardData.setData('application/x-copus-copy', JSON.stringify(willCopyMark));

@@ -1,6 +1,6 @@
 {
   "name": "@copus/editor",
-  "version": "0.16.0-9.b8",
+  "version": "0.17.0-1.b1",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -20,24 +20,24 @@
     "package.json"
   ],
   "dependencies": {
-    "@lexical/clipboard": "0.16.0",
-    "@lexical/code": "0.16.0",
-    "@lexical/file": "0.16.0",
-    "@lexical/hashtag": "0.16.0",
-    "@lexical/html": "0.16.0",
-    "@lexical/link": "0.16.0",
-    "@lexical/list": "0.16.0",
-    "@lexical/mark": "0.16.0",
-    "@lexical/markdown": "0.16.0",
-    "@lexical/overflow": "0.16.0",
-    "@lexical/plain-text": "0.16.0",
-    "@lexical/react": "0.16.0",
-    "@lexical/rich-text": "0.16.0",
-    "@lexical/selection": "0.16.0",
-    "@lexical/table": "0.16.0",
-    "@lexical/text": "0.16.0",
-    "@lexical/utils": "0.16.0",
-    "lexical": "0.16.0",
+    "@lexical/clipboard": "0.17.0",
+    "@lexical/code": "0.17.0",
+    "@lexical/file": "0.17.0",
+    "@lexical/hashtag": "0.17.0",
+    "@lexical/html": "0.17.0",
+    "@lexical/link": "0.17.0",
+    "@lexical/list": "0.17.0",
+    "@lexical/mark": "0.17.0",
+    "@lexical/markdown": "0.17.0",
+    "@lexical/overflow": "0.17.0",
+    "@lexical/plain-text": "0.17.0",
+    "@lexical/react": "0.17.0",
+    "@lexical/rich-text": "0.17.0",
+    "@lexical/selection": "0.17.0",
+    "@lexical/table": "0.17.0",
+    "@lexical/text": "0.17.0",
+    "@lexical/utils": "0.17.0",
+    "lexical": "0.17.0",
     "lodash-es": "^4.17.21",
     "mammoth": "^1.7.2",
     "react": "^18.3.1",
@@ -58,8 +58,8 @@
     "prettier-plugin-organize-attributes": "^1.0.0",
     "prettier-plugin-tailwindcss": "^0.6.4",
     "rollup-plugin-copy": "^3.5.0",
-    "typescript": "^5.5.2",
-    "vite": "^5.3.2"
+    "typescript": "^5.5.4",
+    "vite": "^5.3.5"
   },
   "sideEffects": false
 }

@@ -76,7 +76,6 @@ export class ParagraphNodeX extends ParagraphNode {
       ...super.exportJSON(),
       id: this.__id,
       type: 'paragraph-x',
-      version: 1,
     };
   }
 }

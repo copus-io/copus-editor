@@ -45,7 +45,7 @@ const markList = [
     startNodeAt: 140,
     endNodeId: 'hyyE',
     endNodeAt: 300,
-    downstreamCount: 1,
+    downstreamCount: 2,
   },
   {
     id: '66881095080f1f6e19cf3a6d',
@@ -53,7 +53,7 @@ const markList = [
     startNodeAt: 200,
     endNodeId: 'slkb',
     endNodeAt: 11,
-    sourceCount: 1,
+    sourceCount: 3,
   },
 ];
 
@@ -112,14 +112,21 @@ function DemoApp() {
           onClick={() => {
             ref1.current?.attachMarkList(markList);
           }}>
-          Attach MarkList
+          Attach mark list
+        </button>
+        &nbsp;
+        <button
+          onClick={() => {
+            ref1.current?.removeMark('66881067080f1f6e19cf3a6c');
+          }}>
+          Remove one mark
         </button>
         &nbsp;
         <button
           onClick={() => {
             ref1.current?.clearMarkList();
           }}>
-          Clear MarkList
+          Clear mark list
         </button>
       </div>
       <App

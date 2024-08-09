@@ -33,7 +33,6 @@ import { setFloatingElemPosition } from '../../utils/setFloatingElemPosition';
 import getEditorPortal from '../../utils/getEditorPortal';
 import { INSERT_INLINE_COMMAND } from '../CopusPlugin';
 import { MarkXType } from '../../nodes/MarkNodeX';
-import { $wrapSelectionInMarkNode } from '@lexical/mark';
 import { ParagraphNodeX } from '../../nodes/ParagraphNodeX';
 import { EditorShellProps } from '../../EditorShell';
 

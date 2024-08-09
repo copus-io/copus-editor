@@ -99,7 +99,7 @@ export default function CopusPlugin({ copus = {} }: { copus: EditorShellProps['c
             editor.update(() => {
               if (mark?.id) {
                 $wrapSelectionInMarkNode(selection, isBackward, mark.id, (ids) => {
-                  return new MarkNodeX({ ids, source: true });
+                  return new MarkNodeX({ ids, source: mark.sourceCount });
                 });
               }
             });
@@ -301,6 +301,10 @@ export default function CopusPlugin({ copus = {} }: { copus: EditorShellProps['c
       editor.registerCommand<MouseEvent>(
         CLICK_COMMAND,
         (payload) => {
+          if (editor.isEditable()) {
+            return false;
+          }
+
           const selection = $getSelection();
           if ($isRangeSelection(selection)) {
             if (selection.getTextContent().length > 0) {

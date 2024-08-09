@@ -16,18 +16,18 @@ export type MarkXType = {
 };
 
 type SerializedMarkNodeX = SerializedMarkNode & {
-  source: boolean;
-  branch: boolean;
+  source: number;
+  branch: number;
 };
 
 export class MarkNodeX extends MarkNode {
-  private __hasSource: boolean;
-  private __hasBranch: boolean;
-  constructor(props: { ids: Array<string>; key?: NodeKey; source?: boolean; branch?: boolean }) {
+  __sourceCount: number;
+  __branchCount: number;
+  constructor(props: { ids: Array<string>; key?: NodeKey; source?: number; branch?: number }) {
     const { ids, key, source, branch } = props;
     super(ids, key);
-    this.__hasSource = source ?? false;
-    this.__hasBranch = branch ?? false;
+    this.__sourceCount = source ?? 0;
+    this.__branchCount = branch ?? 0;
   }
 
   static getType(): string {
@@ -38,13 +38,31 @@ export class MarkNodeX extends MarkNode {
     return new MarkNodeX({ ids: node.__ids, key: node.__key });
   }
 
+  getSourceCount(): number {
+    return this.__sourceCount;
+  }
+
+  getBranchCount(): number {
+    return this.__branchCount;
+  }
+
+  setSourceCount(count: number) {
+    const writable = this.getWritable();
+    writable.__sourceCount = count;
+  }
+
+  setBranchCount(count: number) {
+    const writable = this.getWritable();
+    writable.__branchCount = count;
+  }
+
   createDOM(config: EditorConfig) {
     const dom = super.createDOM(config);
-    if (this.__hasSource) {
-      dom.dataset.source = '1';
+    if (this.__sourceCount) {
+      dom.dataset.source = this.__sourceCount.toString();
     }
-    if (this.__hasBranch) {
-      dom.dataset.branch = '1';
+    if (this.__branchCount) {
+      dom.dataset.branch = this.__branchCount.toString();
     }
     dom.dataset.ids = this.__ids.join(',');
     return dom;
@@ -52,9 +70,17 @@ export class MarkNodeX extends MarkNode {
 
   updateDOM(prevNode: MarkNodeX, dom: HTMLElement, config: EditorConfig) {
     const updated = super.updateDOM(prevNode, dom, config);
-    // if (this.__id !== prevNode.__id) {
-    //   dom.setAttribute('data-id', this.__id);
-    // }
+    if (this.__sourceCount) {
+      dom.dataset.source = this.__sourceCount.toString();
+    } else {
+      delete dom.dataset.source;
+    }
+    if (this.__branchCount) {
+      dom.dataset.branch = this.__branchCount.toString();
+    } else {
+      delete dom.dataset.branch;
+    }
+    dom.dataset.ids = this.__ids.join(',');
     return updated;
   }
 
@@ -71,8 +97,8 @@ export class MarkNodeX extends MarkNode {
     return {
       ...super.exportJSON(),
       type: 'mark-x',
-      source: this.__hasSource,
-      branch: this.__hasBranch,
+      source: this.__sourceCount,
+      branch: this.__branchCount,
       version: 1,
     };
   }

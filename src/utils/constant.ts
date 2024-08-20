@@ -29,8 +29,8 @@ export const mineTypeMap = {
     limitMessage: 'Image file size should be less than 5 MB',
   },
   audio: {
-    limitSize: 10 * mb,
-    limitMessage: 'Audio file size should be less than 10 MB',
+    limitSize: 20 * mb,
+    limitMessage: 'Audio file size should be less than 20 MB',
   },
   video: {
     limitSize: 50 * mb,

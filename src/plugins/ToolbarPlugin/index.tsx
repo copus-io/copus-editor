@@ -588,7 +588,8 @@ export default function ToolbarPlugin({
           const type = parentList ? parentList.getListType() : element.getListType();
           setBlockType(type);
         } else {
-          const type = $isHeadingNode(element) ? element.getTag() : element.getType();
+          let type = $isHeadingNode(element) ? element.getTag() : element.getType();
+          type = type.replace('-x', '');
           if (type in blockTypeToBlockName) {
             setBlockType(type as keyof typeof blockTypeToBlockName);
           }

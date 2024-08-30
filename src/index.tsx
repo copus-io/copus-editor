@@ -65,14 +65,14 @@ export default forwardRef(function App(props: EditorShellProps, ref: Ref<EditorS
           return new QuoteNodeX({});
         },
       },
-      CodeNodeX,
-      {
-        replace: CodeNode,
-        with: (node: CodeNode) => {
-          console.log('node.__language', node.__language);
-          return new CodeNodeX({ language: node.__language });
-        },
-      },
+      // CodeNodeX,
+      // {
+      //   replace: CodeNode,
+      //   with: (node: CodeNode) => {
+      //     console.log('node.__language', node.__language);
+      //     return new CodeNodeX({ language: node.__language });
+      //   },
+      // },
       MarkNodeX,
       {
         replace: MarkNode,

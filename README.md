@@ -12,7 +12,7 @@ Copus editor is a rich text editor, customized based on Lexical, with some confi
 - [x] Insert images, audio, video, and upload files
 - [x] Import Word (docx) files, parse the content, upload images, and insert the content into the editor
 - [x] Add loading experience for uploading images, audio, and video, support uploading multiple media files simultaneously
-- [ ] Add bidirectional linking functionality
+- [x] Add bidirectional linking functionality
 
 
 ## License

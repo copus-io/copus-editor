@@ -28,7 +28,6 @@ import {Suspense, useCallback, useEffect, useRef, useState} from 'react';
 
 import {$isFileNode} from './index';
 import styles from './style.module.less';
-import {error} from 'console';
 
 export default function FileComponent({
   src,

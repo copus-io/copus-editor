@@ -13,7 +13,7 @@ import {
   CODE_LANGUAGE_MAP,
   getLanguageFriendlyName,
 } from '@lexical/code';
-import {$isLinkNode, TOGGLE_LINK_COMMAND} from '@lexical/link';
+import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import {
   $isListNode,
   INSERT_CHECK_LIST_COMMAND,
@@ -21,24 +21,18 @@ import {
   INSERT_UNORDERED_LIST_COMMAND,
   ListNode,
 } from '@lexical/list';
-import {INSERT_EMBED_COMMAND} from '@lexical/react/LexicalAutoEmbedPlugin';
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {$isDecoratorBlockNode} from '@lexical/react/LexicalDecoratorBlockNode';
-import {INSERT_HORIZONTAL_RULE_COMMAND} from '@lexical/react/LexicalHorizontalRuleNode';
-import {
-  $createHeadingNode,
-  $createQuoteNode,
-  $isHeadingNode,
-  $isQuoteNode,
-  HeadingTagType,
-} from '@lexical/rich-text';
+import { INSERT_EMBED_COMMAND } from '@lexical/react/LexicalAutoEmbedPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $isDecoratorBlockNode } from '@lexical/react/LexicalDecoratorBlockNode';
+import { INSERT_HORIZONTAL_RULE_COMMAND } from '@lexical/react/LexicalHorizontalRuleNode';
+import { $createHeadingNode, $createQuoteNode, $isHeadingNode, $isQuoteNode, HeadingTagType } from '@lexical/rich-text';
 import {
   $getSelectionStyleValueForProperty,
   $isParentElementRTL,
   $patchStyleText,
   $setBlocksType,
 } from '@lexical/selection';
-import {$isTableNode, $isTableSelection} from '@lexical/table';
+import { $isTableNode, $isTableSelection } from '@lexical/table';
 import {
   $findMatchingParent,
   $getNearestBlockElementAncestorOrThrow,
@@ -70,29 +64,25 @@ import {
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
 } from 'lexical';
-import {Dispatch, useCallback, useEffect, useMemo, useState} from 'react';
-import {IS_APPLE} from '../../shared/environment';
+import { Dispatch, useCallback, useEffect, useMemo, useState } from 'react';
+import { IS_APPLE } from '../../shared/environment';
 
 import useModal from '../../hooks/useModal';
-import DropDown, {DropDownItem} from '../../ui/DropDown';
+import DropDown, { DropDownItem } from '../../ui/DropDown';
 import DropdownColorPicker from '../../ui/DropdownColorPicker';
-import {getSelectedNode} from '../../utils/getSelectedNode';
-import {sanitizeUrl} from '../../utils/url';
-import {EmbedConfigs, YoutubeEmbedConfig} from '../AutoEmbedPlugin';
-import {INSERT_COLLAPSIBLE_COMMAND} from '../CollapsiblePlugin';
-import {
-  INSERT_IMAGE_COMMAND,
-  InsertImageDialog,
-  InsertImagePayload,
-} from '../ImagesPlugin';
-import {InsertInlineImageDialog} from '../InlineImagePlugin';
+import { getSelectedNode } from '../../utils/getSelectedNode';
+import { sanitizeUrl } from '../../utils/url';
+import { EmbedConfigs, YoutubeEmbedConfig } from '../AutoEmbedPlugin';
+import { INSERT_COLLAPSIBLE_COMMAND } from '../CollapsiblePlugin';
+import { INSERT_IMAGE_COMMAND, InsertImageDialog, InsertImagePayload } from '../ImagesPlugin';
+import { InsertInlineImageDialog } from '../InlineImagePlugin';
 import InsertLayoutDialog from '../LayoutPlugin/InsertLayoutDialog';
-import {INSERT_PAGE_BREAK} from '../PageBreakPlugin';
-import {InsertTableDialog} from '../TablePlugin';
+import { INSERT_PAGE_BREAK } from '../PageBreakPlugin';
+import { InsertTableDialog } from '../TablePlugin';
 import FontSize from './fontSize';
-import {InsertAudioDialog} from '../AudioPlugin';
-import {InsertVideoDialog} from '../VideoPlugin';
-import {ImportDocxDialog} from '../ImportDocxPlugin';
+import { InsertAudioDialog } from '../AudioPlugin';
+import { InsertVideoDialog } from '../VideoPlugin';
+import { ImportDocxDialog } from '../ImportDocxPlugin';
 
 const blockTypeToBlockName = {
   bullet: 'Bulleted List',
@@ -117,9 +107,7 @@ const rootTypeToRootName = {
 function getCodeLanguageOptions(): [string, string][] {
   const options: [string, string][] = [];
 
-  for (const [lang, friendlyName] of Object.entries(
-    CODE_LANGUAGE_FRIENDLY_NAME_MAP,
-  )) {
+  for (const [lang, friendlyName] of Object.entries(CODE_LANGUAGE_FRIENDLY_NAME_MAP)) {
     options.push([lang, friendlyName]);
   }
 
@@ -289,57 +277,39 @@ function BlockFormatDropDown({
       buttonIconClassName={'icon block-type ' + blockType}
       buttonLabel={blockTypeToBlockName[blockType]}
       buttonAriaLabel="Formatting options for text style">
-      <DropDownItem
-        className={'item ' + dropDownActiveClass(blockType === 'paragraph')}
-        onClick={formatParagraph}>
+      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'paragraph')} onClick={formatParagraph}>
         <i className="icon paragraph" />
         <span className="text">Normal</span>
       </DropDownItem>
-      <DropDownItem
-        className={'item ' + dropDownActiveClass(blockType === 'h1')}
-        onClick={() => formatHeading('h1')}>
+      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'h1')} onClick={() => formatHeading('h1')}>
         <i className="icon h1" />
         <span className="text">Heading 1</span>
       </DropDownItem>
-      <DropDownItem
-        className={'item ' + dropDownActiveClass(blockType === 'h2')}
-        onClick={() => formatHeading('h2')}>
+      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'h2')} onClick={() => formatHeading('h2')}>
         <i className="icon h2" />
         <span className="text">Heading 2</span>
       </DropDownItem>
-      <DropDownItem
-        className={'item ' + dropDownActiveClass(blockType === 'h3')}
-        onClick={() => formatHeading('h3')}>
+      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'h3')} onClick={() => formatHeading('h3')}>
         <i className="icon h3" />
         <span className="text">Heading 3</span>
       </DropDownItem>
-      <DropDownItem
-        className={'item ' + dropDownActiveClass(blockType === 'bullet')}
-        onClick={formatBulletList}>
+      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'bullet')} onClick={formatBulletList}>
         <i className="icon bullet-list" />
         <span className="text">Bullet List</span>
       </DropDownItem>
-      <DropDownItem
-        className={'item ' + dropDownActiveClass(blockType === 'number')}
-        onClick={formatNumberedList}>
+      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'number')} onClick={formatNumberedList}>
         <i className="icon numbered-list" />
         <span className="text">Numbered List</span>
       </DropDownItem>
-      <DropDownItem
-        className={'item ' + dropDownActiveClass(blockType === 'check')}
-        onClick={formatCheckList}>
+      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'check')} onClick={formatCheckList}>
         <i className="icon check-list" />
         <span className="text">Check List</span>
       </DropDownItem>
-      <DropDownItem
-        className={'item ' + dropDownActiveClass(blockType === 'quote')}
-        onClick={formatQuote}>
+      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'quote')} onClick={formatQuote}>
         <i className="icon quote" />
         <span className="text">Quote</span>
       </DropDownItem>
-      <DropDownItem
-        className={'item ' + dropDownActiveClass(blockType === 'code')}
-        onClick={formatCode}>
+      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'code')} onClick={formatCode}>
         <i className="icon code" />
         <span className="text">Code Block</span>
       </DropDownItem>
@@ -377,31 +347,23 @@ function FontDropDown({
   );
 
   const buttonAriaLabel =
-    style === 'font-family'
-      ? 'Formatting options for font family'
-      : 'Formatting options for font size';
+    style === 'font-family' ? 'Formatting options for font family' : 'Formatting options for font size';
 
   return (
     <DropDown
       disabled={disabled}
       buttonClassName={'toolbar-item ' + style}
       buttonLabel={value}
-      buttonIconClassName={
-        style === 'font-family' ? 'icon block-type font-family' : ''
-      }
+      buttonIconClassName={style === 'font-family' ? 'icon block-type font-family' : ''}
       buttonAriaLabel={buttonAriaLabel}>
-      {(style === 'font-family' ? FONT_FAMILY_OPTIONS : FONT_SIZE_OPTIONS).map(
-        ([option, text]) => (
-          <DropDownItem
-            className={`item ${dropDownActiveClass(value === option)} ${
-              style === 'font-size' ? 'fontsize-item' : ''
-            }`}
-            onClick={() => handleClick(option)}
-            key={option}>
-            <span className="text">{text}</span>
-          </DropDownItem>
-        ),
-      )}
+      {(style === 'font-family' ? FONT_FAMILY_OPTIONS : FONT_SIZE_OPTIONS).map(([option, text]) => (
+        <DropDownItem
+          className={`item ${dropDownActiveClass(value === option)} ${style === 'font-size' ? 'fontsize-item' : ''}`}
+          onClick={() => handleClick(option)}
+          key={option}>
+          <span className="text">{text}</span>
+        </DropDownItem>
+      ))}
     </DropDown>
   );
 }
@@ -423,9 +385,7 @@ function ElementFormatDropdown({
     <DropDown
       disabled={disabled}
       buttonLabel={formatOption.name}
-      buttonIconClassName={`icon ${
-        isRTL ? formatOption.iconRTL : formatOption.icon
-      }`}
+      buttonIconClassName={`icon ${isRTL ? formatOption.iconRTL : formatOption.icon}`}
       buttonClassName="toolbar-item spaced alignment"
       buttonAriaLabel="Formatting options for text alignment">
       <DropDownItem
@@ -465,13 +425,7 @@ function ElementFormatDropdown({
           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'start');
         }}
         className="item">
-        <i
-          className={`icon ${
-            isRTL
-              ? ELEMENT_FORMAT_OPTIONS.start.iconRTL
-              : ELEMENT_FORMAT_OPTIONS.start.icon
-          }`}
-        />
+        <i className={`icon ${isRTL ? ELEMENT_FORMAT_OPTIONS.start.iconRTL : ELEMENT_FORMAT_OPTIONS.start.icon}`} />
         <span className="text">Start Align</span>
       </DropDownItem>
       <DropDownItem
@@ -479,13 +433,7 @@ function ElementFormatDropdown({
           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'end');
         }}
         className="item">
-        <i
-          className={`icon ${
-            isRTL
-              ? ELEMENT_FORMAT_OPTIONS.end.iconRTL
-              : ELEMENT_FORMAT_OPTIONS.end.icon
-          }`}
-        />
+        <i className={`icon ${isRTL ? ELEMENT_FORMAT_OPTIONS.end.iconRTL : ELEMENT_FORMAT_OPTIONS.end.icon}`} />
         <span className="text">End Align</span>
       </DropDownItem>
       <Divider />
@@ -565,13 +513,9 @@ export default function ToolbarPlugin({
 }): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
-  const [blockType, setBlockType] =
-    useState<keyof typeof blockTypeToBlockName>('paragraph');
-  const [rootType, setRootType] =
-    useState<keyof typeof rootTypeToRootName>('root');
-  const [selectedElementKey, setSelectedElementKey] = useState<NodeKey | null>(
-    null,
-  );
+  const [blockType, setBlockType] = useState<keyof typeof blockTypeToBlockName>('paragraph');
+  const [rootType, setRootType] = useState<keyof typeof rootTypeToRootName>('root');
+  const [selectedElementKey, setSelectedElementKey] = useState<NodeKey | null>(null);
   const [fontSize, setFontSize] = useState<string>('15px');
   const [fontColor, setFontColor] = useState<string>('#000');
   const [bgColor, setBgColor] = useState<string>('#fff');
@@ -640,45 +584,26 @@ export default function ToolbarPlugin({
       if (elementDOM !== null) {
         setSelectedElementKey(elementKey);
         if ($isListNode(element)) {
-          const parentList = $getNearestNodeOfType<ListNode>(
-            anchorNode,
-            ListNode,
-          );
-          const type = parentList
-            ? parentList.getListType()
-            : element.getListType();
+          const parentList = $getNearestNodeOfType<ListNode>(anchorNode, ListNode);
+          const type = parentList ? parentList.getListType() : element.getListType();
           setBlockType(type);
         } else {
-          const type = $isHeadingNode(element)
-            ? element.getTag()
-            : element.getType();
+          let type = $isHeadingNode(element) ? element.getTag() : element.getType();
+          type = type.replace('-x', '');
           if (type in blockTypeToBlockName) {
             setBlockType(type as keyof typeof blockTypeToBlockName);
           }
           if ($isCodeNode(element)) {
-            const language =
-              element.getLanguage() as keyof typeof CODE_LANGUAGE_MAP;
-            setCodeLanguage(
-              language ? CODE_LANGUAGE_MAP[language] || language : '',
-            );
+            const language = element.getLanguage() as keyof typeof CODE_LANGUAGE_MAP;
+            setCodeLanguage(language ? CODE_LANGUAGE_MAP[language] || language : '');
             return;
           }
         }
       }
       // Handle buttons
-      setFontColor(
-        $getSelectionStyleValueForProperty(selection, 'color', '#000'),
-      );
-      setBgColor(
-        $getSelectionStyleValueForProperty(
-          selection,
-          'background-color',
-          '#fff',
-        ),
-      );
-      setFontFamily(
-        $getSelectionStyleValueForProperty(selection, 'font-family', 'Arial'),
-      );
+      setFontColor($getSelectionStyleValueForProperty(selection, 'color', '#000'));
+      setBgColor($getSelectionStyleValueForProperty(selection, 'background-color', '#fff'));
+      setFontFamily($getSelectionStyleValueForProperty(selection, 'font-family', 'Arial'));
       let matchingParent;
       if ($isLinkNode(parent)) {
         // If node is a link, we need to fetch the parent paragraph node to set format
@@ -698,9 +623,7 @@ export default function ToolbarPlugin({
       );
     }
     if ($isRangeSelection(selection) || $isTableSelection(selection)) {
-      setFontSize(
-        $getSelectionStyleValueForProperty(selection, 'font-size', '15px'),
-      );
+      setFontSize($getSelectionStyleValueForProperty(selection, 'font-size', '15px'));
     }
   }, [activeEditor]);
 
@@ -721,7 +644,7 @@ export default function ToolbarPlugin({
       editor.registerEditableListener((editable) => {
         setIsEditable(editable);
       }),
-      activeEditor.registerUpdateListener(({editorState}) => {
+      activeEditor.registerUpdateListener(({ editorState }) => {
         editorState.read(() => {
           $updateToolbar();
         });
@@ -750,7 +673,7 @@ export default function ToolbarPlugin({
       KEY_MODIFIER_COMMAND,
       (payload) => {
         const event: KeyboardEvent = payload;
-        const {code, ctrlKey, metaKey} = event;
+        const { code, ctrlKey, metaKey } = event;
 
         if (code === 'KeyK' && (ctrlKey || metaKey)) {
           event.preventDefault();
@@ -779,7 +702,7 @@ export default function ToolbarPlugin({
             $patchStyleText(selection, styles);
           }
         },
-        skipHistoryStack ? {tag: 'historic'} : {},
+        skipHistoryStack ? { tag: 'historic' } : {},
       );
     },
     [activeEditor],
@@ -843,14 +766,14 @@ export default function ToolbarPlugin({
 
   const onFontColorSelect = useCallback(
     (value: string, skipHistoryStack: boolean) => {
-      applyStyleText({color: value}, skipHistoryStack);
+      applyStyleText({ color: value }, skipHistoryStack);
     },
     [applyStyleText],
   );
 
   const onBgColorSelect = useCallback(
     (value: string, skipHistoryStack: boolean) => {
-      applyStyleText({'background-color': value}, skipHistoryStack);
+      applyStyleText({ 'background-color': value }, skipHistoryStack);
     },
     [applyStyleText],
   );
@@ -866,27 +789,19 @@ export default function ToolbarPlugin({
   }, [editor, isLink, setIsLinkEditMode]);
 
   const insertImage = useCallback(() => {
-    showModal('Insert Image', (onClose) => (
-      <InsertImageDialog activeEditor={activeEditor} onClose={onClose} />
-    ));
+    showModal('Insert Image', (onClose) => <InsertImageDialog activeEditor={activeEditor} onClose={onClose} />);
   }, [activeEditor]);
 
   const insertAudio = useCallback(() => {
-    showModal('Insert Audio', (onClose) => (
-      <InsertAudioDialog activeEditor={activeEditor} onClose={onClose} />
-    ));
+    showModal('Insert Audio', (onClose) => <InsertAudioDialog activeEditor={activeEditor} onClose={onClose} />);
   }, [activeEditor]);
 
   const insertVideo = useCallback(() => {
-    showModal('Insert Video', (onClose) => (
-      <InsertVideoDialog activeEditor={activeEditor} onClose={onClose} />
-    ));
+    showModal('Insert Video', (onClose) => <InsertVideoDialog activeEditor={activeEditor} onClose={onClose} />);
   }, [activeEditor]);
 
   const importDocx = useCallback(() => {
-    showModal('Import Word File', (onClose) => (
-      <ImportDocxDialog activeEditor={activeEditor} onClose={onClose} />
-    ));
+    showModal('Import Word File', (onClose) => <ImportDocxDialog activeEditor={activeEditor} onClose={onClose} />);
   }, [activeEditor]);
 
   const onCodeLanguageSelect = useCallback(
@@ -937,12 +852,7 @@ export default function ToolbarPlugin({
     if (blockType in blockTypeToBlockName && activeEditor === editor) {
       return (
         <>
-          <BlockFormatDropDown
-            disabled={!isEditable}
-            blockType={blockType}
-            rootType={rootType}
-            editor={editor}
-          />
+          <BlockFormatDropDown disabled={!isEditable} blockType={blockType} rootType={rootType} editor={editor} />
           <Divider />
         </>
       );
@@ -952,32 +862,16 @@ export default function ToolbarPlugin({
   }, [activeEditor, blockType, editor, isEditable, rootType]);
 
   const ElementFormat = useCallback(
-    () => (
-      <ElementFormatDropdown
-        disabled={!isEditable}
-        value={elementFormat}
-        editor={editor}
-        isRTL={isRTL}
-      />
-    ),
+    () => <ElementFormatDropdown disabled={!isEditable} value={elementFormat} editor={editor} isRTL={isRTL} />,
     [editor, elementFormat, isEditable, isRTL],
   );
 
   const Font = useCallback(
     () => (
       <>
-        <FontDropDown
-          disabled={!isEditable}
-          style={'font-family'}
-          value={fontFamily}
-          editor={editor}
-        />
+        <FontDropDown disabled={!isEditable} style={'font-family'} value={fontFamily} editor={editor} />
         <Divider />
-        <FontSize
-          selectionFontSize={fontSize.slice(0, -2)}
-          editor={editor}
-          disabled={!isEditable}
-        />
+        <FontSize selectionFontSize={fontSize.slice(0, -2)} editor={editor} disabled={!isEditable} />
         <Divider />
       </>
     ),
@@ -994,9 +888,7 @@ export default function ToolbarPlugin({
         className={'toolbar-item spaced ' + (isBold ? 'active' : '')}
         title={IS_APPLE ? 'Bold (⌘B)' : 'Bold (Ctrl+B)'}
         type="button"
-        aria-label={`Format text as bold. Shortcut: ${
-          IS_APPLE ? '⌘B' : 'Ctrl+B'
-        }`}>
+        aria-label={`Format text as bold. Shortcut: ${IS_APPLE ? '⌘B' : 'Ctrl+B'}`}>
         <i className="format bold" />
       </button>
     ),
@@ -1013,9 +905,7 @@ export default function ToolbarPlugin({
         className={'toolbar-item spaced ' + (isItalic ? 'active' : '')}
         title={IS_APPLE ? 'Italic (⌘I)' : 'Italic (Ctrl+I)'}
         type="button"
-        aria-label={`Format text as italics. Shortcut: ${
-          IS_APPLE ? '⌘I' : 'Ctrl+I'
-        }`}>
+        aria-label={`Format text as italics. Shortcut: ${IS_APPLE ? '⌘I' : 'Ctrl+I'}`}>
         <i className="format italic" />
       </button>
     ),
@@ -1032,9 +922,7 @@ export default function ToolbarPlugin({
         className={'toolbar-item spaced ' + (isUnderline ? 'active' : '')}
         title={IS_APPLE ? 'Underline (⌘U)' : 'Underline (Ctrl+U)'}
         type="button"
-        aria-label={`Format text to underlined. Shortcut: ${
-          IS_APPLE ? '⌘U' : 'Ctrl+U'
-        }`}>
+        aria-label={`Format text to underlined. Shortcut: ${IS_APPLE ? '⌘U' : 'Ctrl+U'}`}>
         <i className="format underline" />
       </button>
     ),
@@ -1113,6 +1001,46 @@ export default function ToolbarPlugin({
         buttonIconClassName="icon dropdown-more">
         <DropDownItem
           onClick={() => {
+            activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
+          }}
+          className={'item ' + dropDownActiveClass(isBold)}
+          title="Bold"
+          aria-label="Format text as bold">
+          <i className="icon bold" />
+          <span className="text">Bold</span>
+        </DropDownItem>
+        <DropDownItem
+          onClick={() => {
+            activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
+          }}
+          className={'item ' + dropDownActiveClass(isItalic)}
+          title="Italic"
+          aria-label="Format text as italics">
+          <i className="icon italic" />
+          <span className="text">Italic</span>
+        </DropDownItem>
+        <DropDownItem
+          onClick={() => {
+            activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
+          }}
+          className={'item ' + dropDownActiveClass(isUnderline)}
+          title="Underline"
+          aria-label="Format text as underlined">
+          <i className="icon underline" />
+          <span className="text">Underline</span>
+        </DropDownItem>
+        <DropDownItem
+          onClick={() => {
+            activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
+          }}
+          className={'item ' + dropDownActiveClass(isCode)}
+          title="Insert code block"
+          aria-label="Insert code block">
+          <i className="icon code" />
+          <span className="text">Code Block</span>
+        </DropDownItem>
+        <DropDownItem
+          onClick={() => {
             activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
           }}
           className={'item ' + dropDownActiveClass(isStrikethrough)}
@@ -1158,16 +1086,15 @@ export default function ToolbarPlugin({
       isStrikethrough,
       isSubscript,
       isSuperscript,
+      isBold,
+      isItalic,
+      isUnderline,
     ],
   );
 
   const InsertImage = useCallback(() => {
     return (
-      <button
-        disabled={!isEditable}
-        onClick={insertImage}
-        className="toolbar-item"
-        type="button">
+      <button disabled={!isEditable} onClick={insertImage} className="toolbar-item" type="button">
         <i className="format image" />
         {showLabel && <span className="item-label">Insert Image</span>}
       </button>
@@ -1176,11 +1103,7 @@ export default function ToolbarPlugin({
 
   const InsertAudio = useCallback(
     () => (
-      <button
-        disabled={!isEditable}
-        onClick={insertAudio}
-        className={'toolbar-item'}
-        type="button">
+      <button disabled={!isEditable} onClick={insertAudio} className={'toolbar-item'} type="button">
         <i className="format audio" />
         {showLabel && <span className="item-label">Insert Audio</span>}
       </button>
@@ -1190,11 +1113,7 @@ export default function ToolbarPlugin({
 
   const InsertVideo = useCallback(
     () => (
-      <button
-        disabled={!isEditable}
-        onClick={insertVideo}
-        className={'toolbar-item'}
-        type="button">
+      <button disabled={!isEditable} onClick={insertVideo} className={'toolbar-item'} type="button">
         <i className="format video" />
         {showLabel && <span className="item-label">Insert Video</span>}
       </button>
@@ -1207,17 +1126,12 @@ export default function ToolbarPlugin({
       <button
         disabled={!isEditable}
         onClick={() => {
-          activeEditor.dispatchCommand(
-            INSERT_EMBED_COMMAND,
-            YoutubeEmbedConfig.type,
-          );
+          activeEditor.dispatchCommand(INSERT_EMBED_COMMAND, YoutubeEmbedConfig.type);
         }}
         className={'toolbar-item'}
         type="button">
         <i className="format youtube" />
-        {showLabel && (
-          <span className="item-label">{YoutubeEmbedConfig.contentName}</span>
-        )}
+        {showLabel && <span className="item-label">{YoutubeEmbedConfig.contentName}</span>}
       </button>
     ),
     [isEditable, showLabel],
@@ -1225,11 +1139,7 @@ export default function ToolbarPlugin({
 
   const ImportDocx = useCallback(
     () => (
-      <button
-        disabled={!isEditable}
-        onClick={importDocx}
-        className={'toolbar-item'}
-        type="button">
+      <button disabled={!isEditable} onClick={importDocx} className={'toolbar-item'} type="button">
         <i className="format word" />
         {showLabel && <span className="item-label">Import Word</span>}
       </button>
@@ -1249,10 +1159,7 @@ export default function ToolbarPlugin({
           buttonIconClassName="icon plus">
           <DropDownItem
             onClick={() => {
-              activeEditor.dispatchCommand(
-                INSERT_HORIZONTAL_RULE_COMMAND,
-                undefined,
-              );
+              activeEditor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined);
             }}
             className="item">
             <i className="icon horizontal-rule" />
@@ -1269,10 +1176,7 @@ export default function ToolbarPlugin({
           <DropDownItem
             onClick={() => {
               showModal('Insert Image', (onClose) => (
-                <InsertImageDialog
-                  activeEditor={activeEditor}
-                  onClose={onClose}
-                />
+                <InsertImageDialog activeEditor={activeEditor} onClose={onClose} />
               ));
             }}
             className="item">
@@ -1295,10 +1199,7 @@ export default function ToolbarPlugin({
           <DropDownItem
             onClick={() => {
               showModal('Insert Table', (onClose) => (
-                <InsertTableDialog
-                  activeEditor={activeEditor}
-                  onClose={onClose}
-                />
+                <InsertTableDialog activeEditor={activeEditor} onClose={onClose} />
               ));
             }}
             className="item">
@@ -1308,10 +1209,7 @@ export default function ToolbarPlugin({
           <DropDownItem
             onClick={() => {
               showModal('Insert Columns Layout', (onClose) => (
-                <InsertLayoutDialog
-                  activeEditor={activeEditor}
-                  onClose={onClose}
-                />
+                <InsertLayoutDialog activeEditor={activeEditor} onClose={onClose} />
               ));
             }}
             className="item">
@@ -1326,13 +1224,16 @@ export default function ToolbarPlugin({
             <i className="icon caret-right" />
             <span className="text">Collapsible container</span>
           </DropDownItem>
+
+          <DropDownItem onClick={importDocx} className="item">
+            <i className="icon word" />
+            <span className="text">Import Word</span>
+          </DropDownItem>
+
           <DropDownItem
             onClick={() => {
               showModal('Insert Audio', (onClose) => (
-                <InsertAudioDialog
-                  activeEditor={activeEditor}
-                  onClose={onClose}
-                />
+                <InsertAudioDialog activeEditor={activeEditor} onClose={onClose} />
               ));
             }}
             className="item">
@@ -1342,10 +1243,7 @@ export default function ToolbarPlugin({
           <DropDownItem
             onClick={() => {
               showModal('Insert Video', (onClose) => (
-                <InsertVideoDialog
-                  activeEditor={activeEditor}
-                  onClose={onClose}
-                />
+                <InsertVideoDialog activeEditor={activeEditor} onClose={onClose} />
               ));
             }}
             className="item">
@@ -1356,10 +1254,7 @@ export default function ToolbarPlugin({
             <DropDownItem
               key={embedConfig.type}
               onClick={() => {
-                activeEditor.dispatchCommand(
-                  INSERT_EMBED_COMMAND,
-                  embedConfig.type,
-                );
+                activeEditor.dispatchCommand(INSERT_EMBED_COMMAND, embedConfig.type);
               }}
               className="item">
               {embedConfig.icon}
@@ -1463,9 +1358,7 @@ export default function ToolbarPlugin({
   const ToolbarList = useCallback(() => {
     return toolbarConfig.map((item, index) => {
       if (blockType === 'code') {
-        if (
-          !['history', 'divider', 'block-format', 'code-format'].includes(item)
-        ) {
+        if (!['history', 'divider', 'block-format', 'code-format'].includes(item)) {
           return null;
         }
       } else {

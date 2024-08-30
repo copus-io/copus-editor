@@ -1,0 +1,150 @@
+.floating-toolbar-popup {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  background: #2191fb;
+  padding: 5px 10px;
+  gap: 5px;
+  opacity: 0;
+  box-sizing: border-box;
+  box-shadow: 0 1px 5px 0 rgba(118, 118, 118, 0.5);
+  border-radius: 100px;
+  transition: opacity 0.5s;
+  height: 33px;
+  will-change: transform;
+}
+
+.floating-toolbar-popup button.popup-item {
+  border: 0;
+  display: flex;
+  align-items: center;
+  background: none;
+  cursor: pointer;
+  vertical-align: middle;
+  padding: 0;
+  gap: 5px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.floating-toolbar-popup button.popup-item:disabled {
+  cursor: not-allowed;
+}
+
+.floating-toolbar-popup button.popup-item.spaced {
+  // margin-right: 2px;
+}
+
+.floating-toolbar-popup button.popup-item i.format {
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 18px;
+  width: 18px;
+  vertical-align: -0.25em;
+  display: flex;
+}
+
+.floating-toolbar-popup button.popup-item:disabled i.format {
+  opacity: 0.2;
+}
+
+.floating-toolbar-popup button.popup-item.active {
+  background-color: rgba(223, 232, 250, 0.3);
+}
+
+.floating-toolbar-popup button.popup-item.active i {
+  opacity: 1;
+}
+
+.floating-toolbar-popup .popup-item:hover:not([disabled]) {
+  // background-color: #eee;
+}
+
+.floating-toolbar-popup select.popup-item {
+  border: 0;
+  display: flex;
+  background: none;
+  border-radius: 10px;
+  vertical-align: middle;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 70px;
+  font-size: 14px;
+  color: #777;
+  text-overflow: ellipsis;
+}
+
+.floating-toolbar-popup select.code-language {
+  text-transform: capitalize;
+  width: 130px;
+}
+
+.floating-toolbar-popup .popup-item .text {
+  display: flex;
+  line-height: 20px;
+  vertical-align: middle;
+  font-size: 14px;
+  color: #777;
+  text-overflow: ellipsis;
+  width: 70px;
+  overflow: hidden;
+  height: 20px;
+  text-align: left;
+}
+
+.floating-toolbar-popup .popup-item .icon {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  user-select: none;
+  margin-right: 8px;
+  line-height: 16px;
+  background-size: contain;
+}
+
+.floating-toolbar-popup i.chevron-down {
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  user-select: none;
+}
+
+.floating-toolbar-popup i.chevron-down.inside {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  margin-left: -25px;
+  margin-top: 11px;
+  margin-right: 10px;
+  pointer-events: none;
+}
+
+.floating-toolbar-popup .divider {
+  width: 1px;
+  background-color: #eee;
+  margin: 0 4px;
+}
+
+.floating-toolbar-popup.view-popup {
+  background-color: #FFF;
+
+  .insert-source {
+    color: #231f20;
+  }
+
+  .add-source {
+    width: 20px !important;
+    height: 20px !important;
+    background-color: #484848;
+    background-size: 12px !important;
+    border-radius: 50%;
+    background-position: center center;
+  }
+}

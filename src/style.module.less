@@ -1,4 +1,4 @@
-.s31-editor-shell {
+.copus-editor-shell {
     border-radius: 2px;
     color: #000;
     line-height: 1.7;
@@ -12,7 +12,7 @@
         @import './nodes/styles.less';
         @import './ui/styles.less';
         @import './plugins/styles.less';
-        @import './themes/PlaygroundEditorTheme.less';
+        @import './themes/CopusEditorTheme.less';
 
         .editor-container {
             background: #fff;
@@ -20,6 +20,10 @@
             display: block;
             border-bottom-left-radius: 10px;
             border-bottom-right-radius: 10px;
+
+            iframe {
+                max-width: 100%;
+            }
         }
 
         .editor-container.tree-view {
@@ -1004,6 +1008,7 @@
 
             video {
                 max-width: 100%;
+                max-height: 500px;
             }
         }
 
@@ -1458,13 +1463,13 @@
             z-index: 3;
         }
 
-        .PlaygroundEditorTheme__blockCursor {
+        .CET__blockCursor {
             display: block;
             pointer-events: none;
             position: absolute;
         }
 
-        .PlaygroundEditorTheme__blockCursor:after {
+        .CET__blockCursor:after {
             content: '';
             display: block;
             position: absolute;

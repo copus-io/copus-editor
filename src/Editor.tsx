@@ -134,12 +134,12 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
           placeholder={placeholder}
           ErrorBoundary={LexicalErrorBoundary}
         />
-        {floatingAnchorElem && (
+        {/* {floatingAnchorElem && (
           <>
             <FloatingCopusToolbarPlugin copus={copus} anchorElem={floatingAnchorElem} />
             <CopusPlugin copus={copus} />
           </>
-        )}
+        )} */}
       </div>
     );
   }
@@ -213,8 +213,8 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
                   setIsLinkEditMode={setIsLinkEditMode}
                 />
                 <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} cellMerge={true} />
-                <FloatingCopusToolbarPlugin copus={copus} anchorElem={floatingAnchorElem} />
-                <CopusPlugin copus={copus} />
+                {/* <FloatingCopusToolbarPlugin copus={copus} anchorElem={floatingAnchorElem} />
+                <CopusPlugin copus={copus} /> */}
               </>
             )}
             <OnChangePlugin onChange={onChangeDebounce} ignoreSelectionChange />

@@ -60,6 +60,9 @@ export class ListNodeX extends ListNode {
       start: serializedNode.start,
       id: serializedNode.id,
     });
+    node.setFormat(serializedNode.format);
+    node.setIndent(serializedNode.indent);
+    node.setDirection(serializedNode.direction);
     return node;
   }
 

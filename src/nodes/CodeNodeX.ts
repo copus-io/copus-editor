@@ -59,6 +59,9 @@ export class CodeNodeX extends CodeNode {
       id: serializedNode.id,
       language: serializedNode.language,
     });
+    node.setFormat(serializedNode.format);
+    node.setIndent(serializedNode.indent);
+    node.setDirection(serializedNode.direction);
     return node;
   }
 

@@ -81,6 +81,10 @@ export class TextNodeX extends TextNode {
 
   static importJSON(serializedNode: SerializedTextNodeX): TextNodeX {
     const node = new TextNodeX(serializedNode.text, undefined, serializedNode.id);
+    node.setFormat(serializedNode.format);
+    node.setDetail(serializedNode.detail);
+    node.setMode(serializedNode.mode);
+    node.setStyle(serializedNode.style);
     return node;
   }
 

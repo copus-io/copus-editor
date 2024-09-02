@@ -100,7 +100,7 @@ function DemoApp() {
 
   return (
     <>
-      <App
+      {/* <App
         key="view"
         initialValue={data}
         copus={{ opusUuid: uuid1, opusId: 1, createMark, getMarkInfo }}
@@ -128,7 +128,7 @@ function DemoApp() {
           }}>
           Clear mark list
         </button>
-      </div>
+      </div> */}
       <App
         key="edit"
         initialValue={data}

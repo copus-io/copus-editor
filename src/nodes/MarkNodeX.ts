@@ -90,6 +90,9 @@ export class MarkNodeX extends MarkNode {
       branch: serializedNode.branch,
       source: serializedNode.source,
     });
+    node.setFormat(serializedNode.format);
+    node.setIndent(serializedNode.indent);
+    node.setDirection(serializedNode.direction);
     return node;
   }
 

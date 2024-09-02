@@ -68,6 +68,10 @@ export class ParagraphNodeX extends ParagraphNode {
 
   static importJSON(serializedNode: SerializedParagraphNodeX): ParagraphNodeX {
     const node = new ParagraphNodeX({ id: serializedNode.id });
+    node.setFormat(serializedNode.format);
+    node.setIndent(serializedNode.indent);
+    node.setDirection(serializedNode.direction);
+    node.setTextFormat(serializedNode.textFormat);
     return node;
   }
 

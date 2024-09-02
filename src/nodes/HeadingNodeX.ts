@@ -56,6 +56,9 @@ export class HeadingNodeX extends HeadingNode {
 
   static importJSON(serializedNode: SerializedHeadingNodeX): HeadingNodeX {
     const node = new HeadingNodeX({ id: serializedNode.id, tag: serializedNode.tag });
+    node.setFormat(serializedNode.format);
+    node.setIndent(serializedNode.indent);
+    node.setDirection(serializedNode.direction);
     return node;
   }
 

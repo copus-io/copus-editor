@@ -58,6 +58,9 @@ export class QuoteNodeX extends QuoteNode {
     const node = new QuoteNodeX({
       id: serializedNode.id,
     });
+    node.setFormat(serializedNode.format);
+    node.setIndent(serializedNode.indent);
+    node.setDirection(serializedNode.direction);
     return node;
   }
 

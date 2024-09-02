@@ -781,12 +781,12 @@ export default function ToolbarPlugin({
   const insertLink = useCallback(() => {
     if (!isLink) {
       setIsLinkEditMode(true);
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl('https://'));
+      activeEditor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl('https://'));
     } else {
       setIsLinkEditMode(false);
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+      activeEditor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
     }
-  }, [editor, isLink, setIsLinkEditMode]);
+  }, [activeEditor, isLink, setIsLinkEditMode]);
 
   const insertImage = useCallback(() => {
     showModal('Insert Image', (onClose) => <InsertImageDialog activeEditor={activeEditor} onClose={onClose} />);
@@ -862,20 +862,20 @@ export default function ToolbarPlugin({
   }, [activeEditor, blockType, editor, isEditable, rootType]);
 
   const ElementFormat = useCallback(
-    () => <ElementFormatDropdown disabled={!isEditable} value={elementFormat} editor={editor} isRTL={isRTL} />,
-    [editor, elementFormat, isEditable, isRTL],
+    () => <ElementFormatDropdown disabled={!isEditable} value={elementFormat} editor={activeEditor} isRTL={isRTL} />,
+    [activeEditor, elementFormat, isEditable, isRTL],
   );
 
   const Font = useCallback(
     () => (
       <>
-        <FontDropDown disabled={!isEditable} style={'font-family'} value={fontFamily} editor={editor} />
+        <FontDropDown disabled={!isEditable} style={'font-family'} value={fontFamily} editor={activeEditor} />
         <Divider />
-        <FontSize selectionFontSize={fontSize.slice(0, -2)} editor={editor} disabled={!isEditable} />
+        <FontSize selectionFontSize={fontSize.slice(0, -2)} editor={activeEditor} disabled={!isEditable} />
         <Divider />
       </>
     ),
-    [editor, fontFamily, fontSize, isEditable],
+    [activeEditor, fontFamily, fontSize, isEditable],
   );
 
   const Bold = useCallback(

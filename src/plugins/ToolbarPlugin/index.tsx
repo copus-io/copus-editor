@@ -517,7 +517,7 @@ export default function ToolbarPlugin({
   const [rootType, setRootType] = useState<keyof typeof rootTypeToRootName>('root');
   const [selectedElementKey, setSelectedElementKey] = useState<NodeKey | null>(null);
   const [fontSize, setFontSize] = useState<string>('15px');
-  const [fontColor, setFontColor] = useState<string>('#000');
+  const [fontColor, setFontColor] = useState<string>('#000000');
   const [bgColor, setBgColor] = useState<string>('#fff');
   const [fontFamily, setFontFamily] = useState<string>('Arial');
   const [elementFormat, setElementFormat] = useState<ElementFormatType>('left');
@@ -601,7 +601,7 @@ export default function ToolbarPlugin({
         }
       }
       // Handle buttons
-      setFontColor($getSelectionStyleValueForProperty(selection, 'color', '#000'));
+      setFontColor($getSelectionStyleValueForProperty(selection, 'color', '#000000'));
       setBgColor($getSelectionStyleValueForProperty(selection, 'background-color', '#fff'));
       setFontFamily($getSelectionStyleValueForProperty(selection, 'font-family', 'Arial'));
       let matchingParent;
@@ -1306,56 +1306,7 @@ export default function ToolbarPlugin({
     );
   }, [activeEditor, isEditable, showModal, showLabel]);
 
-  // Map of toolbar items
-  const toolbarMap = useMemo(
-    () => ({
-      history: History,
-      divider: Divider,
-      'block-format': BlockFormat,
-      'element-format': ElementFormat,
-      'code-format': CodeFormat,
-      font: Font,
-      bold: Bold,
-      italic: Italic,
-      underline: Underline,
-      'font-color': FontColor,
-      'bg-color': BgColor,
-      'font-more': FontMore,
-      link: Link,
-      'insert-image': InsertImage,
-      'insert-audio': InsertAudio,
-      'insert-video': InsertVideo,
-      'insert-youtube': InsertYoutubeVideo,
-      'import-docx': ImportDocx,
-      'insert-more': InsertMore,
-      'code-block': CodeBlock,
-      'columns-layout': ColumnsLayout,
-    }),
-    [
-      BlockFormat,
-      ElementFormat,
-      History,
-      FontColor,
-      FontMore,
-      Link,
-      Font,
-      BgColor,
-      InsertImage,
-      InsertAudio,
-      InsertVideo,
-      InsertYoutubeVideo,
-      ImportDocx,
-      InsertMore,
-      CodeBlock,
-      Bold,
-      CodeFormat,
-      Italic,
-      Underline,
-      ColumnsLayout,
-    ],
-  );
-
-  const ToolbarList = useCallback(() => {
+  const ToolbarList = () => {
     return toolbarConfig.map((item, index) => {
       if (blockType === 'code') {
         if (!['history', 'divider', 'block-format', 'code-format'].includes(item)) {
@@ -1367,14 +1318,103 @@ export default function ToolbarPlugin({
         }
       }
 
-      const Component = toolbarMap[item];
-      return <Component key={`${item}_${index}`} />;
+      let Component;
+      switch (item) {
+        case 'history':
+          Component = <History key="history" />;
+          break;
+        case 'divider':
+          Component = <Divider key="divider" />;
+          break;
+        case 'block-format':
+          Component = <BlockFormat key="block-format" />;
+          break;
+        case 'element-format':
+          Component = <ElementFormat key="element-format" />;
+          break;
+        case 'code-format':
+          Component = <CodeFormat key="code-format" />;
+          break;
+        case 'font':
+          Component = <Font key="font" />;
+          break;
+        case 'bold':
+          Component = <Bold key="bold" />;
+          break;
+        case 'italic':
+          Component = <Italic key="italic" />;
+          break;
+        case 'underline':
+          Component = <Underline key="underline" />;
+          break;
+        case 'font-color':
+          Component = (
+            <DropdownColorPicker
+              key="font-color"
+              disabled={!isEditable}
+              buttonClassName="toolbar-item color-picker"
+              buttonAriaLabel="Formatting text color"
+              buttonIconClassName="icon font-color"
+              color={fontColor}
+              onChange={onFontColorSelect}
+              title="text color"
+            />
+          );
+          break;
+        case 'bg-color':
+          Component = (
+            <DropdownColorPicker
+              key="bg-color"
+              disabled={!isEditable}
+              buttonClassName="toolbar-item color-picker"
+              buttonAriaLabel="Formatting background color"
+              buttonIconClassName="icon bg-color"
+              color={bgColor}
+              onChange={onBgColorSelect}
+              title="backgroud color"
+            />
+          );
+          break;
+        case 'font-more':
+          Component = <FontMore key="font-more" />;
+          break;
+        case 'link':
+          Component = <Link key="link" />;
+          break;
+        case 'insert-image':
+          Component = <InsertImage key="insert-image" />;
+          break;
+        case 'insert-audio':
+          Component = <InsertAudio key="insert-audio" />;
+          break;
+        case 'insert-video':
+          Component = <InsertVideo key="insert-video" />;
+          break;
+        case 'insert-youtube':
+          Component = <InsertYoutubeVideo key="insert-youtube" />;
+          break;
+        case 'import-docx':
+          Component = <ImportDocx key="import-docx" />;
+          break;
+        case 'insert-more':
+          Component = <InsertMore key="insert-more" />;
+          break;
+        case 'code-block':
+          Component = <CodeBlock key="code-block" />;
+          break;
+        case 'columns-layout':
+          Component = <ColumnsLayout key="columns-layout" />;
+          break;
+        default:
+          Component = null;
+      }
+      return Component;
     });
-  }, [toolbarConfig, toolbarMap, blockType]);
+  };
 
   return (
     <div className="toolbar">
-      <ToolbarList />
+      {ToolbarList()}
       {modal}
     </div>
   );

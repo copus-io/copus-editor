@@ -117,6 +117,7 @@ function getCodeLanguageOptions(): [string, string][] {
 const CODE_LANGUAGE_OPTIONS = getCodeLanguageOptions();
 
 const FONT_FAMILY_OPTIONS: [string, string][] = [
+  ['Maven Pro', 'Maven Pro'],
   ['Arial', 'Arial'],
   ['Courier New', 'Courier New'],
   ['Georgia', 'Georgia'],
@@ -519,7 +520,7 @@ export default function ToolbarPlugin({
   const [fontSize, setFontSize] = useState<string>('15px');
   const [fontColor, setFontColor] = useState<string>('#000000');
   const [bgColor, setBgColor] = useState<string>('#fff');
-  const [fontFamily, setFontFamily] = useState<string>('Arial');
+  const [fontFamily, setFontFamily] = useState<string>('Maven Pro');
   const [elementFormat, setElementFormat] = useState<ElementFormatType>('left');
   const [isLink, setIsLink] = useState(false);
   const [isBold, setIsBold] = useState(false);
@@ -603,7 +604,7 @@ export default function ToolbarPlugin({
       // Handle buttons
       setFontColor($getSelectionStyleValueForProperty(selection, 'color', '#000000'));
       setBgColor($getSelectionStyleValueForProperty(selection, 'background-color', '#fff'));
-      setFontFamily($getSelectionStyleValueForProperty(selection, 'font-family', 'Arial'));
+      setFontFamily($getSelectionStyleValueForProperty(selection, 'font-family', 'Maven Pro'));
       let matchingParent;
       if ($isLinkNode(parent)) {
         // If node is a link, we need to fetch the parent paragraph node to set format
@@ -878,6 +879,8 @@ export default function ToolbarPlugin({
     [activeEditor, fontFamily, fontSize, isEditable],
   );
 
+  console.log('fontFamily', fontFamily);
+
   const Bold = useCallback(
     () => (
       <button
@@ -959,36 +962,6 @@ export default function ToolbarPlugin({
       </button>
     ),
     [insertLink, isEditable, isLink],
-  );
-
-  const FontColor = useCallback(
-    () => (
-      <DropdownColorPicker
-        disabled={!isEditable}
-        buttonClassName="toolbar-item color-picker"
-        buttonAriaLabel="Formatting text color"
-        buttonIconClassName="icon font-color"
-        color={fontColor}
-        onChange={onFontColorSelect}
-        title="text color"
-      />
-    ),
-    [fontColor, isEditable, onFontColorSelect],
-  );
-
-  const BgColor = useCallback(
-    () => (
-      <DropdownColorPicker
-        disabled={!isEditable}
-        buttonClassName="toolbar-item color-picker"
-        buttonAriaLabel="Formatting background color"
-        buttonIconClassName="icon bg-color"
-        color={bgColor}
-        onChange={onBgColorSelect}
-        title="bg color"
-      />
-    ),
-    [bgColor, isEditable, onBgColorSelect],
   );
 
   const FontMore = useCallback(

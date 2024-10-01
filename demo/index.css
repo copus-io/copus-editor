@@ -5,12 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-@import 'https://fonts.googleapis.com/css?family=Reenie+Beanie';
+@import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&display=swap');
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular',
+  font-family:
+    Maven Pro,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    '.SFNSText-Regular',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -212,4 +216,3 @@ pre::-webkit-scrollbar-thumb {
 #test-recorder-button-download::after {
   background-image: url(../src/images/icons/download.svg);
 }
-

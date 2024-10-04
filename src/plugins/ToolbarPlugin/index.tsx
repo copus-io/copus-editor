@@ -124,6 +124,7 @@ const FONT_FAMILY_OPTIONS: [string, string][] = [
   ['Times New Roman', 'Times New Roman'],
   ['Trebuchet MS', 'Trebuchet MS'],
   ['Verdana', 'Verdana'],
+  ['Noto Sans SC', 'Noto Sans SC'],
 ];
 
 const FONT_SIZE_OPTIONS: [string, string][] = [
@@ -1297,7 +1298,7 @@ export default function ToolbarPlugin({
           Component = <History key="history" />;
           break;
         case 'divider':
-          Component = <Divider key="divider" />;
+          Component = <Divider key={`divider_${index}`} />;
           break;
         case 'block-format':
           Component = <BlockFormat key="block-format" />;

@@ -880,8 +880,6 @@ export default function ToolbarPlugin({
     [activeEditor, fontFamily, fontSize, isEditable],
   );
 
-  console.log('fontFamily', fontFamily);
-
   const Bold = useCallback(
     () => (
       <button

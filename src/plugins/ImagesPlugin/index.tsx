@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {$wrapNodeInElement, mergeRegister} from '@lexical/utils';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $wrapNodeInElement, mergeRegister } from '@lexical/utils';
 import {
   $createParagraphNode,
   $createRangeSelection,
@@ -26,24 +26,19 @@ import {
   LexicalCommand,
   LexicalEditor,
 } from 'lexical';
-import {useEffect, useRef, useState} from 'react';
-import {CAN_USE_DOM} from '../../shared/canUseDOM';
+import { useEffect, useRef, useState } from 'react';
+import { CAN_USE_DOM } from '../../shared/canUseDOM';
 
-import {
-  $createImageNode,
-  $isImageNode,
-  ImageNode,
-  ImagePayload,
-} from '../../nodes/ImageNode';
+import { $createImageNode, $isImageNode, ImageNode, ImagePayload } from '../../nodes/ImageNode';
 import Button from '../../ui/Button';
-import {DialogActions, DialogButtonsList} from '../../ui/Dialog';
+import { DialogActions, DialogButtonsList } from '../../ui/Dialog';
 import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
 import useFlashMessage from '../../hooks/useFlashMessage';
-import {useSharedHistoryContext} from '../../context/SharedHistoryContext';
-import {clearTempHistory} from '../../utils/clearTempHistory';
-import {mineTypeMap} from '../../utils/constant';
+import { useSharedHistoryContext } from '../../context/SharedHistoryContext';
+import { clearTempHistory } from '../../utils/clearTempHistory';
+import { mineTypeMap } from '../../utils/constant';
 
 export type InsertImagePayload = Readonly<ImagePayload> & {
   file?: File;
@@ -52,14 +47,9 @@ export type InsertImagePayload = Readonly<ImagePayload> & {
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
 
-export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> =
-  createCommand('INSERT_IMAGE_COMMAND');
+export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> = createCommand('INSERT_IMAGE_COMMAND');
 
-export function InsertImageUriDialogBody({
-  onClick,
-}: {
-  onClick: (payload: InsertImagePayload) => void;
-}) {
+export function InsertImageUriDialogBody({ onClick }: { onClick: (payload: InsertImagePayload) => void }) {
   const [src, setSrc] = useState('');
   const [altText, setAltText] = useState('');
 
@@ -82,10 +72,7 @@ export function InsertImageUriDialogBody({
         data-test-id="image-modal-alt-text-input"
       />
       <DialogActions>
-        <Button
-          data-test-id="image-modal-confirm-btn"
-          disabled={isDisabled}
-          onClick={() => onClick({altText, src})}>
+        <Button data-test-id="image-modal-confirm-btn" disabled={isDisabled} onClick={() => onClick({ altText, src })}>
           Confirm
         </Button>
       </DialogActions>
@@ -93,11 +80,7 @@ export function InsertImageUriDialogBody({
   );
 }
 
-export function InsertImageUploadedDialogBody({
-  onClick,
-}: {
-  onClick: (payload: InsertImagePayload) => void;
-}) {
+export function InsertImageUploadedDialogBody({ onClick }: { onClick: (payload: InsertImagePayload) => void }) {
   const [file, setFile] = useState<File>();
   const [altText, setAltText] = useState('');
 
@@ -112,12 +95,7 @@ export function InsertImageUploadedDialogBody({
 
   return (
     <>
-      <FileInput
-        label="Image Upload"
-        onChange={loadImage}
-        accept="image/*"
-        data-test-id="image-modal-file-upload"
-      />
+      <FileInput label="Image Upload" onChange={loadImage} accept="image/*" data-test-id="image-modal-file-upload" />
       <TextInput
         label="Alt Text"
         placeholder="Descriptive alternative text"
@@ -135,7 +113,7 @@ export function InsertImageUploadedDialogBody({
                 showFlashMessage(mineTypeMap.image.limitMessage);
                 return;
               }
-              onClick({altText, src: URL.createObjectURL(file), file});
+              onClick({ altText, src: URL.createObjectURL(file), file });
             }
           }}>
           Confirm
@@ -175,14 +153,10 @@ export function InsertImageDialog({
     <>
       {!mode && (
         <DialogButtonsList>
-          <Button
-            data-test-id="image-modal-option-url"
-            onClick={() => setMode('url')}>
+          <Button data-test-id="image-modal-option-url" onClick={() => setMode('url')}>
             URL
           </Button>
-          <Button
-            data-test-id="image-modal-option-file"
-            onClick={() => setMode('file')}>
+          <Button data-test-id="image-modal-option-file" onClick={() => setMode('file')}>
             File
           </Button>
         </DialogButtonsList>
@@ -193,13 +167,9 @@ export function InsertImageDialog({
   );
 }
 
-export default function ImagesPlugin({
-  captionsEnabled,
-}: {
-  captionsEnabled?: boolean;
-}): JSX.Element | null {
+export default function ImagesPlugin({ captionsEnabled }: { captionsEnabled?: boolean }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  const {historyState} = useSharedHistoryContext();
+  const { historyState } = useSharedHistoryContext();
 
   useEffect(() => {
     if (!editor.hasNodes([ImageNode])) {
@@ -210,7 +180,7 @@ export default function ImagesPlugin({
       editor.registerCommand<InsertImagePayload>(
         INSERT_IMAGE_COMMAND,
         (payload) => {
-          const {file, ...otherPayload} = payload;
+          const { file, ...otherPayload } = payload;
           const imageNode = $createImageNode({
             ...otherPayload,
             captionsEnabled: !file,
@@ -227,9 +197,7 @@ export default function ImagesPlugin({
                 const img = new Image();
                 img.onload = () => {
                   editor.update(() => {
-                    const _node = editor
-                      .getEditorState()
-                      ._nodeMap.get(imageNode.getKey());
+                    const _node = editor.getEditorState()._nodeMap.get(imageNode.getKey());
                     if (!_node) return;
                     URL.revokeObjectURL(payload.src);
                     imageNode.setUploadState(false);
@@ -274,16 +242,16 @@ export default function ImagesPlugin({
   return null;
 }
 
-const TRANSPARENT_IMAGE =
-  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-const img = document.createElement('img');
-img.src = TRANSPARENT_IMAGE;
+const TRANSPARENT_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 function $onDragStart(event: DragEvent): boolean {
   const node = $getImageNodeInSelection();
   if (!node) {
     return false;
   }
+
+  const img = document.createElement('img');
+  img.src = TRANSPARENT_IMAGE;
   const dataTransfer = event.dataTransfer;
   if (!dataTransfer) {
     return false;
@@ -359,7 +327,7 @@ function getDragImageData(event: DragEvent): null | InsertImagePayload {
   if (!dragData) {
     return null;
   }
-  const {type, data} = JSON.parse(dragData);
+  const { type, data } = JSON.parse(dragData);
   if (type !== 'image') {
     return null;
   }

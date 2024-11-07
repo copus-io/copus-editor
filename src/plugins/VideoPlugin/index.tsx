@@ -275,9 +275,9 @@ export default function VideoPlugin({
 
   return null;
 }
-const TRANSPARENT_VIDEO = '';
-const video = document.createElement('video');
-video.src = TRANSPARENT_VIDEO;
+// const TRANSPARENT_VIDEO = '';
+// const video = document.createElement('video');
+// video.src = TRANSPARENT_VIDEO;
 
 function onDragStart(event: DragEvent): boolean {
   const node = getVideoNodeInSelection();

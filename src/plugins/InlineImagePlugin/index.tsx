@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import type {Position} from '../../nodes/InlineImageNode';
+import type { Position } from '../../nodes/InlineImageNode';
 
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {$wrapNodeInElement, mergeRegister} from '@lexical/utils';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $wrapNodeInElement, mergeRegister } from '@lexical/utils';
 import {
   $createParagraphNode,
   $createRangeSelection,
@@ -28,8 +28,8 @@ import {
   LexicalEditor,
 } from 'lexical';
 import * as React from 'react';
-import {useEffect, useRef, useState} from 'react';
-import {CAN_USE_DOM} from '../../shared/canUseDOM';
+import { useEffect, useRef, useState } from 'react';
+import { CAN_USE_DOM } from '../../shared/canUseDOM';
 
 import {
   $createInlineImageNode,
@@ -38,7 +38,7 @@ import {
   InlineImagePayload,
 } from '../../nodes/InlineImageNode';
 import Button from '../../ui/Button';
-import {DialogActions} from '../../ui/Dialog';
+import { DialogActions } from '../../ui/Dialog';
 import FileInput from '../../ui/FileInput';
 import Select from '../../ui/Select';
 import TextInput from '../../ui/TextInput';
@@ -100,22 +100,17 @@ export function InsertInlineImageDialog({
   }, [activeEditor]);
 
   const handleOnClick = () => {
-    const payload = {altText, position, showCaption, src};
+    const payload = { altText, position, showCaption, src };
     activeEditor.dispatchCommand(INSERT_INLINE_IMAGE_COMMAND, payload);
     onClose();
   };
 
   return (
     <>
-      <div style={{marginBottom: '1em'}}>
-        <FileInput
-          label="Image Upload"
-          onChange={loadImage}
-          accept="image/*"
-          data-test-id="image-modal-file-upload"
-        />
+      <div style={{ marginBottom: '1em' }}>
+        <FileInput label="Image Upload" onChange={loadImage} accept="image/*" data-test-id="image-modal-file-upload" />
       </div>
-      <div style={{marginBottom: '1em'}}>
+      <div style={{ marginBottom: '1em' }}>
         <TextInput
           label="Alt Text"
           placeholder="Descriptive alternative text"
@@ -126,7 +121,7 @@ export function InsertInlineImageDialog({
       </div>
 
       <Select
-        style={{marginBottom: '1em', width: '290px'}}
+        style={{ marginBottom: '1em', width: '290px' }}
         label="Position"
         name="position"
         id="position-select"
@@ -148,10 +143,7 @@ export function InsertInlineImageDialog({
       </div>
 
       <DialogActions>
-        <Button
-          data-test-id="image-modal-file-upload-btn"
-          disabled={isDisabled}
-          onClick={() => handleOnClick()}>
+        <Button data-test-id="image-modal-file-upload-btn" disabled={isDisabled} onClick={() => handleOnClick()}>
           Confirm
         </Button>
       </DialogActions>
@@ -208,16 +200,15 @@ export default function InlineImagePlugin(): JSX.Element | null {
   return null;
 }
 
-const TRANSPARENT_IMAGE =
-  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-const img = document.createElement('img');
-img.src = TRANSPARENT_IMAGE;
+const TRANSPARENT_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 function $onDragStart(event: DragEvent): boolean {
   const node = $getImageNodeInSelection();
   if (!node) {
     return false;
   }
+  const img = document.createElement('img');
+  img.src = TRANSPARENT_IMAGE;
   const dataTransfer = event.dataTransfer;
   if (!dataTransfer) {
     return false;
@@ -292,7 +283,7 @@ function getDragImageData(event: DragEvent): null | InsertInlineImagePayload {
   if (!dragData) {
     return null;
   }
-  const {type, data} = JSON.parse(dragData);
+  const { type, data } = JSON.parse(dragData);
   if (type !== 'image') {
     return null;
   }
@@ -325,8 +316,8 @@ function getDragSelection(event: DragEvent): Range | null | undefined {
     target == null
       ? null
       : target.nodeType === 9
-      ? (target as Document).defaultView
-      : (target as Element).ownerDocument.defaultView;
+        ? (target as Document).defaultView
+        : (target as Element).ownerDocument.defaultView;
   const domSelection = getDOMSelection(targetWindow);
   if (document.caretRangeFromPoint) {
     range = document.caretRangeFromPoint(event.clientX, event.clientY);

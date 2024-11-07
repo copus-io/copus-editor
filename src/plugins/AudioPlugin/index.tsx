@@ -257,9 +257,9 @@ export default function AudioPlugin({
 
   return null;
 }
-const TRANSPARENT_AUDIO = '';
-const audio = document.createElement('audio');
-audio.src = TRANSPARENT_AUDIO;
+// const TRANSPARENT_AUDIO = '';
+// const audio = document.createElement('audio');
+// audio.src = TRANSPARENT_AUDIO;
 
 function onDragStart(event: DragEvent): boolean {
   const node = getAudioNodeInSelection();

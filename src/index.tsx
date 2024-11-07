@@ -22,7 +22,10 @@ import EditorShell from './EditorShell';
 import type { EditorShellProps, EditorShellRef } from './EditorShell';
 import editorNodes from './nodes';
 
-export { getEditorHtml } from './ssr';
+export const getEditorHtml = async (serializedEditorState: string) => {
+  const { getEditorHtml } = await import('./ssr');
+  return await getEditorHtml(serializedEditorState);
+};
 
 export type { EditorShellRef, EditorShellProps, MarkXType, EditorState };
 

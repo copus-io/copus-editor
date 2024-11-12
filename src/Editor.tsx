@@ -95,7 +95,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
     },
   } = useSettings();
   const isEditable = useLexicalEditable();
-  const text = 'Enter some text...';
+  const text = 'Paste URLs in the text to attribute an inspiration source';
   const placeholder = <Placeholder>{text}</Placeholder>;
   const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
   const [isLinkEditMode, setIsLinkEditMode] = useState<boolean>(false);

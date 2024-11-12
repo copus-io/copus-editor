@@ -13,7 +13,7 @@
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import App from '../src';
+import App, { getEditorHtml } from '../src';
 import './index.css';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { addMark, getDownstreamList, getMarkList } from './api';
@@ -96,6 +96,12 @@ function DemoApp() {
   const getMarkInfo = useCallback(async (ids) => {
     const res = await getDownstreamList(ids);
     return res;
+  }, []);
+
+  useEffect(() => {
+    getEditorHtml(data).then((html) => {
+      console.log('html', html);
+    });
   }, []);
 
   return (

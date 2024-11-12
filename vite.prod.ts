@@ -25,7 +25,7 @@ export default defineConfig(({command}) => {
       target: 'esnext',
       outDir: 'dist/lib',
       rollupOptions: {
-        external: ['react', 'react-dom'],
+        external: ['react', 'react-dom', 'jsdom'],
       },
       cssMinify: false,
       minify: false,

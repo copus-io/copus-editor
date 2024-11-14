@@ -22,14 +22,16 @@ import EditorShell from './EditorShell';
 import type { EditorShellProps, EditorShellRef } from './EditorShell';
 import editorNodes from './nodes';
 
-export const getEditorHtml = async (serializedEditorState: string) => {
-  const isNodeEnvironment = typeof window === 'undefined';
-  if (!isNodeEnvironment) {
-    return '';
-  }
-  const { getEditorHtml } = await import('./ssr');
-  return await getEditorHtml(serializedEditorState);
-};
+export { getEditorHtml } from './ssr';
+
+// export const getEditorHtml = async (serializedEditorState: string) => {
+//   const isNodeEnvironment = typeof window === 'undefined';
+//   if (!isNodeEnvironment) {
+//     return '';
+//   }
+//   const { getEditorHtml } = await import('./ssr');
+//   return await getEditorHtml(serializedEditorState);
+// };
 
 export type { EditorShellRef, EditorShellProps, MarkXType, EditorState };
 

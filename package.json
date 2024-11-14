@@ -1,6 +1,6 @@
 {
   "name": "@copus/editor",
-  "version": "0.17.1-14",
+  "version": "0.17.1-15",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -38,7 +38,6 @@
     "@lexical/table": "0.17.1",
     "@lexical/text": "0.17.1",
     "@lexical/utils": "0.17.1",
-    "jsdom": "^25.0.1",
     "lexical": "0.17.1",
     "lodash-es": "^4.17.21",
     "mammoth": "^1.7.2",
@@ -55,6 +54,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "jsdom": "^25.0.1",
     "less": "^4.2.0",
     "prettier": "^3.3.2",
     "prettier-plugin-hermes-parser": "^0.23.1",

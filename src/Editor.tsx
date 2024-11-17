@@ -213,8 +213,12 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
                   setIsLinkEditMode={setIsLinkEditMode}
                 />
                 <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} cellMerge={true} />
-                {/* <FloatingCopusToolbarPlugin copus={copus} anchorElem={floatingAnchorElem} />
-                <CopusPlugin copus={copus} /> */}
+                <FloatingCopusToolbarPlugin
+                  copus={copus}
+                  anchorElem={floatingAnchorElem}
+                  setIsLinkEditMode={setIsLinkEditMode}
+                />
+                {/* <CopusPlugin copus={copus} /> */}
               </>
             )}
             <OnChangePlugin onChange={onChangeDebounce} ignoreSelectionChange />

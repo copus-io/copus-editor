@@ -41,17 +41,29 @@ function TextFormatFloatingToolbar({
   anchorElem,
   isLink,
   copus,
+  setIsLinkEditMode,
 }: {
   editor: LexicalEditor;
   anchorElem: HTMLElement;
   isLink: boolean;
   copus: EditorShellProps['copus'];
+  setIsLinkEditMode: Dispatch<boolean>;
 }): JSX.Element {
   const popupCharStylesEditorRef = useRef<HTMLDivElement | null>(null);
 
   const insertSource = () => {
     editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined);
   };
+
+  const insertLink = useCallback(() => {
+    if (!isLink) {
+      setIsLinkEditMode(true);
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://');
+    } else {
+      setIsLinkEditMode(false);
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+    }
+  }, [editor, isLink, setIsLinkEditMode]);
 
   function mouseMoveListener(e: MouseEvent) {
     if (popupCharStylesEditorRef?.current && (e.buttons === 1 || e.buttons === 3)) {
@@ -213,7 +225,11 @@ function TextFormatFloatingToolbar({
 
   const isEditable = editor.isEditable();
 
-  if (!isEditable) return <div />;
+  if (!isEditable) return <></>;
+
+  if (isLink) {
+    return <></>;
+  }
 
   return (
     <div ref={popupCharStylesEditorRef} className={`floating-toolbar-popup ${isEditable ? '' : 'view-popup'}`}>
@@ -221,7 +237,7 @@ function TextFormatFloatingToolbar({
         isEditable ? (
           <button
             type="button"
-            onClick={insertSource}
+            onClick={insertLink}
             className={'popup-item spaced insert-source'}
             aria-label="Insert Copus Source">
             <i className="format add-source" />
@@ -244,6 +260,7 @@ function TextFormatFloatingToolbar({
 function useFloatingTextFormatToolbar(
   editor: LexicalEditor,
   anchorElem: HTMLElement,
+  setIsLinkEditMode: Dispatch<boolean>,
   copus: EditorShellProps['copus'],
 ): JSX.Element | null {
   const [isText, setIsText] = useState(false);
@@ -320,18 +337,26 @@ function useFloatingTextFormatToolbar(
   }
 
   return createPortal(
-    <TextFormatFloatingToolbar editor={editor} copus={copus} anchorElem={anchorElem} isLink={isLink} />,
+    <TextFormatFloatingToolbar
+      editor={editor}
+      copus={copus}
+      anchorElem={anchorElem}
+      isLink={isLink}
+      setIsLinkEditMode={setIsLinkEditMode}
+    />,
     anchorElem,
   );
 }
 
 export default function FloatingCopusToolbarPlugin({
   anchorElem = getEditorPortal(),
+  setIsLinkEditMode,
   copus,
 }: {
   anchorElem?: HTMLElement;
+  setIsLinkEditMode: Dispatch<boolean>;
   copus: EditorShellProps['copus'];
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  return useFloatingTextFormatToolbar(editor, anchorElem, copus);
+  return useFloatingTextFormatToolbar(editor, anchorElem, setIsLinkEditMode, copus);
 }

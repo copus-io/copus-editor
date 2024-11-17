@@ -20,6 +20,13 @@ body {
   padding: 20px;
 }
 
+ol,
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 header {
   max-width: 580px;
   margin: auto;

@@ -8,18 +8,22 @@ const mb = 1024 * 1024;
 
 export const mineTypeMap = {
   image: {
+    size: 5,
     limitSize: 5 * mb,
     limitMessage: 'Image file size should be less than 5 MB',
   },
   audio: {
+    size: 20,
     limitSize: 20 * mb,
     limitMessage: 'Audio file size should be less than 20 MB',
   },
   video: {
+    size: 50,
     limitSize: 50 * mb,
     limitMessage: 'Video file size should be less than 50 MB',
   },
   file: {
+    size: 10,
     limitSize: 10 * mb,
     limitMessage: 'File size should be less than 10 MB',
   },

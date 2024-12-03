@@ -103,6 +103,12 @@ export function InsertImageUploadedDialogBody({ onClick }: { onClick: (payload: 
         value={altText}
         data-test-id="image-modal-alt-text-input"
       />
+      <div className="Input__wrapper">
+        <label className="Input__label"></label>
+        <span className="Input__tips">
+          Supported image formats are JPEG, PNG, and GIF. The file size has to be less than {mineTypeMap.image.size} MB.
+        </span>
+      </div>
       <DialogActions>
         <Button
           data-test-id="image-modal-file-upload-btn"
@@ -148,6 +154,8 @@ export function InsertImageDialog({
     activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
     onClose();
   };
+
+  return <InsertImageUploadedDialogBody onClick={onClick} />;
 
   return (
     <>

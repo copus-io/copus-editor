@@ -179,6 +179,8 @@ export function InsertVideoDialog({
     onClose();
   };
 
+  return <InsertVideoUploadedDialogBody onClick={onClick} />
+
   return (
     <>
       {!mode && (

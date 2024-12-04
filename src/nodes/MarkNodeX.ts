@@ -20,10 +20,17 @@ type SerializedMarkNodeX = SerializedMarkNode & {
   branch: number;
 };
 
+type MarkNodeXProps = {
+  ids: readonly string[];
+  key?: NodeKey;
+  source?: number;
+  branch?: number;
+};
+
 export class MarkNodeX extends MarkNode {
   __sourceCount: number;
   __branchCount: number;
-  constructor(props: { ids: Array<string>; key?: NodeKey; source?: number; branch?: number }) {
+  constructor(props: MarkNodeXProps) {
     const { ids, key, source, branch } = props;
     super(ids, key);
     this.__sourceCount = source ?? 0;

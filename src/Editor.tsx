@@ -48,6 +48,7 @@ import ListMaxIndentLevelPlugin from './plugins/ListMaxIndentLevelPlugin';
 import MarkdownShortcutPlugin from './plugins/MarkdownShortcutPlugin';
 import { MaxLengthPlugin } from './plugins/MaxLengthPlugin';
 import PageBreakPlugin from './plugins/PageBreakPlugin';
+import PayLinePlugin from './plugins/PayLinePlugin';
 import TabFocusPlugin from './plugins/TabFocusPlugin';
 import TableCellActionMenuPlugin from './plugins/TableActionMenuPlugin';
 import TableCellResizer from './plugins/TableCellResizer';
@@ -202,6 +203,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
             <TabIndentationPlugin />
             <CollapsiblePlugin />
             <PageBreakPlugin />
+            <PayLinePlugin />
             <LayoutPlugin />
             {floatingAnchorElem && (
               <>

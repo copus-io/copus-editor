@@ -143,17 +143,18 @@ function DemoApp() {
         }}
         copus={{ opusUuid: uuid2, opusId: 2, getMarkInfo, createMark }}
         ref={ref2}
-        // toolbar={[
-        //   'history',
-        //   'block-format',
-        //   'font',
-        //   'insert-image',
-        //   'insert-audio',
-        //   'insert-video',
-        //   'columns-layout',
-        //   'element-format',
-        //   'insert-more',
-        // ]}
+        toolbar={[
+          'history',
+          'block-format',
+          'font',
+          'insert-image',
+          'insert-audio',
+          'insert-video',
+          'columns-layout',
+          'element-format',
+          'insert-more',
+          'pay-line',
+        ]}
         // showLabel
       />
     </>

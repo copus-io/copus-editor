@@ -29,6 +29,7 @@ import {KeywordNode} from './KeywordNode';
 import {LayoutContainerNode} from './LayoutContainerNode';
 import {LayoutItemNode} from './LayoutItemNode';
 import {PageBreakNode} from './PageBreakNode';
+import {PayLineNode} from './PayLineNode';
 import {TweetNode} from './TweetNode';
 import {YouTubeNode} from './YouTubeNode';
 import { EmojiNode } from './EmojiNode';
@@ -69,6 +70,7 @@ const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   CollapsibleContentNode,
   CollapsibleTitleNode,
   PageBreakNode,
+  PayLineNode,
   LayoutContainerNode,
   LayoutItemNode,
 ];

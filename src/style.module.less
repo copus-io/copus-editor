@@ -304,6 +304,11 @@
             background-image: url(images/icons/scissors.svg);
         }
 
+        i.pay-line,
+        .icon.pay-line {
+            background-image: url(images/icons/ic-pay-line.svg);
+        }
+
         .link-editor .button.active,
         .toolbar .button.active {
             background-color: rgb(223, 232, 250);
@@ -1183,12 +1188,14 @@
 
         button.toolbar-item i.format {
             background-size: contain;
+            background-position: center center;
+            background-repeat: no-repeat;
             display: inline-block;
             height: 18px;
             width: 18px;
             vertical-align: -0.25em;
             display: flex;
-            opacity: 0.6;
+            // opacity: 0.6;
         }
 
         button.toolbar-item:disabled .icon,
@@ -1213,6 +1220,13 @@
         .toolbar-item.font-family .text {
             display: block;
             // max-width: 40px;
+        }
+
+        .toolbar-item.pay-line {
+            .text {
+                color: #2191fb !important;
+                font-weight: 500;
+            }
         }
 
         .toolbar .code-language {
@@ -1253,6 +1267,8 @@
             margin-right: 8px;
             line-height: 16px;
             background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .toolbar i.chevron-down,

@@ -24,15 +24,6 @@ import editorNodes from './nodes';
 
 export { getEditorHtml } from './ssr';
 
-// export const getEditorHtml = async (serializedEditorState: string) => {
-//   const isNodeEnvironment = typeof window === 'undefined';
-//   if (!isNodeEnvironment) {
-//     return '';
-//   }
-//   const { getEditorHtml } = await import('./ssr');
-//   return await getEditorHtml(serializedEditorState);
-// };
-
 export type { EditorShellRef, EditorShellProps, MarkXType, EditorState };
 
 export default forwardRef(function App(props: EditorShellProps, ref: Ref<EditorShellRef>): JSX.Element {

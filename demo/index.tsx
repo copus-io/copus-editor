@@ -138,8 +138,8 @@ function DemoApp() {
       <App
         key="edit"
         initialValue={data}
-        onChange={(status, html) => {
-          console.log(status, html);
+        onChange={(status, opts) => {
+          console.log(status, opts);
         }}
         copus={{ opusUuid: uuid2, opusId: 2, getMarkInfo, createMark }}
         ref={ref2}
@@ -153,6 +153,7 @@ function DemoApp() {
         //   'columns-layout',
         //   'element-format',
         //   'insert-more',
+        //   'pay-line',
         // ]}
         // showLabel
       />

@@ -78,6 +78,7 @@ import { INSERT_IMAGE_COMMAND, InsertImageDialog, InsertImagePayload } from '../
 import { InsertInlineImageDialog } from '../InlineImagePlugin';
 import InsertLayoutDialog from '../LayoutPlugin/InsertLayoutDialog';
 import { INSERT_PAGE_BREAK } from '../PageBreakPlugin';
+import { INSERT_PAY_LINE } from '../PayLinePlugin';
 import { InsertTableDialog } from '../TablePlugin';
 import FontSize from './fontSize';
 import { InsertAudioDialog } from '../AudioPlugin';
@@ -481,6 +482,7 @@ export type ToolbarConfig = (
   | 'code-format'
   | 'element-format'
   | 'columns-layout'
+  | 'pay-line'
 )[];
 
 const defaultToolbarConfig: ToolbarConfig = [
@@ -1278,6 +1280,24 @@ export default function ToolbarPlugin({
     );
   }, [activeEditor, isEditable, showModal, showLabel]);
 
+  const PayLine = useCallback(
+    () => (
+      <button
+        disabled={!isEditable}
+        onClick={() => {
+          activeEditor.dispatchCommand(INSERT_PAY_LINE, undefined);
+        }}
+        className={'toolbar-item spaced pay-line'}
+        title="Insert Pay Line"
+        type="button"
+        aria-label="Insert Pay Line">
+        <span className="icon pay-line" />
+        <span className="text">Insert Pay Line</span>
+      </button>
+    ),
+    [activeEditor, isEditable],
+  );
+
   const ToolbarList = () => {
     return toolbarConfig.map((item, index) => {
       if (blockType === 'code') {
@@ -1376,6 +1396,9 @@ export default function ToolbarPlugin({
           break;
         case 'columns-layout':
           Component = <ColumnsLayout key="columns-layout" />;
+          break;
+        case 'pay-line':
+          Component = <PayLine key="pay-line" />;
           break;
         default:
           Component = null;

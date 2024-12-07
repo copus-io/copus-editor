@@ -138,23 +138,23 @@ function DemoApp() {
       <App
         key="edit"
         initialValue={data}
-        onChange={(status, html) => {
-          console.log(status, html);
+        onChange={(status, opts) => {
+          console.log(status, opts);
         }}
         copus={{ opusUuid: uuid2, opusId: 2, getMarkInfo, createMark }}
         ref={ref2}
-        toolbar={[
-          'history',
-          'block-format',
-          'font',
-          'insert-image',
-          'insert-audio',
-          'insert-video',
-          'columns-layout',
-          'element-format',
-          'insert-more',
-          'pay-line',
-        ]}
+        // toolbar={[
+        //   'history',
+        //   'block-format',
+        //   'font',
+        //   'insert-image',
+        //   'insert-audio',
+        //   'insert-video',
+        //   'columns-layout',
+        //   'element-format',
+        //   'insert-more',
+        //   'pay-line',
+        // ]}
         // showLabel
       />
     </>

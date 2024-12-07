@@ -11,11 +11,13 @@ import { $getSelection, $isRangeSelection, COMMAND_PRIORITY_EDITOR, createComman
 import { useEffect } from 'react';
 
 import { $createPayLineNode, PayLineNode } from '../../nodes/PayLineNode';
+import useFlashMessage from '../../hooks/useFlashMessage';
 
 export const INSERT_PAY_LINE: LexicalCommand<undefined> = createCommand();
 
 export default function PayLinePlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
+  const showFlashMessage = useFlashMessage();
 
   useEffect(() => {
     if (!editor.hasNodes([PayLineNode])) {
@@ -29,6 +31,18 @@ export default function PayLinePlugin(): JSX.Element | null {
           const selection = $getSelection();
 
           if (!$isRangeSelection(selection)) {
+            return false;
+          }
+
+          const editorState = editor.getEditorState();
+          let hasPayLineNode = false;
+          editorState._nodeMap.forEach((node) => {
+            if (node instanceof PayLineNode) {
+              hasPayLineNode = true;
+            }
+          });
+          if (hasPayLineNode) {
+            showFlashMessage('Only one PayLine can be inserted');
             return false;
           }
 

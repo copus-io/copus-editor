@@ -5,6 +5,8 @@ import {
   $isRangeSelection,
   EditorState,
   LexicalEditor,
+  SerializedEditorState,
+  SerializedLexicalNode,
 } from 'lexical';
 import { InitialConfigType } from '@lexical/react/LexicalComposer';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -18,7 +20,10 @@ import { ParagraphNodeX } from './nodes/ParagraphNodeX';
 
 export interface EditorShellProps {
   readOnly?: boolean;
-  onChange?: (editorState: EditorState, html: string) => void;
+  onChange?: (
+    editorState: EditorState,
+    opts: { html: string; publicContent: SerializedEditorState<SerializedLexicalNode> },
+  ) => void;
   initialValue?: InitialConfigType['editorState'];
   toolbar?: ToolbarConfig;
   showLabel?: boolean;

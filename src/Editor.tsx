@@ -60,7 +60,15 @@ import YouTubePlugin from './plugins/YouTubePlugin';
 import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
-import { $createRangeSelection, $getRoot, $getSelection, EditorState, SerializedEditorState } from 'lexical';
+import {
+  $createRangeSelection,
+  $getRoot,
+  $getSelection,
+  EditorState,
+  LexicalEditor,
+  SerializedEditorState,
+  SerializedLexicalNode,
+} from 'lexical';
 import { $generateHtmlFromNodes } from '@lexical/html';
 import { debounce, set } from 'lodash-es';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -72,7 +80,10 @@ import { EditorShellProps } from './EditorShell';
 
 export interface EditorProps {
   readOnly?: boolean;
-  onChange?: (editorState: EditorState, html: string) => void;
+  onChange?: (
+    editorState: EditorState,
+    opts: { html: string; publicContent: SerializedEditorState<SerializedLexicalNode> },
+  ) => void;
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
   copus?: EditorShellProps['copus'];
@@ -108,9 +119,18 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
   };
 
   const onChangeDebounce = useCallback(
-    debounce((editorState, editor) => {
+    debounce((editorState: EditorState, editor: LexicalEditor) => {
       editorState.read(() => {
-        onChange?.(editorState, $generateHtmlFromNodes(editor));
+        const html = $generateHtmlFromNodes(editor);
+        const stateJSON = editorState.toJSON();
+        const payLineIndex = stateJSON.root.children.findIndex((child: any) => child.type === 'pay-line');
+        const truncatedChildren =
+          payLineIndex !== -1 ? stateJSON.root.children.slice(0, payLineIndex) : stateJSON.root.children;
+        stateJSON.root.children = truncatedChildren;
+        onChange?.(editorState, {
+          html,
+          publicContent: stateJSON,
+        });
       });
     }, 400),
     [onChange],
@@ -132,7 +152,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
               <ContentEditable />
             </div>
           }
-          placeholder={placeholder}
+          // placeholder={placeholder}
           ErrorBoundary={LexicalErrorBoundary}
         />
         {/* {floatingAnchorElem && (

@@ -520,7 +520,7 @@ export default function ToolbarPlugin({
   const [blockType, setBlockType] = useState<keyof typeof blockTypeToBlockName>('paragraph');
   const [rootType, setRootType] = useState<keyof typeof rootTypeToRootName>('root');
   const [selectedElementKey, setSelectedElementKey] = useState<NodeKey | null>(null);
-  const [fontSize, setFontSize] = useState<string>('15px');
+  const [fontSize, setFontSize] = useState<string>('20px');
   const [fontColor, setFontColor] = useState<string>('#000000');
   const [bgColor, setBgColor] = useState<string>('#fff');
   const [fontFamily, setFontFamily] = useState<string>('Maven Pro');
@@ -627,7 +627,7 @@ export default function ToolbarPlugin({
       );
     }
     if ($isRangeSelection(selection) || $isTableSelection(selection)) {
-      setFontSize($getSelectionStyleValueForProperty(selection, 'font-size', '15px'));
+      setFontSize($getSelectionStyleValueForProperty(selection, 'font-size', '20px'));
     }
   }, [activeEditor]);
 

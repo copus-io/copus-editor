@@ -387,7 +387,7 @@ function ElementFormatDropdown({
   return (
     <DropDown
       disabled={disabled}
-      buttonLabel={formatOption.name}
+      // buttonLabel={formatOption.name}
       buttonIconClassName={`icon ${isRTL ? formatOption.iconRTL : formatOption.icon}`}
       buttonClassName="toolbar-item spaced alignment"
       buttonAriaLabel="Formatting options for text alignment">
@@ -1128,7 +1128,7 @@ export default function ToolbarPlugin({
         <DropDown
           disabled={!isEditable}
           buttonClassName="toolbar-item spaced"
-          buttonLabel="Insert"
+          // buttonLabel="Insert"
           buttonAriaLabel="Insert specialized editor node"
           buttonIconClassName="icon plus">
           <DropDownItem

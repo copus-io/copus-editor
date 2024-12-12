@@ -145,7 +145,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
 
   if (readOnly) {
     return (
-      <div className="editor-container plain-text">
+      <div className="editor-container plain-text editor-read-only">
         <PlainTextPlugin
           contentEditable={
             <div ref={onRef}>

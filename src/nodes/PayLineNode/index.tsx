@@ -120,7 +120,7 @@ export class PayLineNode extends DecoratorNode<JSX.Element> {
   createDOM(): HTMLElement {
     const el = document.createElement('fieldset');
     el.setAttribute('type', this.getType());
-    el.innerHTML = '<legend>Pay to unlock the rest of the content</legend>';
+    el.innerHTML = '<legend></legend>';
     return el;
   }
 

@@ -155,6 +155,7 @@ function DemoApp() {
           'insert-more',
           'pay-line',
         ]}
+        // readOnly
         // showLabel
       />
     </>

@@ -35,8 +35,11 @@ const showErrorOverlay = (err: Event) => {
 window.addEventListener('error', showErrorOverlay);
 window.addEventListener('unhandledrejection', ({ reason }) => showErrorOverlay(reason));
 
-const data =
+let data =
   '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Since the TextNode is foundational to all Lexical packages, including the plain text use case. Handling any rich text logic is undesirable. This creates the need to override the TextNode to handle serialization and deserialization of HTML/CSS styling properties to achieve full fidelity between JSON <-> HTML. Since this is a very popular use case, below we are proving a recipe to handle the","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph-x","version":1,"textFormat":0,"id":"hyyE"},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"哈哈哈","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph-x","version":1,"textFormat":0,"id":"9w9R"},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"most common use cases.","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph-x","version":1,"textFormat":0,"id":"slkb"},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"阿斯顿法斯蒂芬","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph-x","version":1,"textFormat":0,"id":"EhT6"}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
+
+const exampleData = await import('./example.json');
+// data = JSON.stringify(exampleData.default);
 
 const markList = [
   {
@@ -154,6 +157,7 @@ function DemoApp() {
           'element-format',
           'insert-more',
           'pay-line',
+          'code-format',
         ]}
         // readOnly
         // showLabel

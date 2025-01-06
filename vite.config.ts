@@ -6,12 +6,12 @@
  *
  */
 
-import {fileURLToPath, URL} from 'url';
+import { fileURLToPath, URL } from 'url';
 // import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import react from '@vitejs/plugin-react';
-import {createRequire} from 'node:module';
-import {defineConfig} from 'vite';
+import { createRequire } from 'node:module';
+import { defineConfig } from 'vite';
 
 // import moduleResolution from './shared/viteModuleResolution';
 // import viteCopyEsm from './viteCopyEsm';
@@ -19,7 +19,7 @@ import {defineConfig} from 'vite';
 const require = createRequire(import.meta.url);
 
 // https://vitejs.dev/config/
-export default defineConfig(({command}) => {
+export default defineConfig(({ command }) => {
   return {
     build: {
       outDir: 'build',
@@ -28,6 +28,7 @@ export default defineConfig(({command}) => {
           main: new URL('./index.html', import.meta.url).pathname,
         },
       },
+      target: ['chrome87', 'edge88', 'es2020', 'firefox78', 'safari14'],
     },
     define: {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),

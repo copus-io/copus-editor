@@ -241,7 +241,7 @@ function TextFormatFloatingToolbar({
             className={'popup-item spaced insert-source'}
             aria-label="Insert Copus Source">
             <i className="format add-source" />
-            Add Source
+            Make connection
           </button>
         ) : null
         // <button

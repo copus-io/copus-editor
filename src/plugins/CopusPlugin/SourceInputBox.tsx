@@ -118,7 +118,7 @@ export function SourceInputBox({
 
   return (
     <div className="CopusPlugin_SourceInputBox" ref={boxRef}>
-      <div className="link-title">Add Sources</div>
+      <div className="link-title">Make connection</div>
       <div className="link-main">
         <input
           ref={inputRef}

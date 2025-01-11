@@ -78,6 +78,9 @@ import FilePlugin from './plugins/FilePlugin';
 import { MarkNodeX, MarkXType } from './nodes/MarkNodeX';
 import { EditorShellProps } from './EditorShell';
 
+import 'react-photo-view/dist/react-photo-view.css';
+import { PhotoProvider } from 'react-photo-view';
+
 export interface EditorProps {
   readOnly?: boolean;
   onChange?: (
@@ -146,15 +149,17 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
   if (readOnly) {
     return (
       <div className="editor-container plain-text editor-read-only">
-        <PlainTextPlugin
-          contentEditable={
-            <div ref={onRef}>
-              <ContentEditable />
-            </div>
-          }
-          // placeholder={placeholder}
-          ErrorBoundary={LexicalErrorBoundary}
-        />
+        <PhotoProvider maskOpacity={0.5}>
+          <PlainTextPlugin
+            contentEditable={
+              <div ref={onRef}>
+                <ContentEditable />
+              </div>
+            }
+            // placeholder={placeholder}
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+        </PhotoProvider>
         {/* {floatingAnchorElem && (
           <>
             <FloatingCopusToolbarPlugin copus={copus} anchorElem={floatingAnchorElem} />

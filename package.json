@@ -1,6 +1,6 @@
 {
   "name": "@copus/editor",
-  "version": "0.21.0-8",
+  "version": "0.21.0-9",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -44,6 +44,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-error-boundary": "^4.0.13",
+    "react-photo-view": "^1.2.7",
     "tslib": "^2.6.2"
   },
   "devDependencies": {

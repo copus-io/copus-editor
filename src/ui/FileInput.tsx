@@ -10,6 +10,7 @@ type Props = Readonly<{
   accept?: string;
   label: string;
   onChange: (files: FileList | null) => void;
+  multiple?: boolean;
 }>;
 
 export default function FileInput({
@@ -17,6 +18,7 @@ export default function FileInput({
   label,
   onChange,
   'data-test-id': dataTestId,
+  multiple,
 }: Props): JSX.Element {
   return (
     <div className="Input__wrapper">
@@ -27,6 +29,7 @@ export default function FileInput({
         className="Input__input"
         onChange={(e) => onChange(e.target.files)}
         data-test-id={dataTestId}
+        multiple={multiple}
       />
     </div>
   );

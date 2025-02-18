@@ -81,21 +81,39 @@ export function InsertImageUriDialogBody({ onClick }: { onClick: (payload: Inser
 }
 
 export function InsertImageUploadedDialogBody({ onClick }: { onClick: (payload: InsertImagePayload) => void }) {
-  const [file, setFile] = useState<File>();
+  const [files, setFiles] = useState<FileList | null>(null);
   const [altText, setAltText] = useState('');
-
   const showFlashMessage = useFlashMessage();
 
   const loadImage = (files: FileList | null) => {
-    if (files === null) {
-      return;
-    }
-    setFile(files[0]);
+    setFiles(files);
+  };
+
+  const handleConfirm = () => {
+    if (!files) return;
+    
+    Array.from(files).forEach(file => {
+      if (file.size > mineTypeMap.image.limitSize) {
+        showFlashMessage(mineTypeMap.image.limitMessage);
+        return;
+      }
+      onClick({ 
+        altText, 
+        src: URL.createObjectURL(file), 
+        file 
+      });
+    });
   };
 
   return (
     <>
-      <FileInput label="Image Upload" onChange={loadImage} accept="image/*" data-test-id="image-modal-file-upload" />
+      <FileInput 
+        label="Image Upload" 
+        onChange={loadImage} 
+        accept="image/*" 
+        multiple={true}
+        data-test-id="image-modal-file-upload" 
+      />
       <TextInput
         label="Alt Text"
         placeholder="Descriptive alternative text"
@@ -112,16 +130,8 @@ export function InsertImageUploadedDialogBody({ onClick }: { onClick: (payload: 
       <DialogActions>
         <Button
           data-test-id="image-modal-file-upload-btn"
-          disabled={!file}
-          onClick={() => {
-            if (file) {
-              if (file.size > mineTypeMap.image.limitSize) {
-                showFlashMessage(mineTypeMap.image.limitMessage);
-                return;
-              }
-              onClick({ altText, src: URL.createObjectURL(file), file });
-            }
-          }}>
+          disabled={!files || files.length === 0}
+          onClick={handleConfirm}>
           Confirm
         </Button>
       </DialogActions>

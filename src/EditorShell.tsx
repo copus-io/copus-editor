@@ -18,6 +18,8 @@ import styles from './style.module.less';
 import { forwardRef, Ref, RefObject, useImperativeHandle, useRef } from 'react';
 import { ParagraphNodeX } from './nodes/ParagraphNodeX';
 
+export const copusEditorEhellStyle = styles['copus-editor-shell'];
+
 export interface EditorShellProps {
   readOnly?: boolean;
   onChange?: (

@@ -17,7 +17,7 @@ import App, { getEditorHtml } from '../src';
 import './index.css';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { addMark, getDownstreamList, getMarkList } from './api';
-import { EditorShellRef } from '../src/EditorShell';
+import { EditorShellRef, copusEditorEhellStyle } from '../src/EditorShell';
 
 // Handle runtime errors
 const showErrorOverlay = (err: Event) => {
@@ -101,6 +101,7 @@ function DemoApp() {
     return res;
   }, []);
 
+  const [html, setHtml] = useState('');
   useEffect(() => {
     getEditorHtml(data).then((html) => {
       console.log('html', html);
@@ -143,6 +144,7 @@ function DemoApp() {
         initialValue={data}
         onChange={(status, opts) => {
           console.log(status, opts);
+          setHtml(opts.html);
         }}
         copus={{ opusUuid: uuid2, opusId: 2, getMarkInfo, createMark }}
         ref={ref2}
@@ -162,6 +164,8 @@ function DemoApp() {
         // readOnly
         // showLabel
       />
+
+      <div className={copusEditorEhellStyle} dangerouslySetInnerHTML={{ __html: html }}></div>
     </>
   );
 }

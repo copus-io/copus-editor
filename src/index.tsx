@@ -22,6 +22,8 @@ import EditorShell from './EditorShell';
 import type { EditorShellProps, EditorShellRef } from './EditorShell';
 import editorNodes from './nodes';
 
+import './web-components/ImageViewer';
+
 export { getEditorHtml } from './ssr';
 
 export type { EditorShellRef, EditorShellProps, MarkXType, EditorState };

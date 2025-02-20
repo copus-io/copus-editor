@@ -44,8 +44,6 @@ import ImageResizer from '../ui/ImageResizer';
 import Placeholder from '../ui/Placeholder';
 import { $isImageNode } from './ImageNode';
 
-import { PhotoView } from 'react-photo-view';
-
 const imageCache = new Set();
 
 export const RIGHT_CLICK_IMAGE_COMMAND: LexicalCommand<MouseEvent> = createCommand('RIGHT_CLICK_IMAGE_COMMAND');
@@ -84,23 +82,16 @@ function LazyImage({
 }): JSX.Element {
   useSuspenseImage(src);
 
-  const [editor] = useLexicalComposerContext();
-  const isEditable = editor.isEditable();
-
-  const $img = (
-    <img
-      className={className || undefined}
-      src={src}
-      alt={altText}
-      ref={imageRef}
-      style={{ width }}
-      draggable="false"
-    />
-  );
-
   return (
     <>
-      {isEditable ? $img : <PhotoView src={src}>{$img}</PhotoView>}
+      <img
+        className={className || undefined}
+        src={src}
+        alt={altText}
+        ref={imageRef}
+        style={{ width }}
+        draggable="false"
+      />
       {uploading && <div className="uploading-text">Uploading...</div>}
     </>
   );

@@ -165,7 +165,13 @@ function DemoApp() {
         // showLabel
       />
 
-      <div className={copusEditorEhellStyle} dangerouslySetInnerHTML={{ __html: html }}></div>
+      <div style={{ margin: '20px 0' }} />
+
+      <div className={copusEditorEhellStyle}>
+        <div className="editor-container plain-text editor-read-only">
+          <div className="ContentEditable__root" dangerouslySetInnerHTML={{ __html: html }}></div>
+        </div>
+      </div>
     </>
   );
 }

@@ -112,7 +112,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 
   exportDOM(): DOMExportOutput {
-    const element = document.createElement('img');
+    const element = document.createElement('copus-image-viewer');
     element.setAttribute('src', this.__src);
     element.setAttribute('alt', this.__altText);
     element.setAttribute('width', this.__width.toString());

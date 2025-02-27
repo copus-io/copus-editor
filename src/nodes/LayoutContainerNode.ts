@@ -66,12 +66,12 @@ export class LayoutContainerNode extends ElementNode {
     return dom;
   }
 
-  exportDOM(): DOMExportOutput {
-    const element = document.createElement('div');
-    element.style.gridTemplateColumns = this.__templateColumns;
-    element.setAttribute('data-lexical-layout-container', 'true');
-    return {element};
-  }
+  // exportDOM(): DOMExportOutput {
+  //   const element = document.createElement('div');
+  //   element.style.gridTemplateColumns = this.__templateColumns;
+  //   element.setAttribute('data-lexical-layout-container', 'true');
+  //   return {element};
+  // }
 
   updateDOM(prevNode: LayoutContainerNode, dom: HTMLElement): boolean {
     if (prevNode.__templateColumns !== this.__templateColumns) {
@@ -80,19 +80,19 @@ export class LayoutContainerNode extends ElementNode {
     return false;
   }
 
-  static importDOM(): DOMConversionMap | null {
-    return {
-      div: (domNode: HTMLElement) => {
-        if (!domNode.hasAttribute('data-lexical-layout-container')) {
-          return null;
-        }
-        return {
-          conversion: $convertLayoutContainerElement,
-          priority: 2,
-        };
-      },
-    };
-  }
+  // static importDOM(): DOMConversionMap | null {
+  //   return {
+  //     div: (domNode: HTMLElement) => {
+  //       if (!domNode.hasAttribute('data-lexical-layout-container')) {
+  //         return null;
+  //       }
+  //       return {
+  //         conversion: $convertLayoutContainerElement,
+  //         priority: 2,
+  //       };
+  //     },
+  //   };
+  // }
 
   static importJSON(json: SerializedLayoutContainerNode): LayoutContainerNode {
     return $createLayoutContainerNode(json.templateColumns);

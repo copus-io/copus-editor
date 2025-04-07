@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {$wrapNodeInElement, mergeRegister} from '@lexical/utils';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $wrapNodeInElement, mergeRegister } from '@lexical/utils';
 import {
   $createParagraphNode,
   $createRangeSelection,
@@ -25,25 +25,20 @@ import {
   LexicalCommand,
   LexicalEditor,
 } from 'lexical';
-import {useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as React from 'react';
-import {CAN_USE_DOM} from '../../shared/canUseDOM';
+import { CAN_USE_DOM } from '../../shared/canUseDOM';
 
-import {
-  $createAudioNode,
-  $isAudioNode,
-  AudioNode,
-  AudioPayload,
-} from '../../nodes/AudioNode';
+import { $createAudioNode, $isAudioNode, AudioNode, AudioPayload } from '../../nodes/AudioNode';
 import Button from '../../ui/Button';
-import {DialogActions, DialogButtonsList} from '../../ui/Dialog';
+import { DialogActions, DialogButtonsList } from '../../ui/Dialog';
 import FileInput from '../../ui/FileInput';
 import TextInput from '../../ui/TextInput';
 import editorUploadFiles from '../../utils/editorUploadFiles';
 import useFlashMessage from '../../hooks/useFlashMessage';
-import {useSharedHistoryContext} from '../../context/SharedHistoryContext';
-import {clearTempHistory} from '../../utils/clearTempHistory';
-import {mineTypeMap} from '../../utils/constant';
+import { useSharedHistoryContext } from '../../context/SharedHistoryContext';
+import { clearTempHistory } from '../../utils/clearTempHistory';
+import { mineTypeMap } from '../../utils/constant';
 
 export type InsertAudioPayload = Readonly<AudioPayload> & {
   file?: File;
@@ -52,14 +47,9 @@ export type InsertAudioPayload = Readonly<AudioPayload> & {
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
 
-export const INSERT_AUDIO_COMMAND: LexicalCommand<InsertAudioPayload> =
-  createCommand('INSERT_AUDIO_COMMAND');
+export const INSERT_AUDIO_COMMAND: LexicalCommand<InsertAudioPayload> = createCommand('INSERT_AUDIO_COMMAND');
 
-export function InsertAudioUriDialogBody({
-  onClick,
-}: {
-  onClick: (payload: InsertAudioPayload) => void;
-}) {
+export function InsertAudioUriDialogBody({ onClick }: { onClick: (payload: InsertAudioPayload) => void }) {
   const [src, setSrc] = useState('');
 
   const isDisabled = src === '';
@@ -85,7 +75,7 @@ export function InsertAudioUriDialogBody({
         <Button
           data-test-id="audio-modal-confirm-btn"
           disabled={isDisabled}
-          onClick={() => onClick({src, controls: true})}>
+          onClick={() => onClick({ src, controls: true })}>
           Confirm
         </Button>
       </DialogActions>
@@ -93,11 +83,7 @@ export function InsertAudioUriDialogBody({
   );
 }
 
-export function InsertAudioUploadedDialogBody({
-  onClick,
-}: {
-  onClick: (payload: InsertAudioPayload) => void;
-}) {
+export function InsertAudioUploadedDialogBody({ onClick }: { onClick: (payload: InsertAudioPayload) => void }) {
   const [audiofile, setAudiofile] = useState<File>();
   const showFlashMessage = useFlashMessage();
 
@@ -110,12 +96,13 @@ export function InsertAudioUploadedDialogBody({
 
   return (
     <>
-      <FileInput
-        label="Audio Upload"
-        onChange={loadFiles}
-        accept="audio/*"
-        data-test-id="audio-modal-file-upload"
-      />
+      <FileInput label="Audio Upload" onChange={loadFiles} accept="audio/*" data-test-id="audio-modal-file-upload" />
+      <div className="Input__wrapper">
+        <label className="Input__label"></label>
+        <span className="Input__tips">
+          Supported audio formats are MP3, WAV. The file size has to be less than {mineTypeMap.audio.size} MB.
+        </span>
+      </div>
       <DialogActions>
         <Button
           data-test-id="audio-modal-file-upload-btn"
@@ -125,7 +112,7 @@ export function InsertAudioUploadedDialogBody({
                 showFlashMessage(mineTypeMap.audio.limitMessage);
                 return;
               }
-              onClick({src: URL.createObjectURL(audiofile), file: audiofile});
+              onClick({ src: URL.createObjectURL(audiofile), file: audiofile });
             }
           }}>
           Confirm
@@ -161,18 +148,16 @@ export function InsertAudioDialog({
     onClose();
   };
 
+  return <InsertAudioUploadedDialogBody onClick={onClick} />;
+
   return (
     <>
       {!mode && (
         <DialogButtonsList>
-          <Button
-            data-test-id="audio-modal-option-url"
-            onClick={() => setMode('url')}>
+          <Button data-test-id="audio-modal-option-url" onClick={() => setMode('url')}>
             URL
           </Button>
-          <Button
-            data-test-id="audio-modal-option-file"
-            onClick={() => setMode('file')}>
+          <Button data-test-id="audio-modal-option-file" onClick={() => setMode('file')}>
             File
           </Button>
         </DialogButtonsList>
@@ -183,13 +168,9 @@ export function InsertAudioDialog({
   );
 }
 
-export default function AudioPlugin({
-  captionsEnabled,
-}: {
-  captionsEnabled?: boolean;
-}): JSX.Element | null {
+export default function AudioPlugin({ captionsEnabled }: { captionsEnabled?: boolean }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  const {historyState} = useSharedHistoryContext();
+  const { historyState } = useSharedHistoryContext();
 
   useEffect(() => {
     if (!editor.hasNodes([AudioNode])) {
@@ -200,7 +181,7 @@ export default function AudioPlugin({
       editor.registerCommand<InsertAudioPayload>(
         INSERT_AUDIO_COMMAND,
         (payload) => {
-          const {file, ...otherPayload} = payload;
+          const { file, ...otherPayload } = payload;
           const audioNode = $createAudioNode({
             ...otherPayload,
             uploading: !!file,
@@ -214,9 +195,7 @@ export default function AudioPlugin({
             editorUploadFiles(file).then((res) => {
               if (res.status === 1) {
                 editor.update(() => {
-                  const _node = editor
-                    .getEditorState()
-                    ._nodeMap.get(audioNode.getKey());
+                  const _node = editor.getEditorState()._nodeMap.get(audioNode.getKey());
                   if (!_node) return;
                   URL.revokeObjectURL(payload.src);
                   audioNode.setUploadState(false);
@@ -337,7 +316,7 @@ function getDragAudioData(event: DragEvent): null | InsertAudioPayload {
   if (!dragData) {
     return null;
   }
-  const {type, data} = JSON.parse(dragData);
+  const { type, data } = JSON.parse(dragData);
   if (type !== 'audio') {
     return null;
   }

@@ -134,6 +134,12 @@ export function InsertVideoUploadedDialogBody({
         accept="video/*"
         data-test-id="Video-modal-file-upload"
       />
+      <div className="Input__wrapper">
+        <label className="Input__label"></label>
+        <span className="Input__tips">
+          Supported video formats are MP4. The file size has to be less than {mineTypeMap.video.size} MB.
+        </span>
+      </div>
       <DialogActions>
         <Button
           data-test-id="Video-modal-file-upload-btn"

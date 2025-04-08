@@ -1,0 +1,10 @@
+{
+  "bracketSpacing": true,
+  "singleQuote": true,
+  "bracketSameLine": true,
+  "printWidth": 120,
+  "trailingComma": "all",
+  "htmlWhitespaceSensitivity": "ignore",
+  "attributeGroups": ["$DEFAULT", "^data-"],
+  "plugins": ["prettier-plugin-tailwindcss"]
+}

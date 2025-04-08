@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "lib": ["ESNext", "dom"],
+    "module": "ES2020",
+    "jsx": "react-jsx",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "baseUrl": ".",
+    "rootDir": "./src",
+    "typeRoots": ["node_modules/@types"],
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "esModuleInterop": true,
+    "importHelpers": true
+  },
+  "include": ["./src"],
+  "exclude": ["**/dist/**", "**/npm/**", "**/node_modules/**"],
+  "typedocOptions": {"logLevel": "Verbose"},
+  "ts-node": {"require": ["tsconfig-paths/register"], "transpileOnly": true}
+}

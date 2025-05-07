@@ -218,7 +218,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
             {/* <InlineImagePlugin /> */}
             <LinkPlugin />
             {/* <PollPlugin /> */}
-            {/* <TwitterPlugin /> */}
+            <TwitterPlugin />
             <YouTubePlugin />
             {/* <FigmaPlugin /> */}
             <ClickableLinkPlugin disabled={isEditable} />

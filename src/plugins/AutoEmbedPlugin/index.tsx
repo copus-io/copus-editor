@@ -82,7 +82,7 @@ const TwitterEmbedConfig: PlaygroundEmbedConfig = {
   // e.g. Tweet or Google Map.
   contentName: 'Tweet',
 
-  exampleUrl: 'https://twitter.com/jack/status/20',
+  exampleUrl: 'https://x.com/user/status/1234567890123456789',
 
   // Icon for display.
   icon: <i className="icon tweet" />,
@@ -149,7 +149,7 @@ const FigmaEmbedConfig: PlaygroundEmbedConfig = {
 };
 
 export const EmbedConfigs = [
-  // TwitterEmbedConfig,
+  TwitterEmbedConfig,
   YoutubeEmbedConfig,
   // FigmaEmbedConfig,
 ];

@@ -1,6 +1,6 @@
 {
   "name": "@copus/editor",
-  "version": "0.21.0-18",
+  "version": "0.21.0-19",
   "type": "module",
   "publishConfig": {
     "access": "public"

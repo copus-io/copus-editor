@@ -36,6 +36,7 @@ import ContextMenuPlugin from './plugins/ContextMenuPlugin';
 import DragDropPaste from './plugins/DragDropPastePlugin';
 import DraggableBlockPlugin from './plugins/DraggableBlockPlugin';
 import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin';
+import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbarPlugin';
 import FloatingCopusToolbarPlugin from './plugins/FloatingCopusToolbarPlugin';
 import ImagesPlugin from './plugins/ImagesPlugin';
 import InlineImagePlugin from './plugins/InlineImagePlugin';
@@ -114,6 +115,23 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
   const placeholder = <Placeholder>{text}</Placeholder>;
   const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
   const [isLinkEditMode, setIsLinkEditMode] = useState<boolean>(false);
+  const [isSmallWidthViewport, setIsSmallWidthViewport] = useState<boolean>(false);
+
+  useEffect(() => {
+    const updateViewPortWidth = () => {
+      const isNextSmallWidthViewport = CAN_USE_DOM && window.matchMedia('(max-width: 1025px)').matches;
+
+      if (isNextSmallWidthViewport !== isSmallWidthViewport) {
+        setIsSmallWidthViewport(isNextSmallWidthViewport);
+      }
+    };
+    updateViewPortWidth();
+    window.addEventListener('resize', updateViewPortWidth);
+
+    return () => {
+      window.removeEventListener('resize', updateViewPortWidth);
+    };
+  }, [isSmallWidthViewport]);
 
   const onRef = (_floatingAnchorElem: HTMLDivElement) => {
     if (_floatingAnchorElem !== null) {
@@ -150,15 +168,15 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
     return (
       <div className="editor-container plain-text editor-read-only">
         {/* <PhotoProvider maskOpacity={0.5}> */}
-          <PlainTextPlugin
-            contentEditable={
-              <div ref={onRef}>
-                <ContentEditable />
-              </div>
-            }
-            // placeholder={placeholder}
-            ErrorBoundary={LexicalErrorBoundary}
-          />
+        <PlainTextPlugin
+          contentEditable={
+            <div ref={onRef}>
+              <ContentEditable />
+            </div>
+          }
+          // placeholder={placeholder}
+          ErrorBoundary={LexicalErrorBoundary}
+        />
         {/* </PhotoProvider> */}
         {/* {floatingAnchorElem && (
           <>
@@ -230,7 +248,7 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
             <PageBreakPlugin />
             <PayLinePlugin />
             <LayoutPlugin />
-            {floatingAnchorElem && (
+            {floatingAnchorElem && !isSmallWidthViewport && (
               <>
                 <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
                 <CodeActionMenuPlugin anchorElem={floatingAnchorElem} />
@@ -240,11 +258,15 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
                   setIsLinkEditMode={setIsLinkEditMode}
                 />
                 <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} cellMerge={true} />
-                <FloatingCopusToolbarPlugin
-                  copus={copus}
+                <FloatingTextFormatToolbarPlugin
                   anchorElem={floatingAnchorElem}
                   setIsLinkEditMode={setIsLinkEditMode}
                 />
+                {/* <FloatingCopusToolbarPlugin
+                  copus={copus}
+                  anchorElem={floatingAnchorElem}
+                  setIsLinkEditMode={setIsLinkEditMode}
+                /> */}
                 {/* <CopusPlugin copus={copus} /> */}
               </>
             )}

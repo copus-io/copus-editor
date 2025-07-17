@@ -1,8 +1,6 @@
-import {compressImage} from './compressImage';
+import { compressImage } from './compressImage';
 
-export const baseURL =
-  process.env.NEXT_PUBLIC_API_BASEURL ??
-  'https://api.test.copus.io/copus-client';
+export const baseURL = 'https://api.client.prod.copus.io';
 
 export async function uploadImage(params: FormData) {
   return fetch(`${baseURL}/client/common/uploadImage2S3`, {

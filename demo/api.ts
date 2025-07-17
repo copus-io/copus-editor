@@ -1,4 +1,4 @@
-const API_HOST = 'https://api.test.copus.io/copus-client';
+const API_HOST = 'https://api.test.copus.io/client';
 
 const token =
   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJsYXN0TG9naW5UaW1lIjoxNzIwNzA4MDk1MzIzLCJzdWIiOiJoYW92ZWlAZ21haWwuY29tIiwiTGFzdFBhc3N3b3JkUmVzZXREYXRlIjoxNzE1NTgzNDg4MDI0LCJjcmVhdGVkIjoxNzIwNzA4MDk1MzQyLCJleHAiOjE3MjEzMTI4OTUsInVzZXJJZCI6NDE2fQ._aidTbs0qzTpVyn1v8TgH079V58aMw855q2-NNF0zOw';

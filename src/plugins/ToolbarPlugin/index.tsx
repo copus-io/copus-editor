@@ -548,9 +548,9 @@ export default function ToolbarPlugin({
         anchorNode.getKey() === 'root'
           ? anchorNode
           : $findMatchingParent(anchorNode, (e) => {
-              const parent = e.getParent();
-              return parent !== null && $isRootOrShadowRoot(parent);
-            });
+            const parent = e.getParent();
+            return parent !== null && $isRootOrShadowRoot(parent);
+          });
 
       if (element === null) {
         element = anchorNode.getTopLevelElementOrThrow();
@@ -1288,11 +1288,11 @@ export default function ToolbarPlugin({
           activeEditor.dispatchCommand(INSERT_PAY_LINE, undefined);
         }}
         className={'toolbar-item spaced pay-line'}
-        title="Insert Pay Line"
+        title="Insert threshold"
         type="button"
-        aria-label="Insert Pay Line">
+        aria-label="Insert threshold">
         <span className="icon pay-line" />
-        <span className="text">Insert Pay Line</span>
+        <span className="text">Insert threshold</span>
       </button>
     ),
     [activeEditor, isEditable],

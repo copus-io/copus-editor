@@ -10,7 +10,6 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { SharedAutocompleteContext } from './context/SharedAutocompleteContext';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { FlashMessageContext } from './context/FlashMessageContext';
-import PlaygroundNodes from './nodes/PlaygroundNodes';
 import { TableContext } from './plugins/TablePlugin';
 import CopusEditorTheme from './themes/CopusEditorTheme';
 import { forwardRef, Ref, useEffect } from 'react';

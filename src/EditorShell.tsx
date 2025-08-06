@@ -35,6 +35,7 @@ export interface EditorShellProps {
     createMark?: (params: MarkXType) => Promise<MarkXType>;
     getMarkInfo?: (ids: string[]) => Promise<any[]>;
   };
+  maxLength?: number;
 }
 
 export type EditorShellRef = {
@@ -180,6 +181,7 @@ export default forwardRef(function EditorShell(props: EditorShellProps, ref: Ref
         toolbar={props.toolbar}
         showLabel={props.showLabel}
         copus={props.copus}
+        maxLength={props.maxLength}
       />
     </div>
   );

@@ -91,16 +91,24 @@ export interface EditorProps {
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
   copus?: EditorShellProps['copus'];
+  maxLength?: number; // 1. 确保在这里添加了 maxLength 属性
 }
 
-export default function Editor({ onChange, readOnly, toolbar, showLabel, copus = {} }: EditorProps): JSX.Element {
+export default function Editor({
+  onChange,
+  readOnly,
+  toolbar,
+  showLabel,
+  copus = {},
+  maxLength, // 2. 确保在这里从 props 中解构了 maxLength
+}: EditorProps): JSX.Element {
   const { historyState } = useSharedHistoryContext();
   const [editor] = useLexicalComposerContext();
   const {
     settings: {
       // isCollab,
       isAutocomplete,
-      isMaxLength,
+      // isMaxLength, // 不再需要此项
       isCharLimit,
       isCharLimitUtf8,
       isRichText,
@@ -194,7 +202,8 @@ export default function Editor({ onChange, readOnly, toolbar, showLabel, copus =
         <ToolbarPlugin setIsLinkEditMode={setIsLinkEditMode} toolbarConfig={toolbar} showLabel={showLabel} />
       )}
       <div className={`editor-container ${!isRichText ? 'plain-text' : ''}`}>
-        {isMaxLength && <MaxLengthPlugin maxLength={30} />}
+        {/* 3. 在这里使用 maxLength 变量 */}
+        {typeof maxLength === 'number' && maxLength > 0 && <MaxLengthPlugin maxLength={maxLength} />}
         <DragDropPaste />
         <AutoFocusPlugin />
         <ClearEditorPlugin />

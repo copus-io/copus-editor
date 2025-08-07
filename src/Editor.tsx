@@ -91,7 +91,8 @@ export interface EditorProps {
   toolbar?: ToolbarConfig;
   showLabel?: boolean;
   copus?: EditorShellProps['copus'];
-  maxLength?: number; // 1. 确保在这里添加了 maxLength 属性
+  maxLength?: number;
+  placeholder?: string; // 添加 placeholder 属性
 }
 
 export default function Editor({
@@ -100,7 +101,8 @@ export default function Editor({
   toolbar,
   showLabel,
   copus = {},
-  maxLength, // 2. 确保在这里从 props 中解构了 maxLength
+  maxLength,
+  placeholder: placeholderText, // 解构 placeholder 属性并重命名
 }: EditorProps): JSX.Element {
   const { historyState } = useSharedHistoryContext();
   const [editor] = useLexicalComposerContext();
@@ -119,8 +121,8 @@ export default function Editor({
     },
   } = useSettings();
   const isEditable = useLexicalEditable();
-  const text = 'Paste URLs in the text to attribute an inspiration source';
-  const placeholder = <Placeholder>{text}</Placeholder>;
+  const defaultText = 'Paste URLs in the text to attribute an inspiration source';
+  const placeholder = <Placeholder>{placeholderText || defaultText}</Placeholder>;
   const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
   const [isLinkEditMode, setIsLinkEditMode] = useState<boolean>(false);
   const [isSmallWidthViewport, setIsSmallWidthViewport] = useState<boolean>(false);

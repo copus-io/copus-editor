@@ -198,7 +198,7 @@ export default function Editor({
 
   return (
     <>
-      {isRichText && (
+      {isRichText && toolbar && toolbar.length > 0 && (
         <ToolbarPlugin setIsLinkEditMode={setIsLinkEditMode} toolbarConfig={toolbar} showLabel={showLabel} />
       )}
       <div className={`editor-container ${!isRichText ? 'plain-text' : ''}`}>

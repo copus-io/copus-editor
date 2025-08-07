@@ -36,6 +36,7 @@ export interface EditorShellProps {
     getMarkInfo?: (ids: string[]) => Promise<any[]>;
   };
   maxLength?: number;
+  placeholder?: string; // 添加 placeholder 属性
 }
 
 export type EditorShellRef = {
@@ -182,6 +183,7 @@ export default forwardRef(function EditorShell(props: EditorShellProps, ref: Ref
         showLabel={props.showLabel}
         copus={props.copus}
         maxLength={props.maxLength}
+        placeholder={props.placeholder} // 添加 placeholder 传递
       />
     </div>
   );

@@ -12,18 +12,22 @@ export async function uploadImage(params: FormData) {
 const editorUploadFiles = (uploadFiles: File, isImage?: boolean) => {
   return new Promise<any>((resolve, reject) => {
     if (isImage) {
-      compressImage(uploadFiles).then((myImage) => {
-        const formData = new FormData();
-        formData.append('file', myImage);
-        uploadImage(formData)
-          .then((res) => {
-            resolve(res);
-          })
-          .catch((error) => {
-            reject(error);
-          })
-          .finally();
-      });
+      compressImage(uploadFiles)
+        .then((myImage) => {
+          const formData = new FormData();
+          formData.append('file', myImage);
+          uploadImage(formData)
+            .then((res) => {
+              resolve(res);
+            })
+            .catch((error) => {
+              reject(error);
+            })
+            .finally();
+        })
+        .catch((error) => {
+          reject(error);
+        });
       return;
     }
 

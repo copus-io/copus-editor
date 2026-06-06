@@ -1,5 +1,5 @@
 {
-  "name": "@copus/editor",
+  "name": "copus-editor",
   "version": "0.21.0-29",
   "type": "module",
   "publishConfig": {
